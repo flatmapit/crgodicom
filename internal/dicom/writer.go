@@ -59,7 +59,7 @@ func (w *Writer) WriteStudy(study *types.Study, outputDir string) error {
 func (w *Writer) writeStudyMetadata(study *types.Study, studyDir string) error {
 	// TODO: Implement JSON metadata writing
 	// For now, just log the metadata
-	logrus.Infof("Study metadata: UID=%s, Patient=%s (%s), Description=%s", 
+	logrus.Infof("Study metadata: UID=%s, Patient=%s (%s), Description=%s",
 		study.StudyInstanceUID, study.PatientName, study.PatientID, study.StudyDescription)
 	return nil
 }

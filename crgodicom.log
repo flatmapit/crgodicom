@@ -30,3 +30,35 @@
 {"level":"info","msg":"Studies directory: studies, Retries: 3, Timeout: 30s","time":"2025-09-17T14:30:38.690+10:00"}
 {"level":"info","msg":"Connecting to PACS at localhost:4900","time":"2025-09-17T14:30:38.690+10:00"}
 {"level":"fatal","msg":"Application error: failed to connect to PACS: failed to connect to PACS: dial tcp [::1]:4900: connect: connection refused","time":"2025-09-17T14:30:38.693+10:00"}
+{"level":"info","msg":"Creating 1 study(ies) with 2 series each and 2 images per series","time":"2025-09-17T14:31:38.529+10:00"}
+{"level":"info","msg":"Modality: US, Region: chest, Output: studies","time":"2025-09-17T14:31:38.529+10:00"}
+{"level":"info","msg":"Writing study 1.2.840.10008.5.1.4.1.1.1758083498.7338041579410929277 to studies/1.2.840.10008.5.1.4.1.1.1758083498.7338041579410929277","time":"2025-09-17T14:31:38.537+10:00"}
+{"level":"info","msg":"Study metadata: UID=1.2.840.10008.5.1.4.1.1.1758083498.7338041579410929277, Patient=SMITH^JANE^M (604495C5), Description=Ultrasound Abdomen","time":"2025-09-17T14:31:38.537+10:00"}
+{"level":"info","msg":"Writing series 1.2.840.10008.5.1.4.1.1.1758083498.4622601415751994922 with 2 images","time":"2025-09-17T14:31:38.537+10:00"}
+{"level":"fatal","msg":"Application error: failed to write study 1: failed to write series 1: failed to write image 1: failed to write DICOM file: ValueType does not match the specified type in the VR","time":"2025-09-17T14:31:38.538+10:00"}
+{"level":"info","msg":"Exporting study 1.2.840.10008.5.1.4.1.1.1758083498.7338041579410929277 to pdf format","time":"2025-09-17T14:33:16.498+10:00"}
+{"level":"info","msg":"Input directory: studies","time":"2025-09-17T14:33:16.498+10:00"}
+{"level":"info","msg":"Output file: ultrasound_report.pdf","time":"2025-09-17T14:33:16.498+10:00"}
+{"level":"info","msg":"Export functionality not yet implemented","time":"2025-09-17T14:33:16.498+10:00"}
+{"level":"info","msg":"Exporting study 1.2.840.10008.5.1.4.1.1.1758083498.7338041579410929277 to pdf format","time":"2025-09-17T14:33:29.164+10:00"}
+{"level":"info","msg":"Input directory: studies","time":"2025-09-17T14:33:29.165+10:00"}
+{"level":"info","msg":"Output file: ultrasound_report.pdf","time":"2025-09-17T14:33:29.165+10:00"}
+{"level":"info","msg":"PDF export is handled as part of the general export process","time":"2025-09-17T14:33:29.165+10:00"}
+{"level":"info","msg":"Exporting study 1.2.840.10008.5.1.4.1.1.1758083498.7338041579410929277 to studies/1.2.840.10008.5.1.4.1.1.1758083498.7338041579410929277","time":"2025-09-17T14:33:29.165+10:00"}
+{"level":"info","msg":"Exporting series 1.2.840.10008.5.1.4.1.1.1758083498.7338041579410929277.series_001 with 1 images","time":"2025-09-17T14:33:29.165+10:00"}
+{"level":"info","msg":"Created PDF report: studies/1.2.840.10008.5.1.4.1.1.1758083498.7338041579410929277/exports/study_1.2.840.10008.5.1.4.1.1.1758083498.7338041579410929277_report.pdf","time":"2025-09-17T14:33:29.168+10:00"}
+{"level":"info","msg":"Successfully exported study to studies/1.2.840.10008.5.1.4.1.1.1758083498.7338041579410929277/exports","time":"2025-09-17T14:33:29.168+10:00"}
+{"level":"info","msg":"Creating 1 study(ies) with 2 series each and 2 images per series","time":"2025-09-17T14:33:38.593+10:00"}
+{"level":"info","msg":"Modality: US, Region: chest, Output: studies","time":"2025-09-17T14:33:38.594+10:00"}
+{"level":"info","msg":"Writing study 1.2.840.10008.5.1.4.1.1.1758083618.1610799069534959723 to studies/1.2.840.10008.5.1.4.1.1.1758083618.1610799069534959723","time":"2025-09-17T14:33:38.603+10:00"}
+{"level":"info","msg":"Study metadata: UID=1.2.840.10008.5.1.4.1.1.1758083618.1610799069534959723, Patient=SMITH^JANE^M (1E6107A0), Description=Ultrasound Abdomen - Complete Study","time":"2025-09-17T14:33:38.603+10:00"}
+{"level":"info","msg":"Writing series 1.2.840.10008.5.1.4.1.1.1758083618.8152228839420661374 with 2 images","time":"2025-09-17T14:33:38.603+10:00"}
+{"level":"fatal","msg":"Application error: failed to write study 1: failed to write series 1: failed to write image 1: failed to write DICOM file: ValueType does not match the specified type in the VR","time":"2025-09-17T14:33:38.604+10:00"}
+{"level":"info","msg":"Exporting study 1.2.840.10008.5.1.4.1.1.1758083618.1610799069534959723 to pdf format","time":"2025-09-17T14:33:46.146+10:00"}
+{"level":"info","msg":"Input directory: studies","time":"2025-09-17T14:33:46.146+10:00"}
+{"level":"info","msg":"Output file: ultrasound_complete_report.pdf","time":"2025-09-17T14:33:46.146+10:00"}
+{"level":"info","msg":"PDF export is handled as part of the general export process","time":"2025-09-17T14:33:46.146+10:00"}
+{"level":"info","msg":"Exporting study 1.2.840.10008.5.1.4.1.1.1758083618.1610799069534959723 to studies/1.2.840.10008.5.1.4.1.1.1758083618.1610799069534959723","time":"2025-09-17T14:33:46.146+10:00"}
+{"level":"info","msg":"Exporting series 1.2.840.10008.5.1.4.1.1.1758083618.1610799069534959723.series_001 with 1 images","time":"2025-09-17T14:33:46.147+10:00"}
+{"level":"info","msg":"Created PDF report: studies/1.2.840.10008.5.1.4.1.1.1758083618.1610799069534959723/exports/study_1.2.840.10008.5.1.4.1.1.1758083618.1610799069534959723_report.pdf","time":"2025-09-17T14:33:46.150+10:00"}
+{"level":"info","msg":"Successfully exported study to studies/1.2.840.10008.5.1.4.1.1.1758083618.1610799069534959723/exports","time":"2025-09-17T14:33:46.150+10:00"}

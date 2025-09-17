@@ -97,50 +97,50 @@ func sendAction(c *cli.Context) error {
 
 	// Create PACS client
 	client := pacs.NewClient(&pacsConfig)
-	
+
 	// Connect to PACS
 	if err := client.Connect(c.Context); err != nil {
 		return fmt.Errorf("failed to connect to PACS: %w", err)
 	}
 	defer client.Disconnect()
-	
+
 	// Test connectivity with C-ECHO
 	if err := client.CEcho(c.Context); err != nil {
 		return fmt.Errorf("C-ECHO failed: %w", err)
 	}
-	
+
 	// Find and send DICOM files for the study
 	studyDir := filepath.Join(outputDir, studyID)
 	dicomFiles, err := findDICOMFiles(studyDir)
 	if err != nil {
 		return fmt.Errorf("failed to find DICOM files: %w", err)
 	}
-	
+
 	logrus.Infof("Found %d DICOM files to send", len(dicomFiles))
-	
+
 	successCount := 0
 	for _, filePath := range dicomFiles {
 		logrus.Infof("Sending %s", filePath)
-		
+
 		// Read DICOM file
 		dicomData, err := os.ReadFile(filePath)
 		if err != nil {
 			logrus.Errorf("Failed to read %s: %v", filePath, err)
 			continue
 		}
-		
+
 		// Extract SOP Instance UID from filename or data (simplified)
 		sopInstanceUID := extractSOPInstanceUID(filePath)
-		
+
 		// Send to PACS
 		if err := client.CStore(c.Context, dicomData, sopInstanceUID); err != nil {
 			logrus.Errorf("Failed to send %s: %v", filePath, err)
 			continue
 		}
-		
+
 		successCount++
 	}
-	
+
 	fmt.Printf("Successfully sent %d/%d DICOM files to PACS\n", successCount, len(dicomFiles))
 	return nil
 }
@@ -148,20 +148,20 @@ func sendAction(c *cli.Context) error {
 // findDICOMFiles recursively finds all DICOM files in a directory
 func findDICOMFiles(dir string) ([]string, error) {
 	var dicomFiles []string
-	
+
 	err := filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
 		}
-		
+
 		// Check if it's a DICOM file (.dcm extension)
 		if !info.IsDir() && filepath.Ext(path) == ".dcm" {
 			dicomFiles = append(dicomFiles, path)
 		}
-		
+
 		return nil
 	})
-	
+
 	return dicomFiles, err
 }
 
