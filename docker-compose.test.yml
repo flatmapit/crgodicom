@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  orthanc1:
+    image: orthancteam/orthanc:latest
+    container_name: crgodicom-orthanc1
+    ports:
+      - "4900:4242"
+    environment:
+      - ORTHANC__DICOM__Port=4242
+      - ORTHANC__DICOM__AETitle=ORTHANC1
+      - ORTHANC__DICOM__AllowEcho=true
+      - ORTHANC__DICOM__AllowStore=true
+      - ORTHANC__DICOM__AllowFind=true
+      - ORTHANC__DICOM__AllowMove=true
+      - ORTHANC__DICOM__AllowGet=true
+      - ORTHANC__DICOM__AllowTranscoding=true
+      - ORTHANC__DICOM__TransferSyntaxAccepted=*
+      - ORTHANC__DICOM__SopClassAccepted=*
+    volumes:
+      - orthanc1-data:/var/lib/orthanc/db
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8042/system"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  orthanc2:
+    image: orthancteam/orthanc:latest
+    container_name: crgodicom-orthanc2
+    ports:
+      - "4901:4242"
+    environment:
+      - ORTHANC__DICOM__Port=4242
+      - ORTHANC__DICOM__AETitle=ORTHANC2
+      - ORTHANC__DICOM__AllowEcho=true
+      - ORTHANC__DICOM__AllowStore=true
+      - ORTHANC__DICOM__AllowFind=true
+      - ORTHANC__DICOM__AllowMove=true
+      - ORTHANC__DICOM__AllowGet=true
+      - ORTHANC__DICOM__AllowTranscoding=true
+      - ORTHANC__DICOM__TransferSyntaxAccepted=*
+      - ORTHANC__DICOM__SopClassAccepted=*
+    volumes:
+      - orthanc2-data:/var/lib/orthanc/db
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8042/system"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  orthanc1-data:
+  orthanc2-data:

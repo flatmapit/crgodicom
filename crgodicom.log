@@ -20,3 +20,13 @@
 {"level":"info","msg":"Study metadata: UID=1.2.840.10008.5.1.4.1.1.1758083320.98009666002356711, Patient=DOE^JOHN^M (2788EFDB), Description=Generated Study","time":"2025-09-17T14:28:40.240+10:00"}
 {"level":"info","msg":"Writing series 1.2.840.10008.5.1.4.1.1.1758083320.549632383009414763 with 1 images","time":"2025-09-17T14:28:40.240+10:00"}
 {"level":"fatal","msg":"Application error: failed to write study 1: failed to write series 1: failed to write image 1: failed to write DICOM file: ValueType does not match the specified type in the VR","time":"2025-09-17T14:28:40.241+10:00"}
+{"level":"info","msg":"Creating 1 study(ies) with 1 series each and 1 images per series","time":"2025-09-17T14:30:31.668+10:00"}
+{"level":"info","msg":"Modality: CR, Region: chest, Output: studies","time":"2025-09-17T14:30:31.668+10:00"}
+{"level":"info","msg":"Writing study 1.2.840.10008.5.1.4.1.1.1758083431.7103574639225278741 to studies/1.2.840.10008.5.1.4.1.1.1758083431.7103574639225278741","time":"2025-09-17T14:30:31.685+10:00"}
+{"level":"info","msg":"Study metadata: UID=1.2.840.10008.5.1.4.1.1.1758083431.7103574639225278741, Patient=DOE^JOHN^M (E3816EE6), Description=Generated Study","time":"2025-09-17T14:30:31.685+10:00"}
+{"level":"info","msg":"Writing series 1.2.840.10008.5.1.4.1.1.1758083431.2623101171723884854 with 1 images","time":"2025-09-17T14:30:31.685+10:00"}
+{"level":"fatal","msg":"Application error: failed to write study 1: failed to write series 1: failed to write image 1: failed to write DICOM file: ValueType does not match the specified type in the VR","time":"2025-09-17T14:30:31.686+10:00"}
+{"level":"info","msg":"Sending study 1.2.840.10008.5.1.4.1.1.1758083431.7103574639225278741 to PACS localhost:4900 (AEC: CRGODICOM, AET: ORTHANC1)","time":"2025-09-17T14:30:38.690+10:00"}
+{"level":"info","msg":"Studies directory: studies, Retries: 3, Timeout: 30s","time":"2025-09-17T14:30:38.690+10:00"}
+{"level":"info","msg":"Connecting to PACS at localhost:4900","time":"2025-09-17T14:30:38.690+10:00"}
+{"level":"fatal","msg":"Application error: failed to connect to PACS: failed to connect to PACS: dial tcp [::1]:4900: connect: connection refused","time":"2025-09-17T14:30:38.693+10:00"}

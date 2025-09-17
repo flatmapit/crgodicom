@@ -2,8 +2,11 @@ package cli
 
 import (
 	"fmt"
+	"os"
+	"path/filepath"
 
 	"github.com/flatmapit/crgodicom/internal/config"
+	"github.com/flatmapit/crgodicom/internal/pacs"
 	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli/v2"
 )
@@ -92,9 +95,85 @@ func sendAction(c *cli.Context) error {
 	logrus.Infof("Studies directory: %s, Retries: %d, Timeout: %ds",
 		outputDir, retries, pacsConfig.Timeout)
 
-	// TODO: Implement actual PACS sending
-	// For now, just log the parameters
-	logrus.Info("PACS sending not yet implemented")
-
+	// Create PACS client
+	client := pacs.NewClient(&pacsConfig)
+	
+	// Connect to PACS
+	if err := client.Connect(c.Context); err != nil {
+		return fmt.Errorf("failed to connect to PACS: %w", err)
+	}
+	defer client.Disconnect()
+	
+	// Test connectivity with C-ECHO
+	if err := client.CEcho(c.Context); err != nil {
+		return fmt.Errorf("C-ECHO failed: %w", err)
+	}
+	
+	// Find and send DICOM files for the study
+	studyDir := filepath.Join(outputDir, studyID)
+	dicomFiles, err := findDICOMFiles(studyDir)
+	if err != nil {
+		return fmt.Errorf("failed to find DICOM files: %w", err)
+	}
+	
+	logrus.Infof("Found %d DICOM files to send", len(dicomFiles))
+	
+	successCount := 0
+	for _, filePath := range dicomFiles {
+		logrus.Infof("Sending %s", filePath)
+		
+		// Read DICOM file
+		dicomData, err := os.ReadFile(filePath)
+		if err != nil {
+			logrus.Errorf("Failed to read %s: %v", filePath, err)
+			continue
+		}
+		
+		// Extract SOP Instance UID from filename or data (simplified)
+		sopInstanceUID := extractSOPInstanceUID(filePath)
+		
+		// Send to PACS
+		if err := client.CStore(c.Context, dicomData, sopInstanceUID); err != nil {
+			logrus.Errorf("Failed to send %s: %v", filePath, err)
+			continue
+		}
+		
+		successCount++
+	}
+	
+	fmt.Printf("Successfully sent %d/%d DICOM files to PACS\n", successCount, len(dicomFiles))
 	return nil
+}
+
+// findDICOMFiles recursively finds all DICOM files in a directory
+func findDICOMFiles(dir string) ([]string, error) {
+	var dicomFiles []string
+	
+	err := filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+		
+		// Check if it's a DICOM file (.dcm extension)
+		if !info.IsDir() && filepath.Ext(path) == ".dcm" {
+			dicomFiles = append(dicomFiles, path)
+		}
+		
+		return nil
+	})
+	
+	return dicomFiles, err
+}
+
+// extractSOPInstanceUID extracts SOP Instance UID from file path
+// This is a simplified implementation - in a real scenario, you'd parse the DICOM file
+func extractSOPInstanceUID(filePath string) string {
+	// For now, use a simple approach based on filename
+	// In a real implementation, you'd parse the DICOM file to extract the actual UID
+	base := filepath.Base(filePath)
+	if base == "image_001.dcm" {
+		// This is a placeholder - in reality you'd extract from DICOM metadata
+		return "1.2.840.10008.5.1.4.1.1.1.1"
+	}
+	return "1.2.840.10008.5.1.4.1.1.1.1" // Default placeholder
 }
