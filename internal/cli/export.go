@@ -134,9 +134,9 @@ func exportAction(c *cli.Context) error {
 func reconstructStudyFromDirectory(studyDir string) (*types.Study, error) {
 	// This is a simplified implementation that creates a mock study
 	// In a real implementation, you'd parse the DICOM files to extract metadata
-	
+
 	studyUID := filepath.Base(studyDir)
-	
+
 	// Create a basic study structure
 	study := &types.Study{
 		StudyInstanceUID: studyUID,
@@ -149,17 +149,17 @@ func reconstructStudyFromDirectory(studyDir string) (*types.Study, error) {
 		PatientBirthDate: "19800101",
 		Series:           []types.Series{},
 	}
-	
+
 	// Find series directories
 	entries, err := os.ReadDir(studyDir)
 	if err != nil {
 		return nil, fmt.Errorf("failed to read study directory: %w", err)
 	}
-	
+
 	for _, entry := range entries {
 		if entry.IsDir() && filepath.Base(entry.Name()) != "exports" {
 			seriesDir := filepath.Join(studyDir, entry.Name())
-			
+
 			// Create series
 			series := types.Series{
 				SeriesInstanceUID: fmt.Sprintf("%s.%s", studyUID, entry.Name()),
@@ -168,20 +168,20 @@ func reconstructStudyFromDirectory(studyDir string) (*types.Study, error) {
 				SeriesDescription: "Ultrasound Series",
 				Images:            []types.Image{},
 			}
-			
+
 			// Find DICOM files in series
 			dicomFiles, err := findDICOMFilesInDirectory(seriesDir)
 			if err != nil {
 				continue // Skip this series if we can't read it
 			}
-			
+
 			// Create mock images
 			for i := range dicomFiles {
 				image := types.Image{
 					SOPInstanceUID: fmt.Sprintf("%s.%d", series.SeriesInstanceUID, i+1),
-					SOPClassUID:    "1.2.840.10008.5.1.4.1.1.6", // Ultrasound
+					SOPClassUID:    "1.2.840.10008.5.1.4.1.1.6.1", // Ultrasound
 					InstanceNumber: i + 1,
-					Width:          640,  // US dimensions
+					Width:          640, // US dimensions
 					Height:         480,
 					BitsPerPixel:   8,
 					Modality:       "US",
@@ -189,29 +189,29 @@ func reconstructStudyFromDirectory(studyDir string) (*types.Study, error) {
 				}
 				series.Images = append(series.Images, image)
 			}
-			
+
 			study.Series = append(study.Series, series)
 		}
 	}
-	
+
 	return study, nil
 }
 
 // findDICOMFilesInDirectory finds DICOM files in a directory
 func findDICOMFilesInDirectory(dir string) ([]string, error) {
 	var dicomFiles []string
-	
+
 	entries, err := os.ReadDir(dir)
 	if err != nil {
 		return nil, err
 	}
-	
+
 	for _, entry := range entries {
 		if !entry.IsDir() && filepath.Ext(entry.Name()) == ".dcm" {
 			dicomFiles = append(dicomFiles, filepath.Join(dir, entry.Name()))
 		}
 	}
-	
+
 	return dicomFiles, nil
 }
 
@@ -221,19 +221,19 @@ func generateMockPixelData(width, height, bitsPerPixel int) []byte {
 	if bitsPerPixel%8 != 0 {
 		bytesPerPixel++
 	}
-	
+
 	pixelData := make([]byte, width*height*bytesPerPixel)
-	
+
 	// Generate simple pattern
 	for y := 0; y < height; y++ {
 		for x := 0; x < width; x++ {
 			idx := (y*width + x) * bytesPerPixel
-			
+
 			// Create a simple pattern
 			value := uint8((x + y) % 256)
 			pixelData[idx] = value
 		}
 	}
-	
+
 	return pixelData
 }

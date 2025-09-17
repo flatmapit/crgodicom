@@ -8,12 +8,12 @@ import (
 
 // SOPClassUIDs defines the standard SOP Class UIDs for different modalities
 var SOPClassUIDs = map[string]string{
-	"CR": "1.2.840.10008.5.1.4.1.1.1",     // Computed Radiography Image Storage
-	"CT": "1.2.840.10008.5.1.4.1.1.2",     // CT Image Storage
-	"MR": "1.2.840.10008.5.1.4.1.1.4",     // MR Image Storage
-	"US": "1.2.840.10008.5.1.4.1.1.6",     // Ultrasound Image Storage
-	"DX": "1.2.840.10008.5.1.4.1.1.1.1",   // Digital X-Ray Image Storage
-	"MG": "1.2.840.10008.5.1.4.1.1.1.2",   // Digital Mammography X-Ray Image Storage
+	"CR": "1.2.840.10008.5.1.4.1.1.1",   // Computed Radiography Image Storage
+	"CT": "1.2.840.10008.5.1.4.1.1.2",   // CT Image Storage
+	"MR": "1.2.840.10008.5.1.4.1.1.4",   // MR Image Storage
+	"US": "1.2.840.10008.5.1.4.1.1.6.1", // Ultrasound Image Storage
+	"DX": "1.2.840.10008.5.1.4.1.1.1.1", // Digital X-Ray Image Storage
+	"MG": "1.2.840.10008.5.1.4.1.1.1.2", // Digital Mammography X-Ray Image Storage
 }
 
 // TransferSyntaxUIDs defines common transfer syntax UIDs
@@ -82,10 +82,10 @@ type PatientInfo struct {
 
 // StudyInfo represents study information
 type StudyInfo struct {
-	Description   string
+	Description     string
 	AccessionNumber string
-	Date         time.Time
-	Time         time.Time
+	Date            time.Time
+	Time            time.Time
 }
 
 // SeriesInfo represents series information
@@ -97,9 +97,9 @@ type SeriesInfo struct {
 
 // ImageInfo represents image information
 type ImageInfo struct {
-	Number    int
-	Width     int
-	Height    int
+	Number       int
+	Width        int
+	Height       int
 	BitsPerPixel int
 }
 
@@ -144,8 +144,8 @@ type StudyParams struct {
 
 // ValidationError represents a DICOM validation error
 type ValidationError struct {
-	Field string
-	Value interface{}
+	Field   string
+	Value   interface{}
 	Message string
 }
 

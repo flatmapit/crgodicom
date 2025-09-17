@@ -204,3 +204,361 @@
 {"level":"info","msg":"Performing C-ECHO request","time":"2025-09-17T14:55:54.520+10:00"}
 {"level":"info","msg":"Disconnected from PACS server","time":"2025-09-17T14:55:54.522+10:00"}
 {"level":"fatal","msg":"Application error: C-ECHO failed: failed to receive C-ECHO response: EOF","time":"2025-09-17T14:55:54.522+10:00"}
+{"level":"info","msg":"Sending study 1.2.840.10008.5.1.4.1.1.1758084608.4462841482011563283 to PACS localhost:4242 (AEC: DICOM_CLIENT, AET: PACS1)","time":"2025-09-17T15:00:10.248+10:00"}
+{"level":"info","msg":"Studies directory: studies, Retries: 3, Timeout: 30s","time":"2025-09-17T15:00:10.249+10:00"}
+{"level":"info","msg":"Connecting to PACS at localhost:4242","time":"2025-09-17T15:00:10.249+10:00"}
+{"level":"info","msg":"Connected to PACS server localhost:4242","time":"2025-09-17T15:00:10.251+10:00"}
+{"level":"info","msg":"Performing C-ECHO request","time":"2025-09-17T15:00:10.251+10:00"}
+{"level":"info","msg":"Disconnected from PACS server","time":"2025-09-17T15:00:10.254+10:00"}
+{"level":"fatal","msg":"Application error: C-ECHO failed: failed to receive C-ECHO response: EOF","time":"2025-09-17T15:00:10.254+10:00"}
+{"level":"fatal","msg":"Application error: flag provided but not defined: -pacs-host","time":"2025-09-17T15:08:01.767+10:00"}
+{"level":"info","msg":"Sending study 1.2.840.10008.5.1.4.1.1.1758084608.4462841482011563283 to PACS localhost:4900 (AEC: DICOM_CLIENT, AET: PACS1)","time":"2025-09-17T15:08:06.674+10:00"}
+{"level":"info","msg":"Studies directory: studies, Retries: 3, Timeout: 30s","time":"2025-09-17T15:08:06.674+10:00"}
+{"level":"info","msg":"Connecting to PACS at localhost:4900","time":"2025-09-17T15:08:06.674+10:00"}
+{"level":"info","msg":"TCP connection established to localhost:4900","time":"2025-09-17T15:08:06.677+10:00"}
+{"level":"info","msg":"Performing DICOM association negotiation","time":"2025-09-17T15:08:06.677+10:00"}
+{"level":"info","msg":"Sending study 1.2.840.10008.5.1.4.1.1.1758084608.4462841482011563283 to PACS localhost:4900 (AEC: DICOM_CLIENT, AET: PACS1)","time":"2025-09-17T15:09:17.328+10:00"}
+{"level":"info","msg":"Studies directory: studies, Retries: 3, Timeout: 30s","time":"2025-09-17T15:09:17.328+10:00"}
+{"level":"info","msg":"Connecting to PACS at localhost:4900","time":"2025-09-17T15:09:17.328+10:00"}
+{"level":"info","msg":"TCP connection established to localhost:4900","time":"2025-09-17T15:09:17.331+10:00"}
+{"level":"info","msg":"Performing DICOM association negotiation","time":"2025-09-17T15:09:17.331+10:00"}
+{"level":"fatal","msg":"Application error: failed to connect to PACS: DICOM association failed: association rejected: association rejected by server","time":"2025-09-17T15:09:17.333+10:00"}
+{"level":"info","msg":"Sending study 1.2.840.10008.5.1.4.1.1.1758084608.4462841482011563283 to PACS localhost:4900 (AEC: DICOM_CLIENT, AET: PACS1)","time":"2025-09-17T15:09:20.941+10:00"}
+{"level":"info","msg":"Studies directory: studies, Retries: 3, Timeout: 30s","time":"2025-09-17T15:09:20.941+10:00"}
+{"level":"info","msg":"Connecting to PACS at localhost:4900","time":"2025-09-17T15:09:20.941+10:00"}
+{"level":"info","msg":"TCP connection established to localhost:4900","time":"2025-09-17T15:09:20.943+10:00"}
+{"level":"info","msg":"Performing DICOM association negotiation","time":"2025-09-17T15:09:20.943+10:00"}
+{"level":"fatal","msg":"Application error: failed to connect to PACS: DICOM association failed: association rejected: association rejected by server","time":"2025-09-17T15:09:20.944+10:00"}
+{"level":"info","msg":"Sending study 1.2.840.10008.5.1.4.1.1.1758084608.4462841482011563283 to PACS localhost:4900 (AEC: DICOM_CLIENT, AET: PACS1)","time":"2025-09-17T15:09:29.132+10:00"}
+{"level":"info","msg":"Studies directory: studies, Retries: 3, Timeout: 30s","time":"2025-09-17T15:09:29.132+10:00"}
+{"level":"info","msg":"Connecting to PACS at localhost:4900","time":"2025-09-17T15:09:29.132+10:00"}
+{"level":"info","msg":"TCP connection established to localhost:4900","time":"2025-09-17T15:09:29.134+10:00"}
+{"level":"info","msg":"Performing DICOM association negotiation","time":"2025-09-17T15:09:29.134+10:00"}
+{"level":"fatal","msg":"Application error: failed to connect to PACS: DICOM association failed: association rejected: association rejected by server","time":"2025-09-17T15:09:29.136+10:00"}
+{"level":"info","msg":"Sending study 1.2.840.10008.5.1.4.1.1.1758084608.4462841482011563283 to PACS localhost:4900 (AEC: DICOM_CLIENT, AET: PACS1)","time":"2025-09-17T15:10:24.772+10:00"}
+{"level":"info","msg":"Studies directory: studies, Retries: 3, Timeout: 30s","time":"2025-09-17T15:10:24.772+10:00"}
+{"level":"info","msg":"Connecting to PACS at localhost:4900","time":"2025-09-17T15:10:24.772+10:00"}
+{"level":"info","msg":"TCP connection established to localhost:4900","time":"2025-09-17T15:10:24.775+10:00"}
+{"level":"info","msg":"Performing DICOM association negotiation","time":"2025-09-17T15:10:24.775+10:00"}
+{"level":"debug","msg":"Sending association request: 603 bytes, first 10 bytes: 01000000025510000000","time":"2025-09-17T15:10:24.775+10:00"}
+{"level":"debug","msg":"PDU Type: 01 (decimal: 1)","time":"2025-09-17T15:10:24.775+10:00"}
+{"level":"fatal","msg":"Application error: failed to connect to PACS: DICOM association failed: association rejected: association rejected by server","time":"2025-09-17T15:10:24.778+10:00"}
+{"level":"info","msg":"Sending study 1.2.840.10008.5.1.4.1.1.1758084608.4462841482011563283 to PACS localhost:4900 (AEC: DICOM_CLIENT, AET: PACS1)","time":"2025-09-17T15:10:36.259+10:00"}
+{"level":"info","msg":"Studies directory: studies, Retries: 3, Timeout: 30s","time":"2025-09-17T15:10:36.259+10:00"}
+{"level":"info","msg":"Connecting to PACS at localhost:4900","time":"2025-09-17T15:10:36.259+10:00"}
+{"level":"info","msg":"TCP connection established to localhost:4900","time":"2025-09-17T15:10:36.261+10:00"}
+{"level":"info","msg":"Performing DICOM association negotiation","time":"2025-09-17T15:10:36.261+10:00"}
+{"level":"debug","msg":"Sending association request: 603 bytes, first 10 bytes: 01000000025510000000","time":"2025-09-17T15:10:36.261+10:00"}
+{"level":"debug","msg":"PDU Type: 01 (decimal: 1)","time":"2025-09-17T15:10:36.261+10:00"}
+{"level":"fatal","msg":"Application error: failed to connect to PACS: DICOM association failed: association rejected: association rejected by server","time":"2025-09-17T15:10:36.263+10:00"}
+{"level":"info","msg":"Sending study 1.2.840.10008.5.1.4.1.1.1758084608.4462841482011563283 to PACS localhost:4242 (AEC: DICOM_CLIENT, AET: PACS1)","time":"2025-09-17T15:15:13.777+10:00"}
+{"level":"info","msg":"Studies directory: studies, Retries: 3, Timeout: 30s","time":"2025-09-17T15:15:13.778+10:00"}
+{"level":"info","msg":"Connecting to PACS at localhost:4242","time":"2025-09-17T15:15:13.778+10:00"}
+{"level":"info","msg":"TCP connection established to localhost:4242","time":"2025-09-17T15:15:13.782+10:00"}
+{"level":"info","msg":"Performing DICOM association negotiation","time":"2025-09-17T15:15:13.782+10:00"}
+{"level":"debug","msg":"Sending association request: 611 bytes, first 10 bytes: 01000000025D50000004","time":"2025-09-17T15:15:13.782+10:00"}
+{"level":"debug","msg":"PDU Type: 01 (decimal: 1)","time":"2025-09-17T15:15:13.782+10:00"}
+{"level":"fatal","msg":"Application error: failed to connect to PACS: DICOM association failed: association rejected: association rejected by server","time":"2025-09-17T15:15:13.785+10:00"}
+{"level":"info","msg":"Creating 1 study(ies) with 1 series each and 2 images per series","time":"2025-09-17T15:16:16.541+10:00"}
+{"level":"info","msg":"Modality: CR, Region: chest, Output: studies","time":"2025-09-17T15:16:16.542+10:00"}
+{"level":"info","msg":"Writing study 1.2.840.10008.5.1.4.1.1.1758086176.4882365503335314686 to studies/1.2.840.10008.5.1.4.1.1.1758086176.4882365503335314686","time":"2025-09-17T15:16:16.574+10:00"}
+{"level":"info","msg":"Study metadata: UID=1.2.840.10008.5.1.4.1.1.1758086176.4882365503335314686, Patient=DOE^JOHN (XR001), Description=Chest X-Ray PA and Lateral","time":"2025-09-17T15:16:16.574+10:00"}
+{"level":"info","msg":"Writing series 1.2.840.10008.5.1.4.1.1.1758086176.587596024911997120 with 2 images","time":"2025-09-17T15:16:16.574+10:00"}
+{"level":"fatal","msg":"Application error: failed to write study 1: failed to write series 1: failed to write image 1: failed to write DICOM file: ValueType does not match the specified type in the VR","time":"2025-09-17T15:16:16.575+10:00"}
+{"level":"info","msg":"Creating 1 study(ies) with 1 series each and 2 images per series","time":"2025-09-17T15:16:26.113+10:00"}
+{"level":"info","msg":"Modality: CR, Region: chest, Output: studies","time":"2025-09-17T15:16:26.113+10:00"}
+{"level":"info","msg":"Writing study 1.2.840.10008.5.1.4.1.1.1758086186.7256380701948490234 to studies/1.2.840.10008.5.1.4.1.1.1758086186.7256380701948490234","time":"2025-09-17T15:16:26.146+10:00"}
+{"level":"info","msg":"Study metadata: UID=1.2.840.10008.5.1.4.1.1.1758086186.7256380701948490234, Patient=DOE^JOHN (XR001), Description=Chest X-Ray PA and Lateral","time":"2025-09-17T15:16:26.146+10:00"}
+{"level":"info","msg":"Writing series 1.2.840.10008.5.1.4.1.1.1758086186.679465330368728940 with 2 images","time":"2025-09-17T15:16:26.146+10:00"}
+{"level":"fatal","msg":"Application error: failed to write study 1: failed to write series 1: failed to write image 1: failed to write DICOM file: ValueType does not match the specified type in the VR","time":"2025-09-17T15:16:26.146+10:00"}
+{"level":"info","msg":"Sending study 1.2.840.10008.5.1.4.1.1.1758084608.4462841482011563283 to PACS localhost:4242 (AEC: DICOM_CLIENT, AET: PACS1)","time":"2025-09-17T15:17:02.216+10:00"}
+{"level":"info","msg":"Studies directory: studies, Retries: 3, Timeout: 30s","time":"2025-09-17T15:17:02.216+10:00"}
+{"level":"info","msg":"Connecting to PACS at localhost:4242","time":"2025-09-17T15:17:02.216+10:00"}
+{"level":"info","msg":"TCP connection established to localhost:4242","time":"2025-09-17T15:17:02.218+10:00"}
+{"level":"info","msg":"Performing DICOM association negotiation","time":"2025-09-17T15:17:02.218+10:00"}
+{"level":"fatal","msg":"Application error: failed to connect to PACS: DICOM association failed: association rejected: association rejected by server","time":"2025-09-17T15:17:02.219+10:00"}
+{"level":"info","msg":"Sending study 1.2.840.10008.5.1.4.1.1.1758084608.4462841482011563283 to PACS localhost:4242 (AEC: DICOM_CLIENT, AET: PACS1)","time":"2025-09-17T15:19:35.022+10:00"}
+{"level":"info","msg":"Studies directory: studies, Retries: 3, Timeout: 30s","time":"2025-09-17T15:19:35.022+10:00"}
+{"level":"info","msg":"Connecting to PACS at localhost:4242","time":"2025-09-17T15:19:35.022+10:00"}
+{"level":"info","msg":"TCP connection established to localhost:4242","time":"2025-09-17T15:19:35.026+10:00"}
+{"level":"info","msg":"Performing DICOM association negotiation","time":"2025-09-17T15:19:35.026+10:00"}
+{"level":"debug","msg":"Sending association request: 609 bytes, first 10 bytes: 01000000025B50000002","time":"2025-09-17T15:19:35.026+10:00"}
+{"level":"debug","msg":"PDU Type: 01 (decimal: 1)","time":"2025-09-17T15:19:35.026+10:00"}
+{"level":"fatal","msg":"Application error: failed to connect to PACS: DICOM association failed: association rejected: association rejected by server","time":"2025-09-17T15:19:35.028+10:00"}
+{"level":"info","msg":"Sending C-ECHO to PACS localhost:4242 (AEC: DICOM_CLIENT, AET: PACS1)","time":"2025-09-17T15:21:12.218+10:00"}
+{"level":"info","msg":"Establishing DICOM association...","time":"2025-09-17T15:21:12.218+10:00"}
+{"level":"info","msg":"Connecting to PACS at localhost:4242","time":"2025-09-17T15:21:12.218+10:00"}
+{"level":"info","msg":"TCP connection established to localhost:4242","time":"2025-09-17T15:21:12.221+10:00"}
+{"level":"info","msg":"Performing DICOM association negotiation","time":"2025-09-17T15:21:12.221+10:00"}
+{"level":"debug","msg":"Sending association request: 603 bytes, first 10 bytes: 01000000025510000000","time":"2025-09-17T15:21:12.221+10:00"}
+{"level":"debug","msg":"PDU Type: 01 (decimal: 1)","time":"2025-09-17T15:21:12.221+10:00"}
+{"level":"fatal","msg":"Application error: DICOM association failed: association rejected: association rejected by server","time":"2025-09-17T15:21:12.223+10:00"}
+{"level":"info","msg":"Sending C-ECHO to PACS localhost:4242 (AEC: DICOM_CLIENT, AET: PACS1)","time":"2025-09-17T15:24:23.658+10:00"}
+{"level":"info","msg":"Establishing DICOM association...","time":"2025-09-17T15:24:23.658+10:00"}
+{"level":"info","msg":"Connecting to PACS at localhost:4242","time":"2025-09-17T15:24:23.658+10:00"}
+{"level":"info","msg":"TCP connection established to localhost:4242","time":"2025-09-17T15:24:23.661+10:00"}
+{"level":"info","msg":"Performing DICOM association negotiation","time":"2025-09-17T15:24:23.661+10:00"}
+{"level":"debug","msg":"Sending association request: 149 bytes, first 10 bytes: 01000000008F00010000","time":"2025-09-17T15:24:23.661+10:00"}
+{"level":"debug","msg":"PDU Type: 01 (decimal: 1)","time":"2025-09-17T15:24:23.661+10:00"}
+{"level":"info","msg":"Association accepted by server","time":"2025-09-17T15:24:23.663+10:00"}
+{"level":"info","msg":"DICOM association established successfully","time":"2025-09-17T15:24:23.663+10:00"}
+{"level":"info","msg":"DICOM association established with localhost:4242 (AET: PACS1)","time":"2025-09-17T15:24:23.663+10:00"}
+{"level":"info","msg":"DICOM association established successfully","time":"2025-09-17T15:24:23.663+10:00"}
+{"level":"info","msg":"Sending C-ECHO request...","time":"2025-09-17T15:24:23.663+10:00"}
+{"level":"info","msg":"Performing C-ECHO request","time":"2025-09-17T15:24:23.663+10:00"}
+{"level":"debug","msg":"Sending C-ECHO DIMSE command","time":"2025-09-17T15:24:23.663+10:00"}
+{"level":"info","msg":"Releasing DICOM association","time":"2025-09-17T15:24:23.665+10:00"}
+{"level":"info","msg":"Disconnected from PACS server","time":"2025-09-17T15:24:53.675+10:00"}
+{"level":"fatal","msg":"Application error: C-ECHO failed: DIMSE command failed: unexpected PDU type in response: 7","time":"2025-09-17T15:24:53.675+10:00"}
+{"level":"info","msg":"Creating 1 study(ies) with 2 series each and 3 images per series","time":"2025-09-17T15:26:39.401+10:00"}
+{"level":"info","msg":"Modality: CT, Region: chest, Output: studies","time":"2025-09-17T15:26:39.401+10:00"}
+{"level":"info","msg":"Writing study 1.2.840.10008.5.1.4.1.1.1758086799.4518613181541466739 to studies/1.2.840.10008.5.1.4.1.1.1758086799.4518613181541466739","time":"2025-09-17T15:26:39.408+10:00"}
+{"level":"info","msg":"Study metadata: UID=1.2.840.10008.5.1.4.1.1.1758086799.4518613181541466739, Patient=CT_PATIENT^JOHN (CT001), Description=CT Chest with Contrast","time":"2025-09-17T15:26:39.408+10:00"}
+{"level":"info","msg":"Writing series 1.2.840.10008.5.1.4.1.1.1758086799.7318147020793302780 with 3 images","time":"2025-09-17T15:26:39.408+10:00"}
+{"level":"fatal","msg":"Application error: failed to write study 1: failed to write series 1: failed to write image 1: failed to write DICOM file: ValueType does not match the specified type in the VR","time":"2025-09-17T15:26:39.408+10:00"}
+{"level":"info","msg":"Sending study 1.2.840.10008.5.1.4.1.1.1758083884.615900210705117783 to PACS localhost:4242 (AEC: DICOM_CLIENT, AET: PACS1)","time":"2025-09-17T15:27:25.869+10:00"}
+{"level":"info","msg":"Studies directory: studies, Retries: 3, Timeout: 30s","time":"2025-09-17T15:27:25.869+10:00"}
+{"level":"info","msg":"Connecting to PACS at localhost:4242","time":"2025-09-17T15:27:25.869+10:00"}
+{"level":"info","msg":"TCP connection established to localhost:4242","time":"2025-09-17T15:27:25.872+10:00"}
+{"level":"info","msg":"Performing DICOM association negotiation","time":"2025-09-17T15:27:25.872+10:00"}
+{"level":"info","msg":"Association accepted by server","time":"2025-09-17T15:27:25.874+10:00"}
+{"level":"info","msg":"DICOM association established successfully","time":"2025-09-17T15:27:25.874+10:00"}
+{"level":"info","msg":"DICOM association established with localhost:4242 (AET: PACS1)","time":"2025-09-17T15:27:25.874+10:00"}
+{"level":"info","msg":"Performing C-ECHO request","time":"2025-09-17T15:27:25.874+10:00"}
+{"level":"info","msg":"Releasing DICOM association","time":"2025-09-17T15:27:25.875+10:00"}
+{"level":"info","msg":"Disconnected from PACS server","time":"2025-09-17T15:27:55.906+10:00"}
+{"level":"fatal","msg":"Application error: C-ECHO failed: C-ECHO failed: DIMSE command failed: unexpected PDU type in response: 7","time":"2025-09-17T15:27:55.906+10:00"}
+{"level":"info","msg":"Sending C-ECHO to PACS localhost:4242 (AEC: DICOM_CLIENT, AET: PACS1)","time":"2025-09-17T15:28:15.587+10:00"}
+{"level":"info","msg":"Establishing DICOM association...","time":"2025-09-17T15:28:15.588+10:00"}
+{"level":"info","msg":"Connecting to PACS at localhost:4242","time":"2025-09-17T15:28:15.588+10:00"}
+{"level":"info","msg":"TCP connection established to localhost:4242","time":"2025-09-17T15:28:15.590+10:00"}
+{"level":"info","msg":"Performing DICOM association negotiation","time":"2025-09-17T15:28:15.590+10:00"}
+{"level":"info","msg":"Association accepted by server","time":"2025-09-17T15:28:15.592+10:00"}
+{"level":"info","msg":"DICOM association established successfully","time":"2025-09-17T15:28:15.592+10:00"}
+{"level":"info","msg":"DICOM association established with localhost:4242 (AET: PACS1)","time":"2025-09-17T15:28:15.592+10:00"}
+{"level":"info","msg":"DICOM association established successfully","time":"2025-09-17T15:28:15.592+10:00"}
+{"level":"info","msg":"Sending C-ECHO request...","time":"2025-09-17T15:28:15.592+10:00"}
+{"level":"info","msg":"Performing C-ECHO request","time":"2025-09-17T15:28:15.592+10:00"}
+{"level":"info","msg":"Releasing DICOM association","time":"2025-09-17T15:28:15.593+10:00"}
+{"level":"info","msg":"Disconnected from PACS server","time":"2025-09-17T15:28:45.626+10:00"}
+{"level":"fatal","msg":"Application error: C-ECHO failed: DIMSE command failed: unexpected PDU type in response: 7","time":"2025-09-17T15:28:45.626+10:00"}
+{"level":"info","msg":"Sending study 1.2.840.10008.5.1.4.1.1.1758083884.615900210705117783 to PACS localhost:4242 (AEC: DICOM_CLIENT, AET: PACS1)","time":"2025-09-17T15:40:36.903+10:00"}
+{"level":"info","msg":"Studies directory: studies, Retries: 3, Timeout: 30s","time":"2025-09-17T15:40:36.903+10:00"}
+{"level":"info","msg":"Connecting to PACS at localhost:4242","time":"2025-09-17T15:40:36.903+10:00"}
+{"level":"info","msg":"TCP connection established to localhost:4242","time":"2025-09-17T15:40:36.906+10:00"}
+{"level":"info","msg":"Performing DICOM association negotiation","time":"2025-09-17T15:40:36.906+10:00"}
+{"level":"debug","msg":"Sending association request: 561 bytes, first 10 bytes: 01000000022B00010000","time":"2025-09-17T15:40:36.906+10:00"}
+{"level":"debug","msg":"PDU Type: 01 (decimal: 1)","time":"2025-09-17T15:40:36.906+10:00"}
+{"level":"info","msg":"Association accepted by server","time":"2025-09-17T15:40:36.907+10:00"}
+{"level":"info","msg":"DICOM association established successfully","time":"2025-09-17T15:40:36.907+10:00"}
+{"level":"info","msg":"DICOM association established with localhost:4242 (AET: PACS1)","time":"2025-09-17T15:40:36.907+10:00"}
+{"level":"info","msg":"Performing C-ECHO request","time":"2025-09-17T15:40:36.907+10:00"}
+{"level":"debug","msg":"Sending C-ECHO DIMSE command","time":"2025-09-17T15:40:36.907+10:00"}
+{"level":"info","msg":"Releasing DICOM association","time":"2025-09-17T15:40:36.908+10:00"}
+{"level":"info","msg":"Disconnected from PACS server","time":"2025-09-17T15:41:06.945+10:00"}
+{"level":"fatal","msg":"Application error: C-ECHO failed: C-ECHO failed: DIMSE command failed: unexpected PDU type in response: 7","time":"2025-09-17T15:41:06.945+10:00"}
+{"level":"info","msg":"Sending study 1.2.840.10008.5.1.4.1.1.1758083884.615900210705117783 to PACS localhost:4242 (AEC: DICOM_CLIENT, AET: PACS1)","time":"2025-09-17T15:42:26.819+10:00"}
+{"level":"info","msg":"Found 4 DICOM files to send","time":"2025-09-17T15:42:26.819+10:00"}
+{"level":"info","msg":"Establishing DICOM association...","time":"2025-09-17T15:42:26.819+10:00"}
+{"level":"info","msg":"Connecting to PACS at localhost:4242","time":"2025-09-17T15:42:26.819+10:00"}
+{"level":"info","msg":"TCP connection established to localhost:4242","time":"2025-09-17T15:42:26.823+10:00"}
+{"level":"info","msg":"Performing DICOM association negotiation","time":"2025-09-17T15:42:26.823+10:00"}
+{"level":"debug","msg":"Sending association request: 561 bytes, first 10 bytes: 01000000022B00010000","time":"2025-09-17T15:42:26.823+10:00"}
+{"level":"debug","msg":"PDU Type: 01 (decimal: 1)","time":"2025-09-17T15:42:26.823+10:00"}
+{"level":"info","msg":"Association accepted by server","time":"2025-09-17T15:42:26.826+10:00"}
+{"level":"info","msg":"DICOM association established successfully","time":"2025-09-17T15:42:26.826+10:00"}
+{"level":"info","msg":"DICOM association established with localhost:4242 (AET: PACS1)","time":"2025-09-17T15:42:26.826+10:00"}
+{"level":"info","msg":"DICOM association established successfully - bypassing C-ECHO","time":"2025-09-17T15:42:26.826+10:00"}
+{"level":"info","msg":"Sending file 1/4: image_001.dcm","time":"2025-09-17T15:42:26.826+10:00"}
+{"level":"debug","msg":"Attempting C-STORE for SOP Instance UID: 1.2.840.10008.1.1.1758087746826310000","time":"2025-09-17T15:42:26.826+10:00"}
+{"level":"info","msg":"Performing C-STORE request for SOP Instance UID: 1.2.840.10008.1.1.1758087746826310000","time":"2025-09-17T15:42:26.826+10:00"}
+{"level":"error","msg":"C-STORE failed for studies/1.2.840.10008.5.1.4.1.1.1758083884.615900210705117783/series_001/image_001.dcm: DIMSE command failed: unexpected PDU type in response: 7","time":"2025-09-17T15:42:26.827+10:00"}
+{"level":"info","msg":"Sending file 2/4: image_002.dcm","time":"2025-09-17T15:42:26.827+10:00"}
+{"level":"debug","msg":"Attempting C-STORE for SOP Instance UID: 1.2.840.10008.1.1.1758087746827383000","time":"2025-09-17T15:42:26.827+10:00"}
+{"level":"info","msg":"Performing C-STORE request for SOP Instance UID: 1.2.840.10008.1.1.1758087746827383000","time":"2025-09-17T15:42:26.827+10:00"}
+{"level":"error","msg":"C-STORE failed for studies/1.2.840.10008.5.1.4.1.1.1758083884.615900210705117783/series_001/image_002.dcm: failed to read DIMSE response: EOF","time":"2025-09-17T15:42:56.835+10:00"}
+{"level":"info","msg":"Sending file 3/4: image_001.dcm","time":"2025-09-17T15:42:56.836+10:00"}
+{"level":"debug","msg":"Attempting C-STORE for SOP Instance UID: 1.2.840.10008.1.1.1758087776836137000","time":"2025-09-17T15:42:56.836+10:00"}
+{"level":"info","msg":"Performing C-STORE request for SOP Instance UID: 1.2.840.10008.1.1.1758087776836137000","time":"2025-09-17T15:42:56.836+10:00"}
+{"level":"error","msg":"C-STORE failed for studies/1.2.840.10008.5.1.4.1.1.1758083884.615900210705117783/series_002/image_001.dcm: failed to read DIMSE response: EOF","time":"2025-09-17T15:42:56.836+10:00"}
+{"level":"info","msg":"Sending file 4/4: image_002.dcm","time":"2025-09-17T15:42:56.836+10:00"}
+{"level":"debug","msg":"Attempting C-STORE for SOP Instance UID: 1.2.840.10008.1.1.1758087776836285000","time":"2025-09-17T15:42:56.836+10:00"}
+{"level":"info","msg":"Performing C-STORE request for SOP Instance UID: 1.2.840.10008.1.1.1758087776836285000","time":"2025-09-17T15:42:56.836+10:00"}
+{"level":"error","msg":"C-STORE failed for studies/1.2.840.10008.5.1.4.1.1.1758083884.615900210705117783/series_002/image_002.dcm: failed to read DIMSE response: EOF","time":"2025-09-17T15:42:56.836+10:00"}
+{"level":"info","msg":"Releasing DICOM association","time":"2025-09-17T15:42:56.836+10:00"}
+{"level":"info","msg":"Disconnected from PACS server","time":"2025-09-17T15:42:56.836+10:00"}
+{"level":"fatal","msg":"Application error: failed to send any DICOM files","time":"2025-09-17T15:42:56.836+10:00"}
+{"level":"info","msg":"Sending C-ECHO to PACS localhost:4242 (AEC: DICOM_CLIENT, AET: PACS1)","time":"2025-09-17T15:55:11.744+10:00"}
+{"level":"info","msg":"Establishing DICOM association...","time":"2025-09-17T15:55:11.744+10:00"}
+{"level":"info","msg":"Connecting to PACS at localhost:4242","time":"2025-09-17T15:55:11.744+10:00"}
+{"level":"info","msg":"TCP connection established to localhost:4242","time":"2025-09-17T15:55:11.747+10:00"}
+{"level":"info","msg":"Performing DICOM association negotiation","time":"2025-09-17T15:55:11.747+10:00"}
+{"level":"debug","msg":"Sending association request: 561 bytes, first 10 bytes: 01000000022B00010000","time":"2025-09-17T15:55:11.747+10:00"}
+{"level":"debug","msg":"PDU Type: 01 (decimal: 1)","time":"2025-09-17T15:55:11.747+10:00"}
+{"level":"info","msg":"Association accepted by server","time":"2025-09-17T15:55:11.750+10:00"}
+{"level":"info","msg":"DICOM association established successfully","time":"2025-09-17T15:55:11.750+10:00"}
+{"level":"info","msg":"DICOM association established with localhost:4242 (AET: PACS1)","time":"2025-09-17T15:55:11.750+10:00"}
+{"level":"info","msg":"DICOM association established successfully","time":"2025-09-17T15:55:11.750+10:00"}
+{"level":"info","msg":"Sending C-ECHO request...","time":"2025-09-17T15:55:11.750+10:00"}
+{"level":"info","msg":"Performing C-ECHO request","time":"2025-09-17T15:55:11.750+10:00"}
+{"level":"info","msg":"Sending simplified C-ECHO request","time":"2025-09-17T15:55:11.750+10:00"}
+{"level":"info","msg":"Releasing DICOM association","time":"2025-09-17T15:55:11.750+10:00"}
+{"level":"info","msg":"Disconnected from PACS server","time":"2025-09-17T15:56:15.391+10:00"}
+{"level":"info","msg":"Sending C-ECHO to PACS localhost:4242 (AEC: DICOM_CLIENT, AET: PACS1)","time":"2025-09-17T15:56:55.317+10:00"}
+{"level":"info","msg":"Establishing DICOM association...","time":"2025-09-17T15:56:55.317+10:00"}
+{"level":"info","msg":"Connecting to PACS at localhost:4242","time":"2025-09-17T15:56:55.317+10:00"}
+{"level":"info","msg":"TCP connection established to localhost:4242","time":"2025-09-17T15:56:55.323+10:00"}
+{"level":"info","msg":"Performing DICOM association negotiation","time":"2025-09-17T15:56:55.323+10:00"}
+{"level":"debug","msg":"Sending association request: 561 bytes, first 10 bytes: 01000000022B00010000","time":"2025-09-17T15:56:55.323+10:00"}
+{"level":"debug","msg":"PDU Type: 01 (decimal: 1)","time":"2025-09-17T15:56:55.323+10:00"}
+{"level":"info","msg":"Association accepted by server","time":"2025-09-17T15:56:55.326+10:00"}
+{"level":"info","msg":"DICOM association established successfully","time":"2025-09-17T15:56:55.326+10:00"}
+{"level":"info","msg":"DICOM association established with localhost:4242 (AET: PACS1)","time":"2025-09-17T15:56:55.326+10:00"}
+{"level":"info","msg":"DICOM association established successfully","time":"2025-09-17T15:56:55.326+10:00"}
+{"level":"info","msg":"Sending C-ECHO request...","time":"2025-09-17T15:56:55.326+10:00"}
+{"level":"info","msg":"Performing C-ECHO request","time":"2025-09-17T15:56:55.326+10:00"}
+{"level":"info","msg":"Sending simplified C-ECHO request","time":"2025-09-17T15:56:55.326+10:00"}
+{"level":"debug","msg":"Sending P-DATA-TF: 68 bytes, PC=1, MCH=0x03","time":"2025-09-17T15:56:55.326+10:00"}
+{"level":"debug","msg":"Received response: 10 bytes, PDU type: 0x07","time":"2025-09-17T15:56:55.328+10:00"}
+{"level":"info","msg":"Releasing DICOM association","time":"2025-09-17T15:56:55.328+10:00"}
+{"level":"info","msg":"Disconnected from PACS server","time":"2025-09-17T15:57:05.328+10:00"}
+{"level":"fatal","msg":"Application error: C-ECHO failed: received A-ABORT from PACS","time":"2025-09-17T15:57:05.328+10:00"}
+{"level":"info","msg":"Testing DICOM association to PACS localhost:4242 (AEC: DICOM_CLIENT, AET: PACS1)","time":"2025-09-17T15:57:54.529+10:00"}
+{"level":"info","msg":"Establishing DICOM association...","time":"2025-09-17T15:57:54.529+10:00"}
+{"level":"info","msg":"Connecting to PACS at localhost:4242","time":"2025-09-17T15:57:54.529+10:00"}
+{"level":"info","msg":"TCP connection established to localhost:4242","time":"2025-09-17T15:57:54.532+10:00"}
+{"level":"info","msg":"Performing DICOM association negotiation","time":"2025-09-17T15:57:54.532+10:00"}
+{"level":"debug","msg":"Sending association request: 561 bytes, first 10 bytes: 01000000022B00010000","time":"2025-09-17T15:57:54.532+10:00"}
+{"level":"debug","msg":"PDU Type: 01 (decimal: 1)","time":"2025-09-17T15:57:54.532+10:00"}
+{"level":"info","msg":"Association accepted by server","time":"2025-09-17T15:57:54.534+10:00"}
+{"level":"info","msg":"DICOM association established successfully","time":"2025-09-17T15:57:54.534+10:00"}
+{"level":"info","msg":"DICOM association established with localhost:4242 (AET: PACS1)","time":"2025-09-17T15:57:54.534+10:00"}
+{"level":"info","msg":"✅ DICOM association established successfully!","time":"2025-09-17T15:57:54.534+10:00"}
+{"level":"info","msg":"✅ Association negotiation complete","time":"2025-09-17T15:57:54.534+10:00"}
+{"level":"info","msg":"✅ Ready for DIMSE commands","time":"2025-09-17T15:57:54.534+10:00"}
+{"level":"info","msg":"Releasing DICOM association...","time":"2025-09-17T15:57:56.535+10:00"}
+{"level":"info","msg":"Releasing DICOM association","time":"2025-09-17T15:57:56.535+10:00"}
+{"level":"info","msg":"Disconnected from PACS server","time":"2025-09-17T15:58:59.234+10:00"}
+{"level":"info","msg":"✅ Association test completed successfully","time":"2025-09-17T15:58:59.234+10:00"}
+{"level":"info","msg":"Creating 1 study(ies) with 2 series each and 2 images per series","time":"2025-09-17T16:25:33.822+10:00"}
+{"level":"info","msg":"Modality: CT, Region: chest, Output: studies","time":"2025-09-17T16:25:33.822+10:00"}
+{"level":"info","msg":"Writing study 1.2.840.10008.5.1.4.1.1.1758090333.5958708120879394183 to studies/1.2.840.10008.5.1.4.1.1.1758090333.5958708120879394183","time":"2025-09-17T16:25:33.826+10:00"}
+{"level":"info","msg":"Study metadata: UID=1.2.840.10008.5.1.4.1.1.1758090333.5958708120879394183, Patient=FIXED_CT^PATIENT (CT_FIXED_001), Description=CT Study with Correct SOP Class","time":"2025-09-17T16:25:33.826+10:00"}
+{"level":"info","msg":"Writing series 1.2.840.10008.5.1.4.1.1.1758090333.188122330178188784 with 2 images","time":"2025-09-17T16:25:33.826+10:00"}
+{"level":"fatal","msg":"Application error: failed to write study 1: failed to write series 1: failed to write image 1: failed to write DICOM file: ValueType does not match the specified type in the VR","time":"2025-09-17T16:25:33.826+10:00"}
+{"level":"info","msg":"Sending study 1.2.840.10008.5.1.4.1.1.1758083884.615900210705117783 to PACS localhost:4242 (AEC: DICOM_CLIENT, AET: PACS1)","time":"2025-09-17T16:26:10.291+10:00"}
+{"level":"info","msg":"Found 4 DICOM files to send","time":"2025-09-17T16:26:10.291+10:00"}
+{"level":"info","msg":"Establishing DICOM association...","time":"2025-09-17T16:26:10.291+10:00"}
+{"level":"info","msg":"Connecting to PACS at localhost:4242","time":"2025-09-17T16:26:10.291+10:00"}
+{"level":"info","msg":"TCP connection established to localhost:4242","time":"2025-09-17T16:26:10.294+10:00"}
+{"level":"info","msg":"Performing DICOM association negotiation","time":"2025-09-17T16:26:10.294+10:00"}
+{"level":"debug","msg":"Sending association request: 561 bytes, first 10 bytes: 01000000022B00010000","time":"2025-09-17T16:26:10.294+10:00"}
+{"level":"debug","msg":"PDU Type: 01 (decimal: 1)","time":"2025-09-17T16:26:10.294+10:00"}
+{"level":"info","msg":"Association accepted by server","time":"2025-09-17T16:26:10.295+10:00"}
+{"level":"info","msg":"DICOM association established successfully","time":"2025-09-17T16:26:10.295+10:00"}
+{"level":"info","msg":"DICOM association established with localhost:4242 (AET: PACS1)","time":"2025-09-17T16:26:10.295+10:00"}
+{"level":"info","msg":"DICOM association established successfully - bypassing C-ECHO","time":"2025-09-17T16:26:10.295+10:00"}
+{"level":"info","msg":"Sending file 1/4: image_001.dcm","time":"2025-09-17T16:26:10.295+10:00"}
+{"level":"debug","msg":"Attempting C-STORE for SOP Instance UID: 1.2.840.10008.1.1.1758090370295894000","time":"2025-09-17T16:26:10.295+10:00"}
+{"level":"info","msg":"Performing C-STORE request for SOP Instance UID: 1.2.840.10008.1.1.1758090370295894000","time":"2025-09-17T16:26:10.295+10:00"}
+{"level":"info","msg":"Sending C-STORE for SOP Instance: 1.2.840.10008.1.1.1758090370295894000","time":"2025-09-17T16:26:10.295+10:00"}
+{"level":"debug","msg":"Sending P-DATA-TF: 120 bytes, PC=15, MCH=0x01","time":"2025-09-17T16:26:10.295+10:00"}
+{"level":"error","msg":"C-STORE failed for studies/1.2.840.10008.5.1.4.1.1.1758083884.615900210705117783/series_001/image_001.dcm: C-STORE failed: failed to send C-STORE command: failed to read response: read tcp [::1]:54246-\u003e[::1]:4242: i/o timeout","time":"2025-09-17T16:26:20.297+10:00"}
+{"level":"info","msg":"Sending file 2/4: image_002.dcm","time":"2025-09-17T16:26:20.297+10:00"}
+{"level":"debug","msg":"Attempting C-STORE for SOP Instance UID: 1.2.840.10008.1.1.1758090380297453000","time":"2025-09-17T16:26:20.297+10:00"}
+{"level":"info","msg":"Performing C-STORE request for SOP Instance UID: 1.2.840.10008.1.1.1758090380297453000","time":"2025-09-17T16:26:20.297+10:00"}
+{"level":"info","msg":"Sending C-STORE for SOP Instance: 1.2.840.10008.1.1.1758090380297453000","time":"2025-09-17T16:26:20.297+10:00"}
+{"level":"debug","msg":"Sending P-DATA-TF: 120 bytes, PC=15, MCH=0x01","time":"2025-09-17T16:26:20.297+10:00"}
+{"level":"error","msg":"C-STORE failed for studies/1.2.840.10008.5.1.4.1.1.1758083884.615900210705117783/series_001/image_002.dcm: C-STORE failed: failed to send C-STORE command: failed to read response: read tcp [::1]:54246-\u003e[::1]:4242: i/o timeout","time":"2025-09-17T16:26:30.298+10:00"}
+{"level":"info","msg":"Sending file 3/4: image_001.dcm","time":"2025-09-17T16:26:30.298+10:00"}
+{"level":"debug","msg":"Attempting C-STORE for SOP Instance UID: 1.2.840.10008.1.1.1758090390299087000","time":"2025-09-17T16:26:30.299+10:00"}
+{"level":"info","msg":"Performing C-STORE request for SOP Instance UID: 1.2.840.10008.1.1.1758090390299087000","time":"2025-09-17T16:26:30.299+10:00"}
+{"level":"info","msg":"Sending C-STORE for SOP Instance: 1.2.840.10008.1.1.1758090390299087000","time":"2025-09-17T16:26:30.299+10:00"}
+{"level":"debug","msg":"Sending P-DATA-TF: 120 bytes, PC=15, MCH=0x01","time":"2025-09-17T16:26:30.299+10:00"}
+{"level":"error","msg":"C-STORE failed for studies/1.2.840.10008.5.1.4.1.1.1758083884.615900210705117783/series_002/image_001.dcm: C-STORE failed: failed to send C-STORE command: failed to read response: read tcp [::1]:54246-\u003e[::1]:4242: i/o timeout","time":"2025-09-17T16:26:40.300+10:00"}
+{"level":"info","msg":"Sending file 4/4: image_002.dcm","time":"2025-09-17T16:26:40.300+10:00"}
+{"level":"debug","msg":"Attempting C-STORE for SOP Instance UID: 1.2.840.10008.1.1.1758090400301035000","time":"2025-09-17T16:26:40.301+10:00"}
+{"level":"info","msg":"Performing C-STORE request for SOP Instance UID: 1.2.840.10008.1.1.1758090400301035000","time":"2025-09-17T16:26:40.301+10:00"}
+{"level":"info","msg":"Sending C-STORE for SOP Instance: 1.2.840.10008.1.1.1758090400301035000","time":"2025-09-17T16:26:40.301+10:00"}
+{"level":"debug","msg":"Sending P-DATA-TF: 120 bytes, PC=15, MCH=0x01","time":"2025-09-17T16:26:40.301+10:00"}
+{"level":"debug","msg":"Received response: 10 bytes, PDU type: 0x07","time":"2025-09-17T16:26:43.315+10:00"}
+{"level":"error","msg":"C-STORE failed for studies/1.2.840.10008.5.1.4.1.1.1758083884.615900210705117783/series_002/image_002.dcm: C-STORE failed: failed to send C-STORE command: received A-ABORT from PACS","time":"2025-09-17T16:26:43.315+10:00"}
+{"level":"info","msg":"Releasing DICOM association","time":"2025-09-17T16:26:43.315+10:00"}
+{"level":"info","msg":"Disconnected from PACS server","time":"2025-09-17T16:26:50.302+10:00"}
+{"level":"fatal","msg":"Application error: failed to send any DICOM files","time":"2025-09-17T16:26:50.302+10:00"}
+{"level":"info","msg":"Sending study 1.2.840.10008.5.1.4.1.1.1758083884.615900210705117783 using DCMTK storescu to PACS localhost:4242","time":"2025-09-17T16:38:52.055+10:00"}
+{"level":"info","msg":"Found 4 DICOM files to send via DCMTK","time":"2025-09-17T16:38:52.056+10:00"}
+{"level":"info","msg":"Testing PACS connectivity with DCMTK echoscu...","time":"2025-09-17T16:38:52.056+10:00"}
+{"level":"info","msg":"✅ PACS connectivity confirmed with DCMTK echoscu","time":"2025-09-17T16:38:52.082+10:00"}
+{"level":"info","msg":"Sending file 1/4 via DCMTK storescu: image_001.dcm","time":"2025-09-17T16:38:52.082+10:00"}
+{"level":"info","msg":"✅ Successfully sent image_001.dcm via DCMTK storescu","time":"2025-09-17T16:38:52.108+10:00"}
+{"level":"info","msg":"Sending file 2/4 via DCMTK storescu: image_002.dcm","time":"2025-09-17T16:38:52.108+10:00"}
+{"level":"error","msg":"Failed to send image_002.dcm via DCMTK: storescu failed: exit status 1\nOutput: I: checking input files ...\nI: Requesting Association\nI: Association Accepted (Max Send PDV: 16372)\nI: Sending file: studies/1.2.840.10008.5.1.4.1.1.1758083884.615900210705117783/series_001/image_002.dcm\nW: DcmItem: Dataset not in ascending tag order, at element (0008,0020)\nW: DcmItem: Dataset not in ascending tag order, at element (0008,0030)\nW: DcmItem: Dataset not in ascending tag order, at element (0008,1030)\nW: DcmItem: Dataset not in ascending tag order, at element (0008,0050)\nW: DcmItem: Dataset not in ascending tag order, at element (0008,0060)\nW: DcmItem: Dataset not in ascending tag order, at element (0008,103e)\nW: DcmItem: Dataset not in ascending tag order, at element (0008,0018)\nW: DcmItem: Dataset not in ascending tag order, at element (0008,0016)\nW: DcmItem: Dataset not in ascending tag order, at element (0028,0002)\nW: DcmItem: Dataset not in ascending tag order, at element (0028,0004)\nW: DcmItem: Dataset not in ascending tag order, at element (0028,0006)\nE: No presentation context for: (USr) 1.2.840.10008.5.1.4.1.1.6\nE: Store SCU Failed: 0006:0208 DIMSE No valid Presentation Context ID\nI: Aborting Association\n","time":"2025-09-17T16:38:52.128+10:00"}
+{"level":"info","msg":"Sending file 3/4 via DCMTK storescu: image_001.dcm","time":"2025-09-17T16:38:52.129+10:00"}
+{"level":"error","msg":"Failed to send image_001.dcm via DCMTK: storescu failed: exit status 1\nOutput: I: checking input files ...\nI: Requesting Association\nI: Association Accepted (Max Send PDV: 16372)\nI: Sending file: studies/1.2.840.10008.5.1.4.1.1.1758083884.615900210705117783/series_002/image_001.dcm\nW: DcmItem: Dataset not in ascending tag order, at element (0008,0020)\nW: DcmItem: Dataset not in ascending tag order, at element (0008,0030)\nW: DcmItem: Dataset not in ascending tag order, at element (0008,1030)\nW: DcmItem: Dataset not in ascending tag order, at element (0008,0050)\nW: DcmItem: Dataset not in ascending tag order, at element (0008,0060)\nW: DcmItem: Dataset not in ascending tag order, at element (0008,103e)\nW: DcmItem: Dataset not in ascending tag order, at element (0008,0018)\nW: DcmItem: Dataset not in ascending tag order, at element (0008,0016)\nW: DcmItem: Dataset not in ascending tag order, at element (0028,0002)\nW: DcmItem: Dataset not in ascending tag order, at element (0028,0004)\nW: DcmItem: Dataset not in ascending tag order, at element (0028,0006)\nE: No presentation context for: (USr) 1.2.840.10008.5.1.4.1.1.6\nE: Store SCU Failed: 0006:0208 DIMSE No valid Presentation Context ID\nI: Aborting Association\n","time":"2025-09-17T16:38:52.148+10:00"}
+{"level":"info","msg":"Sending file 4/4 via DCMTK storescu: image_002.dcm","time":"2025-09-17T16:38:52.148+10:00"}
+{"level":"error","msg":"Failed to send image_002.dcm via DCMTK: storescu failed: exit status 1\nOutput: I: checking input files ...\nI: Requesting Association\nI: Association Accepted (Max Send PDV: 16372)\nI: Sending file: studies/1.2.840.10008.5.1.4.1.1.1758083884.615900210705117783/series_002/image_002.dcm\nW: DcmItem: Dataset not in ascending tag order, at element (0008,0020)\nW: DcmItem: Dataset not in ascending tag order, at element (0008,0030)\nW: DcmItem: Dataset not in ascending tag order, at element (0008,1030)\nW: DcmItem: Dataset not in ascending tag order, at element (0008,0050)\nW: DcmItem: Dataset not in ascending tag order, at element (0008,0060)\nW: DcmItem: Dataset not in ascending tag order, at element (0008,103e)\nW: DcmItem: Dataset not in ascending tag order, at element (0008,0018)\nW: DcmItem: Dataset not in ascending tag order, at element (0008,0016)\nW: DcmItem: Dataset not in ascending tag order, at element (0028,0002)\nW: DcmItem: Dataset not in ascending tag order, at element (0028,0004)\nW: DcmItem: Dataset not in ascending tag order, at element (0028,0006)\nE: No presentation context for: (USr) 1.2.840.10008.5.1.4.1.1.6\nE: Store SCU Failed: 0006:0208 DIMSE No valid Presentation Context ID\nI: Aborting Association\n","time":"2025-09-17T16:38:52.173+10:00"}
+{"level":"info","msg":"🎉 Successfully sent 1/4 DICOM files to PACS via DCMTK","time":"2025-09-17T16:38:52.173+10:00"}
+{"level":"info","msg":"Sending study 1.2.840.10008.5.1.4.1.1.1758083884.615900210705117783 using DCMTK storescu to PACS localhost:4242","time":"2025-09-17T16:39:28.518+10:00"}
+{"level":"info","msg":"Found 4 DICOM files to send via DCMTK","time":"2025-09-17T16:39:28.518+10:00"}
+{"level":"info","msg":"Testing PACS connectivity with DCMTK echoscu...","time":"2025-09-17T16:39:28.518+10:00"}
+{"level":"info","msg":"✅ PACS connectivity confirmed with DCMTK echoscu","time":"2025-09-17T16:39:28.537+10:00"}
+{"level":"info","msg":"Sending file 1/4 via DCMTK storescu: image_001.dcm","time":"2025-09-17T16:39:28.537+10:00"}
+{"level":"error","msg":"Failed to send image_001.dcm via DCMTK: storescu did not report success: ","time":"2025-09-17T16:39:28.564+10:00"}
+{"level":"info","msg":"Sending file 2/4 via DCMTK storescu: image_002.dcm","time":"2025-09-17T16:39:28.564+10:00"}
+{"level":"error","msg":"Failed to send image_002.dcm via DCMTK: storescu did not report success: ","time":"2025-09-17T16:39:28.585+10:00"}
+{"level":"info","msg":"Sending file 3/4 via DCMTK storescu: image_001.dcm","time":"2025-09-17T16:39:28.585+10:00"}
+{"level":"error","msg":"Failed to send image_001.dcm via DCMTK: storescu did not report success: ","time":"2025-09-17T16:39:28.605+10:00"}
+{"level":"info","msg":"Sending file 4/4 via DCMTK storescu: image_002.dcm","time":"2025-09-17T16:39:28.605+10:00"}
+{"level":"error","msg":"Failed to send image_002.dcm via DCMTK: storescu did not report success: ","time":"2025-09-17T16:39:28.628+10:00"}
+{"level":"fatal","msg":"Application error: failed to send any DICOM files via DCMTK","time":"2025-09-17T16:39:28.628+10:00"}
+{"level":"info","msg":"Sending study 1.2.840.10008.5.1.4.1.1.1758083884.615900210705117783 using DCMTK storescu to PACS localhost:4242","time":"2025-09-17T16:40:20.114+10:00"}
+{"level":"info","msg":"Found 4 DICOM files to send via DCMTK","time":"2025-09-17T16:40:20.115+10:00"}
+{"level":"info","msg":"Testing PACS connectivity with DCMTK echoscu...","time":"2025-09-17T16:40:20.115+10:00"}
+{"level":"info","msg":"✅ PACS connectivity confirmed with DCMTK echoscu","time":"2025-09-17T16:40:20.137+10:00"}
+{"level":"info","msg":"Sending file 1/4 via DCMTK storescu: image_001.dcm","time":"2025-09-17T16:40:20.137+10:00"}
+{"level":"info","msg":"✅ Successfully sent image_001.dcm via DCMTK storescu","time":"2025-09-17T16:40:20.166+10:00"}
+{"level":"info","msg":"Sending file 2/4 via DCMTK storescu: image_002.dcm","time":"2025-09-17T16:40:20.166+10:00"}
+{"level":"info","msg":"✅ Successfully sent image_002.dcm via DCMTK storescu","time":"2025-09-17T16:40:20.191+10:00"}
+{"level":"info","msg":"Sending file 3/4 via DCMTK storescu: image_001.dcm","time":"2025-09-17T16:40:20.191+10:00"}
+{"level":"info","msg":"✅ Successfully sent image_001.dcm via DCMTK storescu","time":"2025-09-17T16:40:20.212+10:00"}
+{"level":"info","msg":"Sending file 4/4 via DCMTK storescu: image_002.dcm","time":"2025-09-17T16:40:20.212+10:00"}
+{"level":"info","msg":"✅ Successfully sent image_002.dcm via DCMTK storescu","time":"2025-09-17T16:40:20.233+10:00"}
+{"level":"info","msg":"🎉 Successfully sent 4/4 DICOM files to PACS via DCMTK","time":"2025-09-17T16:40:20.233+10:00"}
+{"level":"info","msg":"Creating 1 study(ies) with 2 series each and 2 images per series","time":"2025-09-17T16:44:23.748+10:00"}
+{"level":"info","msg":"Modality: US, Region: abdomen, Output: studies","time":"2025-09-17T16:44:23.749+10:00"}
+{"level":"info","msg":"Writing study 1.2.840.10008.5.1.4.1.1.1758091463.5096634239602474645 to studies/1.2.840.10008.5.1.4.1.1.1758091463.5096634239602474645","time":"2025-09-17T16:44:23.757+10:00"}
+{"level":"info","msg":"Study metadata: UID=1.2.840.10008.5.1.4.1.1.1758091463.5096634239602474645, Patient=BAR^FOO (US_BAR_001), Description=Ultrasound Abdomen","time":"2025-09-17T16:44:23.757+10:00"}
+{"level":"info","msg":"Writing series 1.2.840.10008.5.1.4.1.1.1758091463.4581588049189201317 with 2 images","time":"2025-09-17T16:44:23.757+10:00"}
+{"level":"fatal","msg":"Application error: failed to write study 1: failed to write series 1: failed to write image 1: failed to write DICOM file: ValueType does not match the specified type in the VR","time":"2025-09-17T16:44:23.758+10:00"}
+{"level":"fatal","msg":"Application error: PDF format requires --output-file parameter","time":"2025-09-17T16:45:06.382+10:00"}
+{"level":"fatal","msg":"Application error: PDF format requires --output-file parameter","time":"2025-09-17T16:45:22.308+10:00"}
+{"level":"info","msg":"Sending study 1.2.840.10008.5.1.4.1.1.1758091484123456789 using DCMTK storescu to PACS localhost:4242","time":"2025-09-17T16:45:57.025+10:00"}
+{"level":"info","msg":"Found 4 DICOM files to send via DCMTK","time":"2025-09-17T16:45:57.025+10:00"}
+{"level":"info","msg":"Testing PACS connectivity with DCMTK echoscu...","time":"2025-09-17T16:45:57.025+10:00"}
+{"level":"info","msg":"✅ PACS connectivity confirmed with DCMTK echoscu","time":"2025-09-17T16:45:57.044+10:00"}
+{"level":"info","msg":"Sending file 1/4 via DCMTK storescu: image_001.dcm","time":"2025-09-17T16:45:57.044+10:00"}
+{"level":"error","msg":"Failed to send image_001.dcm via DCMTK: storescu status unclear: ","time":"2025-09-17T16:45:57.074+10:00"}
+{"level":"info","msg":"Sending file 2/4 via DCMTK storescu: image_002.dcm","time":"2025-09-17T16:45:57.074+10:00"}
+{"level":"error","msg":"Failed to send image_002.dcm via DCMTK: storescu status unclear: ","time":"2025-09-17T16:45:57.095+10:00"}
+{"level":"info","msg":"Sending file 3/4 via DCMTK storescu: image_001.dcm","time":"2025-09-17T16:45:57.095+10:00"}
+{"level":"error","msg":"Failed to send image_001.dcm via DCMTK: storescu status unclear: ","time":"2025-09-17T16:45:57.115+10:00"}
+{"level":"info","msg":"Sending file 4/4 via DCMTK storescu: image_002.dcm","time":"2025-09-17T16:45:57.115+10:00"}
+{"level":"error","msg":"Failed to send image_002.dcm via DCMTK: storescu status unclear: ","time":"2025-09-17T16:45:57.136+10:00"}
+{"level":"fatal","msg":"Application error: failed to send any DICOM files via DCMTK","time":"2025-09-17T16:45:57.136+10:00"}
+{"level":"info","msg":"Sending study 1.2.840.10008.5.1.4.1.1.1758091484123456789 using DCMTK storescu to PACS localhost:4242","time":"2025-09-17T16:46:51.727+10:00"}
+{"level":"info","msg":"Found 4 DICOM files to send via DCMTK","time":"2025-09-17T16:46:51.728+10:00"}
+{"level":"info","msg":"Testing PACS connectivity with DCMTK echoscu...","time":"2025-09-17T16:46:51.728+10:00"}
+{"level":"info","msg":"✅ PACS connectivity confirmed with DCMTK echoscu","time":"2025-09-17T16:46:51.750+10:00"}
+{"level":"info","msg":"Sending file 1/4 via DCMTK storescu: image_001.dcm","time":"2025-09-17T16:46:51.750+10:00"}
+{"level":"error","msg":"Failed to send image_001.dcm via DCMTK: storescu status unclear: ","time":"2025-09-17T16:46:51.779+10:00"}
+{"level":"info","msg":"Sending file 2/4 via DCMTK storescu: image_002.dcm","time":"2025-09-17T16:46:51.779+10:00"}
+{"level":"error","msg":"Failed to send image_002.dcm via DCMTK: storescu status unclear: ","time":"2025-09-17T16:46:51.805+10:00"}
+{"level":"info","msg":"Sending file 3/4 via DCMTK storescu: image_001.dcm","time":"2025-09-17T16:46:51.805+10:00"}
+{"level":"error","msg":"Failed to send image_001.dcm via DCMTK: storescu status unclear: ","time":"2025-09-17T16:46:51.830+10:00"}
+{"level":"info","msg":"Sending file 4/4 via DCMTK storescu: image_002.dcm","time":"2025-09-17T16:46:51.830+10:00"}
+{"level":"error","msg":"Failed to send image_002.dcm via DCMTK: storescu status unclear: ","time":"2025-09-17T16:46:51.851+10:00"}
+{"level":"fatal","msg":"Application error: failed to send any DICOM files via DCMTK","time":"2025-09-17T16:46:51.851+10:00"}
+{"level":"info","msg":"Creating template 'my-ct-brain' with modality CT","time":"2025-09-18T07:26:02.030+10:00"}
+{"level":"info","msg":"Series: 2, Images: 25, Region: brain","time":"2025-09-18T07:26:02.031+10:00"}
+{"level":"info","msg":"Output file: examples/my-ct-brain-template.yaml","time":"2025-09-18T07:26:02.031+10:00"}
