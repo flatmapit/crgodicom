@@ -15,26 +15,26 @@ func VerifyCommand() *cli.Command {
 		Usage: "Verify PACS connection using C-ECHO",
 		Flags: []cli.Flag{
 			&cli.StringFlag{
-				Name:    "host",
-				Usage:   "PACS host address",
+				Name:  "host",
+				Usage: "PACS host address",
 			},
 			&cli.IntFlag{
-				Name:    "port",
-				Usage:   "PACS port",
-				Value:   11112,
+				Name:  "port",
+				Usage: "PACS port",
+				Value: 11112,
 			},
 			&cli.StringFlag{
-				Name:    "aec",
-				Usage:   "Application Entity Caller",
+				Name:  "aec",
+				Usage: "Application Entity Caller",
 			},
 			&cli.StringFlag{
-				Name:    "aet",
-				Usage:   "Application Entity Title",
+				Name:  "aet",
+				Usage: "Application Entity Title",
 			},
 			&cli.IntFlag{
-				Name:    "timeout",
-				Usage:   "Connection timeout in seconds",
-				Value:   10,
+				Name:  "timeout",
+				Usage: "Connection timeout in seconds",
+				Value: 10,
 			},
 		},
 		Action: verifyAction,
@@ -68,7 +68,7 @@ func verifyAction(c *cli.Context) error {
 		return fmt.Errorf("PACS connection requires host, aec, and aet parameters")
 	}
 
-	logrus.Infof("Verifying PACS connection to %s:%d (AEC: %s, AET: %s)", 
+	logrus.Infof("Verifying PACS connection to %s:%d (AEC: %s, AET: %s)",
 		pacsConfig.Host, pacsConfig.Port, pacsConfig.AEC, pacsConfig.AET)
 	logrus.Infof("Timeout: %ds", pacsConfig.Timeout)
 

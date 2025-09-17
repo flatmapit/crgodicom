@@ -2,3 +2,9 @@
 {"level":"info","msg":"Creating 1 study(ies) with 1 series each and 1 images per series","time":"2025-09-17T14:12:41.074+10:00"}
 {"level":"info","msg":"Modality: CR, Region: chest, Output: studies","time":"2025-09-17T14:12:41.074+10:00"}
 {"level":"info","msg":"DICOM study creation not yet implemented","time":"2025-09-17T14:12:41.074+10:00"}
+{"level":"info","msg":"Creating 1 study(ies) with 1 series each and 2 images per series","time":"2025-09-17T14:24:04.424+10:00"}
+{"level":"info","msg":"Modality: CR, Region: chest, Output: studies","time":"2025-09-17T14:24:04.424+10:00"}
+{"level":"info","msg":"Writing study 1.2.840.10008.5.1.4.1.1.1758083044.1265375159143478388 to studies/1.2.840.10008.5.1.4.1.1.1758083044.1265375159143478388","time":"2025-09-17T14:24:04.456+10:00"}
+{"level":"info","msg":"Study metadata: UID=1.2.840.10008.5.1.4.1.1.1758083044.1265375159143478388, Patient=DOE^JOHN^M (666B5A20), Description=Generated Study","time":"2025-09-17T14:24:04.456+10:00"}
+{"level":"info","msg":"Writing series 1.2.840.10008.5.1.4.1.1.1758083044.7675777197700937123 with 2 images","time":"2025-09-17T14:24:04.456+10:00"}
+{"level":"fatal","msg":"Application error: failed to write study 1: failed to write series 1: failed to write image 1: failed to write DICOM file: element not found","time":"2025-09-17T14:24:04.457+10:00"}

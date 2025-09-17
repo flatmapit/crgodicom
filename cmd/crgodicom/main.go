@@ -14,7 +14,7 @@ import (
 )
 
 var (
-	Version = "dev"
+	Version   = "dev"
 	BuildDate = "unknown"
 	GitCommit = "unknown"
 )
@@ -52,13 +52,13 @@ func main() {
 				Value:   "crgodicom.yaml",
 			},
 			&cli.StringFlag{
-				Name:    "log-file",
-				Usage:   "Log file path",
+				Name:  "log-file",
+				Usage: "Log file path",
 			},
 			&cli.StringFlag{
-				Name:    "log-level",
-				Usage:   "Log level (DEBUG, INFO, WARNING, ERROR, CRITICAL)",
-				Value:   "INFO",
+				Name:  "log-level",
+				Usage: "Log level (DEBUG, INFO, WARNING, ERROR, CRITICAL)",
+				Value: "INFO",
 			},
 		},
 		Before: func(c *cli.Context) error {

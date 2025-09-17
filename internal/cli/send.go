@@ -20,36 +20,36 @@ func SendCommand() *cli.Command {
 				Required: true,
 			},
 			&cli.StringFlag{
-				Name:    "host",
-				Usage:   "PACS host address",
+				Name:  "host",
+				Usage: "PACS host address",
 			},
 			&cli.IntFlag{
-				Name:    "port",
-				Usage:   "PACS port",
-				Value:   11112,
+				Name:  "port",
+				Usage: "PACS port",
+				Value: 11112,
 			},
 			&cli.StringFlag{
-				Name:    "aec",
-				Usage:   "Application Entity Caller",
+				Name:  "aec",
+				Usage: "Application Entity Caller",
 			},
 			&cli.StringFlag{
-				Name:    "aet",
-				Usage:   "Application Entity Title",
+				Name:  "aet",
+				Usage: "Application Entity Title",
 			},
 			&cli.StringFlag{
-				Name:    "output-dir",
-				Usage:   "Studies directory",
-				Value:   "studies",
+				Name:  "output-dir",
+				Usage: "Studies directory",
+				Value: "studies",
 			},
 			&cli.IntFlag{
-				Name:    "timeout",
-				Usage:   "Connection timeout in seconds",
-				Value:   30,
+				Name:  "timeout",
+				Usage: "Connection timeout in seconds",
+				Value: 30,
 			},
 			&cli.IntFlag{
-				Name:    "retries",
-				Usage:   "Retry attempts",
-				Value:   3,
+				Name:  "retries",
+				Usage: "Retry attempts",
+				Value: 3,
 			},
 		},
 		Action: sendAction,
@@ -87,9 +87,9 @@ func sendAction(c *cli.Context) error {
 	outputDir := c.String("output-dir")
 	retries := c.Int("retries")
 
-	logrus.Infof("Sending study %s to PACS %s:%d (AEC: %s, AET: %s)", 
+	logrus.Infof("Sending study %s to PACS %s:%d (AEC: %s, AET: %s)",
 		studyID, pacsConfig.Host, pacsConfig.Port, pacsConfig.AEC, pacsConfig.AET)
-	logrus.Infof("Studies directory: %s, Retries: %d, Timeout: %ds", 
+	logrus.Infof("Studies directory: %s, Retries: %d, Timeout: %ds",
 		outputDir, retries, pacsConfig.Timeout)
 
 	// TODO: Implement actual PACS sending

@@ -18,14 +18,14 @@ func ListCommand() *cli.Command {
 		Usage: "List local DICOM studies",
 		Flags: []cli.Flag{
 			&cli.StringFlag{
-				Name:    "output-dir",
-				Usage:   "Studies directory",
-				Value:   "studies",
+				Name:  "output-dir",
+				Usage: "Studies directory",
+				Value: "studies",
 			},
 			&cli.StringFlag{
-				Name:    "format",
-				Usage:   "Output format: table, json, csv",
-				Value:   "table",
+				Name:  "format",
+				Usage: "Output format: table, json, csv",
+				Value: "table",
 			},
 			&cli.BoolFlag{
 				Name:    "verbose",
@@ -157,7 +157,7 @@ func isUIDFormat(s string) bool {
 // getStudyInfo reads study information from directory
 func getStudyInfo(studyPath string) (StudyInfo, error) {
 	studyUID := filepath.Base(studyPath)
-	
+
 	// TODO: Read actual DICOM metadata from files
 	// For now, return placeholder info
 	return StudyInfo{
@@ -176,11 +176,11 @@ func getStudyInfo(studyPath string) (StudyInfo, error) {
 // displayStudiesTable displays studies in table format
 func displayStudiesTable(studies []StudyInfo, verbose bool) {
 	if verbose {
-		fmt.Printf("%-40s %-20s %-12s %-15s %-8s %-8s %-8s %-12s\n", 
+		fmt.Printf("%-40s %-20s %-12s %-15s %-8s %-8s %-8s %-12s\n",
 			"Study UID", "Patient Name", "Patient ID", "Study Date", "Series", "Images", "Modality", "Accession")
 		fmt.Println(strings.Repeat("-", 120))
 	} else {
-		fmt.Printf("%-40s %-20s %-12s %-15s %-8s %-8s\n", 
+		fmt.Printf("%-40s %-20s %-12s %-15s %-8s %-8s\n",
 			"Study UID", "Patient Name", "Patient ID", "Study Date", "Series", "Images")
 		fmt.Println(strings.Repeat("-", 95))
 	}

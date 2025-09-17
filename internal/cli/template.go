@@ -28,27 +28,27 @@ func CreateTemplateCommand() *cli.Command {
 				Required: true,
 			},
 			&cli.IntFlag{
-				Name:    "series-count",
-				Usage:   "Number of series per study",
-				Value:   1,
+				Name:  "series-count",
+				Usage: "Number of series per study",
+				Value: 1,
 			},
 			&cli.IntFlag{
-				Name:    "image-count",
-				Usage:   "Number of images per series",
-				Value:   1,
+				Name:  "image-count",
+				Usage: "Number of images per series",
+				Value: 1,
 			},
 			&cli.StringFlag{
-				Name:    "anatomical-region",
-				Usage:   "Anatomical region",
-				Value:   "chest",
+				Name:  "anatomical-region",
+				Usage: "Anatomical region",
+				Value: "chest",
 			},
 			&cli.StringFlag{
-				Name:    "study-description",
-				Usage:   "Study description",
+				Name:  "study-description",
+				Usage: "Study description",
 			},
 			&cli.StringFlag{
-				Name:    "output-file",
-				Usage:   "Output file path for template",
+				Name:  "output-file",
+				Usage: "Output file path for template",
 			},
 		},
 		Action: createTemplateAction,
@@ -136,12 +136,12 @@ func createTemplateFile(template config.TemplateConfig, outputFile, name string)
 
 	// Create template data
 	templateData := map[string]interface{}{
-		"name":               name,
-		"modality":           template.Modality,
-		"series_count":       template.SeriesCount,
-		"image_count":        template.ImageCount,
-		"anatomical_region":  template.AnatomicalRegion,
-		"study_description":  template.StudyDescription,
+		"name":              name,
+		"modality":          template.Modality,
+		"series_count":      template.SeriesCount,
+		"image_count":       template.ImageCount,
+		"anatomical_region": template.AnatomicalRegion,
+		"study_description": template.StudyDescription,
 	}
 
 	// Add optional fields if they exist

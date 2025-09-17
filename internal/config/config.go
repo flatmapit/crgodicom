@@ -10,12 +10,12 @@ import (
 
 // Config represents the application configuration
 type Config struct {
-	DICOM         DICOMConfig         `yaml:"dicom"`
-	DefaultPACS   PACSConfig          `yaml:"default_pacs"`
+	DICOM          DICOMConfig               `yaml:"dicom"`
+	DefaultPACS    PACSConfig                `yaml:"default_pacs"`
 	StudyTemplates map[string]TemplateConfig `yaml:"study_templates"`
-	Logging       LoggingConfig       `yaml:"logging"`
-	Storage       StorageConfig       `yaml:"storage"`
-	TestPACS      map[string]PACSConfig `yaml:"test_pacs"`
+	Logging        LoggingConfig             `yaml:"logging"`
+	Storage        StorageConfig             `yaml:"storage"`
+	TestPACS       map[string]PACSConfig     `yaml:"test_pacs"`
 }
 
 // DICOMConfig contains DICOM-specific configuration
@@ -34,14 +34,14 @@ type PACSConfig struct {
 
 // TemplateConfig represents a study template configuration
 type TemplateConfig struct {
-	Modality          string `yaml:"modality"`
-	SeriesCount       int    `yaml:"series_count"`
-	ImageCount        int    `yaml:"image_count"`
-	AnatomicalRegion  string `yaml:"anatomical_region"`
-	StudyDescription  string `yaml:"study_description"`
-	PatientName       string `yaml:"patient_name,omitempty"`
-	PatientID         string `yaml:"patient_id,omitempty"`
-	AccessionNumber   string `yaml:"accession_number,omitempty"`
+	Modality         string `yaml:"modality"`
+	SeriesCount      int    `yaml:"series_count"`
+	ImageCount       int    `yaml:"image_count"`
+	AnatomicalRegion string `yaml:"anatomical_region"`
+	StudyDescription string `yaml:"study_description"`
+	PatientName      string `yaml:"patient_name,omitempty"`
+	PatientID        string `yaml:"patient_id,omitempty"`
+	AccessionNumber  string `yaml:"accession_number,omitempty"`
 }
 
 // LoggingConfig represents logging configuration
@@ -53,9 +53,9 @@ type LoggingConfig struct {
 
 // StorageConfig represents storage configuration
 type StorageConfig struct {
-	BaseDir      string `yaml:"base_dir"`
-	Compression  bool   `yaml:"compression"`
-	IndexCache   bool   `yaml:"index_cache"`
+	BaseDir     string `yaml:"base_dir"`
+	Compression bool   `yaml:"compression"`
+	IndexCache  bool   `yaml:"index_cache"`
 }
 
 // LoadConfig loads configuration from file

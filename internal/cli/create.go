@@ -4,6 +4,8 @@ import (
 	"fmt"
 
 	"github.com/flatmapit/crgodicom/internal/config"
+	"github.com/flatmapit/crgodicom/internal/dicom"
+	"github.com/flatmapit/crgodicom/pkg/types"
 	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli/v2"
 )
@@ -15,54 +17,54 @@ func CreateCommand() *cli.Command {
 		Usage: "Create synthetic DICOM studies",
 		Flags: []cli.Flag{
 			&cli.IntFlag{
-				Name:    "study-count",
-				Usage:   "Number of studies to create",
-				Value:   1,
+				Name:  "study-count",
+				Usage: "Number of studies to create",
+				Value: 1,
 			},
 			&cli.IntFlag{
-				Name:    "series-count",
-				Usage:   "Number of series per study",
-				Value:   1,
+				Name:  "series-count",
+				Usage: "Number of series per study",
+				Value: 1,
 			},
 			&cli.IntFlag{
-				Name:    "image-count",
-				Usage:   "Number of images per series",
-				Value:   1,
+				Name:  "image-count",
+				Usage: "Number of images per series",
+				Value: 1,
 			},
 			&cli.StringFlag{
-				Name:    "modality",
-				Usage:   "DICOM modality: CR, CT, MR, US, DX, MG",
-				Value:   "CR",
+				Name:  "modality",
+				Usage: "DICOM modality: CR, CT, MR, US, DX, MG",
+				Value: "CR",
 			},
 			&cli.StringFlag{
-				Name:    "template",
-				Usage:   "Study template name",
+				Name:  "template",
+				Usage: "Study template name",
 			},
 			&cli.StringFlag{
-				Name:    "anatomical-region",
-				Usage:   "Anatomical region",
-				Value:   "chest",
+				Name:  "anatomical-region",
+				Usage: "Anatomical region",
+				Value: "chest",
 			},
 			&cli.StringFlag{
-				Name:    "patient-id",
-				Usage:   "Patient ID",
+				Name:  "patient-id",
+				Usage: "Patient ID",
 			},
 			&cli.StringFlag{
-				Name:    "patient-name",
-				Usage:   "Patient name (format: LAST^FIRST^MIDDLE)",
+				Name:  "patient-name",
+				Usage: "Patient name (format: LAST^FIRST^MIDDLE)",
 			},
 			&cli.StringFlag{
-				Name:    "accession-number",
-				Usage:   "Accession number",
+				Name:  "accession-number",
+				Usage: "Accession number",
 			},
 			&cli.StringFlag{
-				Name:    "study-description",
-				Usage:   "Study description",
+				Name:  "study-description",
+				Usage: "Study description",
 			},
 			&cli.StringFlag{
-				Name:    "output-dir",
-				Usage:   "Output directory",
-				Value:   "studies",
+				Name:  "output-dir",
+				Usage: "Output directory",
+				Value: "studies",
 			},
 		},
 		Action: createAction,
@@ -89,17 +91,17 @@ func createAction(c *cli.Context) error {
 
 	// Create study parameters
 	params := StudyCreateParams{
-		StudyCount:      c.Int("study-count"),
-		SeriesCount:     c.Int("series-count"),
-		ImageCount:      c.Int("image-count"),
-		Modality:        c.String("modality"),
+		StudyCount:       c.Int("study-count"),
+		SeriesCount:      c.Int("series-count"),
+		ImageCount:       c.Int("image-count"),
+		Modality:         c.String("modality"),
 		AnatomicalRegion: c.String("anatomical-region"),
-		PatientID:       c.String("patient-id"),
-		PatientName:     c.String("patient-name"),
-		AccessionNumber: c.String("accession-number"),
+		PatientID:        c.String("patient-id"),
+		PatientName:      c.String("patient-name"),
+		AccessionNumber:  c.String("accession-number"),
 		StudyDescription: c.String("study-description"),
-		OutputDir:       c.String("output-dir"),
-		Template:        template,
+		OutputDir:        c.String("output-dir"),
+		Template:         template,
 	}
 
 	// Validate parameters
@@ -112,10 +114,41 @@ func createAction(c *cli.Context) error {
 	logrus.Infof("Modality: %s, Region: %s, Output: %s", 
 		params.Modality, params.AnatomicalRegion, params.OutputDir)
 
-	// TODO: Implement actual DICOM study creation
-	// For now, just log the parameters
-	logrus.Info("DICOM study creation not yet implemented")
+	// Create DICOM generator and writer
+	generator := dicom.NewGenerator(cfg)
+	writer := dicom.NewWriter(cfg)
 
+	// Create studies
+	for i := 0; i < params.StudyCount; i++ {
+		studyParams := types.StudyParams{
+			StudyCount:       1,
+			SeriesCount:      params.SeriesCount,
+			ImageCount:       params.ImageCount,
+			Modality:         params.Modality,
+			AnatomicalRegion: params.AnatomicalRegion,
+			PatientName:      params.PatientName,
+			PatientID:        params.PatientID,
+			AccessionNumber:  params.AccessionNumber,
+			StudyDescription: params.StudyDescription,
+			OutputDir:        params.OutputDir,
+			Template:         params.Template,
+		}
+
+		// Generate study
+		study, err := generator.GenerateStudy(studyParams)
+		if err != nil {
+			return fmt.Errorf("failed to generate study %d: %w", i+1, err)
+		}
+
+		// Write study to disk
+		if err := writer.WriteStudy(study, params.OutputDir); err != nil {
+			return fmt.Errorf("failed to write study %d: %w", i+1, err)
+		}
+
+		logrus.Infof("Successfully created study %d: %s", i+1, study.StudyInstanceUID)
+	}
+
+	fmt.Printf("Successfully created %d study(ies) in directory: %s\n", params.StudyCount, params.OutputDir)
 	return nil
 }
 
