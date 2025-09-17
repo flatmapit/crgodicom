@@ -145,6 +145,7 @@ func (e *Exporter) addBurntInText(img *image.Gray, study *types.Study, series *t
 	// Create text lines for burnt-in metadata
 	textLines := []string{
 		fmt.Sprintf("Patient: %s", study.PatientName),
+		fmt.Sprintf("Patient ID: %s", study.PatientID),
 		fmt.Sprintf("DOB: %s", e.formatDate(study.PatientBirthDate)),
 		fmt.Sprintf("Accession: %s", study.AccessionNumber),
 		fmt.Sprintf("Study UID: %s", study.StudyInstanceUID),
@@ -168,11 +169,19 @@ func (e *Exporter) addBurntInText(img *image.Gray, study *types.Study, series *t
 	x := 10
 	y := 20
 	lineHeight := 15
+	padding := 8
 	
-	// Draw background rectangle for text
-	textWidth := 300
-	textHeight := len(textLines)*lineHeight + 10
-	rect := image.Rect(x-5, y-lineHeight+5, x+textWidth, y+textHeight)
+	// Calculate the maximum text width
+	maxTextWidth := 0
+	for _, line := range textLines {
+		textWidth := len(line) * 7 // Approximate width for Face7x13 (7 pixels per character)
+		if textWidth > maxTextWidth {
+			maxTextWidth = textWidth
+		}
+	}
+	
+	// Draw background rectangle for text that properly surrounds all text
+	rect := image.Rect(x-padding, y-lineHeight+padding, x+maxTextWidth+padding, y+(len(textLines)*lineHeight)+padding)
 	
 	// Semi-transparent black background
 	bgColor := color.RGBA{0, 0, 0, 180}
