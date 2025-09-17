@@ -8,3 +8,15 @@
 {"level":"info","msg":"Study metadata: UID=1.2.840.10008.5.1.4.1.1.1758083044.1265375159143478388, Patient=DOE^JOHN^M (666B5A20), Description=Generated Study","time":"2025-09-17T14:24:04.456+10:00"}
 {"level":"info","msg":"Writing series 1.2.840.10008.5.1.4.1.1.1758083044.7675777197700937123 with 2 images","time":"2025-09-17T14:24:04.456+10:00"}
 {"level":"fatal","msg":"Application error: failed to write study 1: failed to write series 1: failed to write image 1: failed to write DICOM file: element not found","time":"2025-09-17T14:24:04.457+10:00"}
+{"level":"info","msg":"Creating 1 study(ies) with 1 series each and 1 images per series","time":"2025-09-17T14:25:54.356+10:00"}
+{"level":"info","msg":"Modality: CR, Region: chest, Output: studies","time":"2025-09-17T14:25:54.356+10:00"}
+{"level":"info","msg":"Writing study 1.2.840.10008.5.1.4.1.1.1758083154.4576237142984955950 to studies/1.2.840.10008.5.1.4.1.1.1758083154.4576237142984955950","time":"2025-09-17T14:25:54.373+10:00"}
+{"level":"info","msg":"Study metadata: UID=1.2.840.10008.5.1.4.1.1.1758083154.4576237142984955950, Patient=DOE^JOHN^M (B0B2F5FB), Description=Generated Study","time":"2025-09-17T14:25:54.373+10:00"}
+{"level":"info","msg":"Writing series 1.2.840.10008.5.1.4.1.1.1758083154.8084467118838781762 with 1 images","time":"2025-09-17T14:25:54.373+10:00"}
+{"level":"fatal","msg":"Application error: failed to write study 1: failed to write series 1: failed to write image 1: failed to write DICOM file: element not found","time":"2025-09-17T14:25:54.374+10:00"}
+{"level":"info","msg":"Creating 1 study(ies) with 1 series each and 1 images per series","time":"2025-09-17T14:28:40.222+10:00"}
+{"level":"info","msg":"Modality: CR, Region: chest, Output: studies","time":"2025-09-17T14:28:40.223+10:00"}
+{"level":"info","msg":"Writing study 1.2.840.10008.5.1.4.1.1.1758083320.98009666002356711 to studies/1.2.840.10008.5.1.4.1.1.1758083320.98009666002356711","time":"2025-09-17T14:28:40.240+10:00"}
+{"level":"info","msg":"Study metadata: UID=1.2.840.10008.5.1.4.1.1.1758083320.98009666002356711, Patient=DOE^JOHN^M (2788EFDB), Description=Generated Study","time":"2025-09-17T14:28:40.240+10:00"}
+{"level":"info","msg":"Writing series 1.2.840.10008.5.1.4.1.1.1758083320.549632383009414763 with 1 images","time":"2025-09-17T14:28:40.240+10:00"}
+{"level":"fatal","msg":"Application error: failed to write study 1: failed to write series 1: failed to write image 1: failed to write DICOM file: ValueType does not match the specified type in the VR","time":"2025-09-17T14:28:40.241+10:00"}
