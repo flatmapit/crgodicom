@@ -179,14 +179,14 @@ jobs:
           cd ..
 
       - name: Upload Development Artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: dev-installer-${{ matrix.platform }}
           path: dist/
           retention-days: 7  # Shorter retention for dev builds
 
       - name: Upload Coverage Report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: coverage-report-${{ matrix.platform }}
           path: coverage.html

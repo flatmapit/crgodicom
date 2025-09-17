@@ -184,14 +184,14 @@ jobs:
           cd ..
 
       - name: Upload Feature Artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: feat-installer-${{ matrix.platform }}
           path: dist/
           retention-days: 3  # Very short retention for feature builds
 
       - name: Upload Coverage Report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: coverage-feat-${{ matrix.platform }}
           path: coverage.html
