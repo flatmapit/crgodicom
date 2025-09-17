@@ -1,0 +1,266 @@
+name: Development Build and Installer
+
+on:
+  push:
+    branches:
+      - develop
+  pull_request:
+    branches:
+      - develop
+  workflow_dispatch:  # Allow manual triggering
+
+jobs:
+  build-and-test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            platform: linux-amd64
+          - os: windows-latest
+            platform: windows-amd64
+          - os: macos-latest
+            platform: darwin-amd64
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.21'
+
+      - name: Get development version
+        id: version
+        run: |
+          echo "VERSION=dev-$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+          echo "BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> $GITHUB_OUTPUT
+
+      - name: Install dependencies
+        run: go mod download && go mod tidy
+
+      - name: Run tests
+        run: |
+          go test -v -race -coverprofile=coverage.out ./...
+          go tool cover -html=coverage.out -o coverage.html
+
+      - name: Build binary
+        run: |
+          GOOS=${{ matrix.platform == 'windows-amd64' && 'windows' || matrix.platform == 'darwin-amd64' && 'darwin' || 'linux' }} \
+          GOARCH=${{ matrix.platform == 'windows-amd64' && 'amd64' || matrix.platform == 'darwin-amd64' && 'amd64' || 'amd64' }} \
+          go build -ldflags "-X main.Version=${{ steps.version.outputs.VERSION }} -X main.BuildDate=${{ steps.version.outputs.BUILD_DATE }} -s -w" \
+          -o bin/crgodicom-${{ matrix.platform }} cmd/crgodicom/main.go
+
+      # Windows Development Installer
+      - name: Create Windows Development Installer
+        if: matrix.os == 'windows-latest'
+        run: |
+          echo "Creating development installer for Windows..."
+          
+          # Create development distribution
+          mkdir -p dist/crgodicom-dev
+          cp bin/crgodicom-${{ matrix.platform }}.exe dist/crgodicom-dev/crgodicom.exe
+          cp README.md dist/crgodicom-dev/
+          cp crgodicom.yaml dist/crgodicom-dev/
+          cp CHANGELOG.md dist/crgodicom-dev/
+          
+          # Create version info file
+          echo "Version: ${{ steps.version.outputs.VERSION }}" > dist/crgodicom-dev/version.txt
+          echo "Build Date: ${{ steps.version.outputs.BUILD_DATE }}" >> dist/crgodicom-dev/version.txt
+          echo "Platform: ${{ matrix.platform }}" >> dist/crgodicom-dev/version.txt
+          echo "Branch: develop" >> dist/crgodicom-dev/version.txt
+          
+          # Create ZIP installer
+          cd dist
+          powershell Compress-Archive -Path crgodicom-dev -DestinationPath crgodicom-dev-${{ steps.version.outputs.VERSION }}-${{ matrix.platform }}.zip
+          cd ..
+
+      # macOS Development Installer
+      - name: Create macOS Development Installer
+        if: matrix.os == 'macos-latest'
+        run: |
+          echo "Creating development installer for macOS..."
+          
+          # Create development app bundle
+          mkdir -p dist/crgodicom-dev.app/Contents/MacOS
+          mkdir -p dist/crgodicom-dev.app/Contents/Resources
+          
+          # Copy binary
+          cp bin/crgodicom-${{ matrix.platform }} dist/crgodicom-dev.app/Contents/MacOS/crgodicom
+          chmod +x dist/crgodicom-dev.app/Contents/MacOS/crgodicom
+          
+          # Create Info.plist for development
+          cat > dist/crgodicom-dev.app/Contents/Info.plist << EOF
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+              <key>CFBundleExecutable</key>
+              <string>crgodicom</string>
+              <key>CFBundleIdentifier</key>
+              <string>com.flatmapit.crgodicom.dev</string>
+              <key>CFBundleName</key>
+              <string>CRGoDICOM Dev</string>
+              <key>CFBundleVersion</key>
+              <string>${{ steps.version.outputs.VERSION }}</string>
+              <key>CFBundleShortVersionString</key>
+              <string>${{ steps.version.outputs.VERSION }}</string>
+              <key>CFBundleInfoDictionaryVersion</key>
+              <string>6.0</string>
+              <key>CFBundlePackageType</key>
+              <string>APPL</string>
+              <key>NSHumanReadableCopyright</key>
+              <string>Development Build - Not for Production Use</string>
+          </dict>
+          </plist>
+          EOF
+          
+          # Copy additional files
+          cp README.md dist/crgodicom-dev.app/Contents/Resources/
+          cp crgodicom.yaml dist/crgodicom-dev.app/Contents/Resources/
+          cp CHANGELOG.md dist/crgodicom-dev.app/Contents/Resources/
+          
+          # Create version info
+          echo "Version: ${{ steps.version.outputs.VERSION }}" > dist/crgodicom-dev.app/Contents/Resources/version.txt
+          echo "Build Date: ${{ steps.version.outputs.BUILD_DATE }}" >> dist/crgodicom-dev.app/Contents/Resources/version.txt
+          echo "Platform: ${{ matrix.platform }}" >> dist/crgodicom-dev.app/Contents/Resources/version.txt
+          echo "Branch: develop" >> dist/crgodicom-dev.app/Contents/Resources/version.txt
+          
+          # Create DMG for development
+          hdiutil create -volname "CRGoDICOM Dev ${{ steps.version.outputs.VERSION }}" \
+            -srcfolder dist/crgodicom-dev.app \
+            -ov -format UDZO \
+            dist/crgodicom-dev-${{ steps.version.outputs.VERSION }}-${{ matrix.platform }}.dmg
+
+      # Linux Development Installer
+      - name: Create Linux Development Installer
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          echo "Creating development installer for Linux..."
+          
+          # Create development distribution
+          mkdir -p dist/crgodicom-dev/usr/bin
+          mkdir -p dist/crgodicom-dev/usr/share/applications
+          mkdir -p dist/crgodicom-dev/usr/share/doc/crgodicom
+          
+          # Copy binary
+          cp bin/crgodicom-${{ matrix.platform }} dist/crgodicom-dev/usr/bin/crgodicom
+          chmod +x dist/crgodicom-dev/usr/bin/crgodicom
+          
+          # Create desktop file
+          cat > dist/crgodicom-dev/usr/share/applications/crgodicom-dev.desktop << EOF
+          [Desktop Entry]
+          Name=CRGoDICOM Dev
+          Comment=DICOM Medical Imaging Utility (Development Build)
+          Exec=crgodicom
+          Icon=crgodicom
+          Type=Application
+          Categories=Graphics;Medical;
+          EOF
+          
+          # Copy documentation
+          cp README.md dist/crgodicom-dev/usr/share/doc/crgodicom/
+          cp CHANGELOG.md dist/crgodicom-dev/usr/share/doc/crgodicom/
+          cp crgodicom.yaml dist/crgodicom-dev/usr/share/doc/crgodicom/
+          
+          # Create version info
+          mkdir -p dist/crgodicom-dev/usr/share/doc/crgodicom
+          echo "Version: ${{ steps.version.outputs.VERSION }}" > dist/crgodicom-dev/usr/share/doc/crgodicom/version.txt
+          echo "Build Date: ${{ steps.version.outputs.BUILD_DATE }}" >> dist/crgodicom-dev/usr/share/doc/crgodicom/version.txt
+          echo "Platform: ${{ matrix.platform }}" >> dist/crgodicom-dev/usr/share/doc/crgodicom/version.txt
+          echo "Branch: develop" >> dist/crgodicom-dev/usr/share/doc/crgodicom/version.txt
+          
+          # Create tar.gz installer
+          cd dist
+          tar -czf crgodicom-dev-${{ steps.version.outputs.VERSION }}-${{ matrix.platform }}.tar.gz crgodicom-dev/
+          cd ..
+
+      - name: Upload Development Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: dev-installer-${{ matrix.platform }}
+          path: dist/
+          retention-days: 7  # Shorter retention for dev builds
+
+      - name: Upload Coverage Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-report-${{ matrix.platform }}
+          path: coverage.html
+          retention-days: 7
+
+      - name: Comment PR with Build Status
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+            
+            // Check if build artifacts exist
+            const artifacts = await github.rest.actions.listWorkflowRunArtifacts({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              run_id: context.runId
+            });
+            
+            let comment = `## 🚀 Development Build Status\n\n`;
+            comment += `**Platform**: ${{ matrix.platform }}\n`;
+            comment += `**Version**: ${{ steps.version.outputs.VERSION }}\n`;
+            comment += `**Build Date**: ${{ steps.version.outputs.BUILD_DATE }}\n\n`;
+            
+            if (artifacts.data.artifacts.length > 0) {
+              comment += `✅ **Build Successful**\n`;
+              comment += `📦 Development installer available in artifacts\n\n`;
+            } else {
+              comment += `❌ **Build Failed**\n`;
+              comment += `Check the workflow logs for details\n\n`;
+            }
+            
+            comment += `---\n`;
+            comment += `*This is an automated development build. For production releases, use the main branch.*`;
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+
+      - name: Create Development Release
+        if: github.ref == 'refs/heads/develop' && github.event_name == 'push'
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: dev-${{ steps.version.outputs.VERSION }}
+          name: Development Build ${{ steps.version.outputs.VERSION }}
+          body: |
+            ## 🚀 Development Build
+            
+            **Version**: ${{ steps.version.outputs.VERSION }}
+            **Build Date**: ${{ steps.version.outputs.BUILD_DATE }}
+            **Platform**: ${{ matrix.platform }}
+            **Branch**: develop
+            
+            ### ⚠️ Important Notes
+            - This is a **development build** and should not be used in production
+            - Features may be unstable or incomplete
+            - For production use, please use releases from the main branch
+            
+            ### 📦 Installation
+            1. Download the appropriate installer for your platform
+            2. Follow the installation instructions in the README
+            3. Report any issues on the develop branch
+            
+            ### 🧪 Testing
+            Please test this build and report any issues or feedback.
+          files: |
+            dist/*.zip
+            dist/*.dmg
+            dist/*.tar.gz
+          draft: true
+          prerelease: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
