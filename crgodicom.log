@@ -146,3 +146,19 @@
 {"level":"info","msg":"Exporting series 1.2.840.10008.5.1.4.1.1.1758083884.615900210705117783.series_002 with 2 images","time":"2025-09-17T14:48:50.592+10:00"}
 {"level":"info","msg":"Created PDF report: studies/1.2.840.10008.5.1.4.1.1.1758083884.615900210705117783/exports/study_1.2.840.10008.5.1.4.1.1.1758083884.615900210705117783_report.pdf","time":"2025-09-17T14:48:50.606+10:00"}
 {"level":"info","msg":"Successfully exported study to studies/1.2.840.10008.5.1.4.1.1.1758083884.615900210705117783/exports","time":"2025-09-17T14:48:50.606+10:00"}
+{"level":"info","msg":"Creating 1 study(ies) with 3 series each and 1 images per series","time":"2025-09-17T14:50:08.220+10:00"}
+{"level":"info","msg":"Modality: CR, Region: chest, Output: studies","time":"2025-09-17T14:50:08.220+10:00"}
+{"level":"info","msg":"Writing study 1.2.840.10008.5.1.4.1.1.1758084608.4462841482011563283 to studies/1.2.840.10008.5.1.4.1.1.1758084608.4462841482011563283","time":"2025-09-17T14:50:08.269+10:00"}
+{"level":"info","msg":"Study metadata: UID=1.2.840.10008.5.1.4.1.1.1758084608.4462841482011563283, Patient=SMITH^ROBERT^J (D7431F86), Description=Chest X-Ray - PA Lateral and Oblique Views","time":"2025-09-17T14:50:08.269+10:00"}
+{"level":"info","msg":"Writing series 1.2.840.10008.5.1.4.1.1.1758084608.1168177946939621045 with 1 images","time":"2025-09-17T14:50:08.270+10:00"}
+{"level":"fatal","msg":"Application error: failed to write study 1: failed to write series 1: failed to write image 1: failed to write DICOM file: ValueType does not match the specified type in the VR","time":"2025-09-17T14:50:08.270+10:00"}
+{"level":"info","msg":"Exporting study 1.2.840.10008.5.1.4.1.1.1758084608.4462841482011563283 to pdf format","time":"2025-09-17T14:50:37.838+10:00"}
+{"level":"info","msg":"Input directory: studies","time":"2025-09-17T14:50:37.838+10:00"}
+{"level":"info","msg":"Output file: chest_xray_pa_lateral_oblique.pdf","time":"2025-09-17T14:50:37.838+10:00"}
+{"level":"info","msg":"PDF export is handled as part of the general export process","time":"2025-09-17T14:50:37.839+10:00"}
+{"level":"info","msg":"Exporting study 1.2.840.10008.5.1.4.1.1.1758084608.4462841482011563283 to studies/1.2.840.10008.5.1.4.1.1.1758084608.4462841482011563283","time":"2025-09-17T14:50:37.839+10:00"}
+{"level":"info","msg":"Exporting series 1.2.840.10008.5.1.4.1.1.1758084608.4462841482011563283.series_001 with 1 images","time":"2025-09-17T14:50:37.839+10:00"}
+{"level":"info","msg":"Exporting series 1.2.840.10008.5.1.4.1.1.1758084608.4462841482011563283.series_002 with 1 images","time":"2025-09-17T14:50:37.844+10:00"}
+{"level":"info","msg":"Exporting series 1.2.840.10008.5.1.4.1.1.1758084608.4462841482011563283.series_003 with 1 images","time":"2025-09-17T14:50:37.850+10:00"}
+{"level":"info","msg":"Created PDF report: studies/1.2.840.10008.5.1.4.1.1.1758084608.4462841482011563283/exports/study_1.2.840.10008.5.1.4.1.1.1758084608.4462841482011563283_report.pdf","time":"2025-09-17T14:50:37.856+10:00"}
+{"level":"info","msg":"Successfully exported study to studies/1.2.840.10008.5.1.4.1.1.1758084608.4462841482011563283/exports","time":"2025-09-17T14:50:37.857+10:00"}
