@@ -1,0 +1,4 @@
+{"level":"info","msg":"Using template: chest-xray","time":"2025-09-17T14:12:41.074+10:00"}
+{"level":"info","msg":"Creating 1 study(ies) with 1 series each and 1 images per series","time":"2025-09-17T14:12:41.074+10:00"}
+{"level":"info","msg":"Modality: CR, Region: chest, Output: studies","time":"2025-09-17T14:12:41.074+10:00"}
+{"level":"info","msg":"DICOM study creation not yet implemented","time":"2025-09-17T14:12:41.074+10:00"}

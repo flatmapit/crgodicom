@@ -7,7 +7,7 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/flatmapit/crgodicom/internal/cli"
+	internalcli "github.com/flatmapit/crgodicom/internal/cli"
 	"github.com/flatmapit/crgodicom/internal/config"
 	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli/v2"
@@ -87,13 +87,13 @@ func main() {
 			return nil
 		},
 		Commands: []*cli.Command{
-			cli.CreateCommand(),
-			cli.ListCommand(),
-			cli.SendCommand(),
-			cli.VerifyCommand(),
-			cli.ExportCommand(),
-			cli.CreateTemplateCommand(),
-			// Future: cli.QueryCommand(),
+			internalcli.CreateCommand(),
+			internalcli.ListCommand(),
+			internalcli.SendCommand(),
+			internalcli.VerifyCommand(),
+			internalcli.ExportCommand(),
+			internalcli.CreateTemplateCommand(),
+			// Future: internalcli.QueryCommand(),
 		},
 	}
 
