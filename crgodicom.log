@@ -101,3 +101,21 @@
 {"level":"info","msg":"Exporting series 1.2.840.10008.5.1.4.1.1.1758084204.7177486426013495444.series_002 with 3 images","time":"2025-09-17T14:43:41.288+10:00"}
 {"level":"info","msg":"Created PDF report: studies/1.2.840.10008.5.1.4.1.1.1758084204.7177486426013495444/exports/study_1.2.840.10008.5.1.4.1.1.1758084204.7177486426013495444_report.pdf","time":"2025-09-17T14:43:41.303+10:00"}
 {"level":"info","msg":"Successfully exported study to studies/1.2.840.10008.5.1.4.1.1.1758084204.7177486426013495444/exports","time":"2025-09-17T14:43:41.303+10:00"}
+{"level":"info","msg":"Exporting study 1.2.840.10008.5.1.4.1.1.1758084204.7177486426013495444 to pdf format","time":"2025-09-17T14:47:10.259+10:00"}
+{"level":"info","msg":"Input directory: studies","time":"2025-09-17T14:47:10.259+10:00"}
+{"level":"info","msg":"Output file: ct_chest_with_proper_metadata.pdf","time":"2025-09-17T14:47:10.259+10:00"}
+{"level":"info","msg":"PDF export is handled as part of the general export process","time":"2025-09-17T14:47:10.260+10:00"}
+{"level":"info","msg":"Exporting study 1.2.840.10008.5.1.4.1.1.1758084204.7177486426013495444 to studies/1.2.840.10008.5.1.4.1.1.1758084204.7177486426013495444","time":"2025-09-17T14:47:10.260+10:00"}
+{"level":"info","msg":"Exporting series 1.2.840.10008.5.1.4.1.1.1758084204.7177486426013495444.series_001 with 2 images","time":"2025-09-17T14:47:10.260+10:00"}
+{"level":"info","msg":"Exporting series 1.2.840.10008.5.1.4.1.1.1758084204.7177486426013495444.series_002 with 3 images","time":"2025-09-17T14:47:10.274+10:00"}
+{"level":"info","msg":"Created PDF report: studies/1.2.840.10008.5.1.4.1.1.1758084204.7177486426013495444/exports/study_1.2.840.10008.5.1.4.1.1.1758084204.7177486426013495444_report.pdf","time":"2025-09-17T14:47:10.292+10:00"}
+{"level":"info","msg":"Successfully exported study to studies/1.2.840.10008.5.1.4.1.1.1758084204.7177486426013495444/exports","time":"2025-09-17T14:47:10.292+10:00"}
+{"level":"info","msg":"Exporting study 1.2.840.10008.5.1.4.1.1.1758083884.615900210705117783 to pdf format","time":"2025-09-17T14:47:17.300+10:00"}
+{"level":"info","msg":"Input directory: studies","time":"2025-09-17T14:47:17.300+10:00"}
+{"level":"info","msg":"Output file: us_abdomen_with_proper_metadata.pdf","time":"2025-09-17T14:47:17.300+10:00"}
+{"level":"info","msg":"PDF export is handled as part of the general export process","time":"2025-09-17T14:47:17.301+10:00"}
+{"level":"info","msg":"Exporting study 1.2.840.10008.5.1.4.1.1.1758083884.615900210705117783 to studies/1.2.840.10008.5.1.4.1.1.1758083884.615900210705117783","time":"2025-09-17T14:47:17.301+10:00"}
+{"level":"info","msg":"Exporting series 1.2.840.10008.5.1.4.1.1.1758083884.615900210705117783.series_001 with 2 images","time":"2025-09-17T14:47:17.301+10:00"}
+{"level":"info","msg":"Exporting series 1.2.840.10008.5.1.4.1.1.1758083884.615900210705117783.series_002 with 2 images","time":"2025-09-17T14:47:17.312+10:00"}
+{"level":"info","msg":"Created PDF report: studies/1.2.840.10008.5.1.4.1.1.1758083884.615900210705117783/exports/study_1.2.840.10008.5.1.4.1.1.1758083884.615900210705117783_report.pdf","time":"2025-09-17T14:47:17.323+10:00"}
+{"level":"info","msg":"Successfully exported study to studies/1.2.840.10008.5.1.4.1.1.1758083884.615900210705117783/exports","time":"2025-09-17T14:47:17.323+10:00"}
