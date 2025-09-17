@@ -86,3 +86,18 @@
 {"level":"info","msg":"Exporting series 1.2.840.10008.5.1.4.1.1.1758083884.615900210705117783.series_002 with 2 images","time":"2025-09-17T14:42:11.157+10:00"}
 {"level":"info","msg":"Created PDF report: studies/1.2.840.10008.5.1.4.1.1.1758083884.615900210705117783/exports/study_1.2.840.10008.5.1.4.1.1.1758083884.615900210705117783_report.pdf","time":"2025-09-17T14:42:11.167+10:00"}
 {"level":"info","msg":"Successfully exported study to studies/1.2.840.10008.5.1.4.1.1.1758083884.615900210705117783/exports","time":"2025-09-17T14:42:11.167+10:00"}
+{"level":"info","msg":"Creating 1 study(ies) with 2 series each and 2 images per series","time":"2025-09-17T14:43:24.751+10:00"}
+{"level":"info","msg":"Modality: CT, Region: chest, Output: studies","time":"2025-09-17T14:43:24.751+10:00"}
+{"level":"info","msg":"Writing study 1.2.840.10008.5.1.4.1.1.1758084204.7177486426013495444 to studies/1.2.840.10008.5.1.4.1.1.1758084204.7177486426013495444","time":"2025-09-17T14:43:24.756+10:00"}
+{"level":"info","msg":"Study metadata: UID=1.2.840.10008.5.1.4.1.1.1758084204.7177486426013495444, Patient=JOHNSON^MICHAEL^M (9B8D0F7F), Description=CT Chest - Pre and Post Contrast","time":"2025-09-17T14:43:24.756+10:00"}
+{"level":"info","msg":"Writing series 1.2.840.10008.5.1.4.1.1.1758084204.5096196123092336692 with 2 images","time":"2025-09-17T14:43:24.756+10:00"}
+{"level":"fatal","msg":"Application error: failed to write study 1: failed to write series 1: failed to write image 1: failed to write DICOM file: ValueType does not match the specified type in the VR","time":"2025-09-17T14:43:24.756+10:00"}
+{"level":"info","msg":"Exporting study 1.2.840.10008.5.1.4.1.1.1758084204.7177486426013495444 to pdf format","time":"2025-09-17T14:43:41.278+10:00"}
+{"level":"info","msg":"Input directory: studies","time":"2025-09-17T14:43:41.278+10:00"}
+{"level":"info","msg":"Output file: ct_chest_pre_post_contrast_report.pdf","time":"2025-09-17T14:43:41.278+10:00"}
+{"level":"info","msg":"PDF export is handled as part of the general export process","time":"2025-09-17T14:43:41.279+10:00"}
+{"level":"info","msg":"Exporting study 1.2.840.10008.5.1.4.1.1.1758084204.7177486426013495444 to studies/1.2.840.10008.5.1.4.1.1.1758084204.7177486426013495444","time":"2025-09-17T14:43:41.279+10:00"}
+{"level":"info","msg":"Exporting series 1.2.840.10008.5.1.4.1.1.1758084204.7177486426013495444.series_001 with 2 images","time":"2025-09-17T14:43:41.279+10:00"}
+{"level":"info","msg":"Exporting series 1.2.840.10008.5.1.4.1.1.1758084204.7177486426013495444.series_002 with 3 images","time":"2025-09-17T14:43:41.288+10:00"}
+{"level":"info","msg":"Created PDF report: studies/1.2.840.10008.5.1.4.1.1.1758084204.7177486426013495444/exports/study_1.2.840.10008.5.1.4.1.1.1758084204.7177486426013495444_report.pdf","time":"2025-09-17T14:43:41.303+10:00"}
+{"level":"info","msg":"Successfully exported study to studies/1.2.840.10008.5.1.4.1.1.1758084204.7177486426013495444/exports","time":"2025-09-17T14:43:41.303+10:00"}
