@@ -162,3 +162,45 @@
 {"level":"info","msg":"Exporting series 1.2.840.10008.5.1.4.1.1.1758084608.4462841482011563283.series_003 with 1 images","time":"2025-09-17T14:50:37.850+10:00"}
 {"level":"info","msg":"Created PDF report: studies/1.2.840.10008.5.1.4.1.1.1758084608.4462841482011563283/exports/study_1.2.840.10008.5.1.4.1.1.1758084608.4462841482011563283_report.pdf","time":"2025-09-17T14:50:37.856+10:00"}
 {"level":"info","msg":"Successfully exported study to studies/1.2.840.10008.5.1.4.1.1.1758084608.4462841482011563283/exports","time":"2025-09-17T14:50:37.857+10:00"}
+{"level":"info","msg":"Sending study 1.2.840.10008.5.1.4.1.1.1758084608.4462841482011563283 to PACS localhost:4242 (AEC: DICOM_MANAGER, AET: PACS1)","time":"2025-09-17T14:51:59.900+10:00"}
+{"level":"info","msg":"Studies directory: studies, Retries: 3, Timeout: 30s","time":"2025-09-17T14:51:59.901+10:00"}
+{"level":"info","msg":"Connecting to PACS at localhost:4242","time":"2025-09-17T14:51:59.901+10:00"}
+{"level":"info","msg":"Connected to PACS server localhost:4242","time":"2025-09-17T14:51:59.903+10:00"}
+{"level":"info","msg":"Performing C-ECHO request","time":"2025-09-17T14:51:59.903+10:00"}
+{"level":"info","msg":"Disconnected from PACS server","time":"2025-09-17T14:51:59.907+10:00"}
+{"level":"fatal","msg":"Application error: C-ECHO failed: failed to receive C-ECHO response: EOF","time":"2025-09-17T14:51:59.907+10:00"}
+{"level":"info","msg":"Sending study 1.2.840.10008.5.1.4.1.1.1758084608.4462841482011563283 to PACS localhost:4900 (AEC: DICOM_MANAGER, AET: ORTHANC1)","time":"2025-09-17T14:53:24.979+10:00"}
+{"level":"info","msg":"Studies directory: studies, Retries: 3, Timeout: 30s","time":"2025-09-17T14:53:24.980+10:00"}
+{"level":"info","msg":"Connecting to PACS at localhost:4900","time":"2025-09-17T14:53:24.980+10:00"}
+{"level":"info","msg":"Connected to PACS server localhost:4900","time":"2025-09-17T14:53:24.983+10:00"}
+{"level":"info","msg":"Performing C-ECHO request","time":"2025-09-17T14:53:24.983+10:00"}
+{"level":"info","msg":"Disconnected from PACS server","time":"2025-09-17T14:53:24.985+10:00"}
+{"level":"fatal","msg":"Application error: C-ECHO failed: failed to receive C-ECHO response: EOF","time":"2025-09-17T14:53:24.985+10:00"}
+{"level":"info","msg":"Sending study 1.2.840.10008.5.1.4.1.1.1758084608.4462841482011563283 to PACS localhost:4242 (AEC: DICOM_MANAGER, AET: PACS1)","time":"2025-09-17T14:53:38.486+10:00"}
+{"level":"info","msg":"Studies directory: studies, Retries: 3, Timeout: 30s","time":"2025-09-17T14:53:38.486+10:00"}
+{"level":"info","msg":"Connecting to PACS at localhost:4242","time":"2025-09-17T14:53:38.486+10:00"}
+{"level":"info","msg":"Connected to PACS server localhost:4242","time":"2025-09-17T14:53:38.488+10:00"}
+{"level":"info","msg":"Performing C-ECHO request","time":"2025-09-17T14:53:38.488+10:00"}
+{"level":"info","msg":"Disconnected from PACS server","time":"2025-09-17T14:53:38.490+10:00"}
+{"level":"fatal","msg":"Application error: C-ECHO failed: failed to receive C-ECHO response: EOF","time":"2025-09-17T14:53:38.490+10:00"}
+{"level":"info","msg":"Sending study 1.2.840.10008.5.1.4.1.1.1758084608.4462841482011563283 to PACS localhost:4242 (AEC: DICOM_MANAGER, AET: ORTHANC)","time":"2025-09-17T14:53:45.608+10:00"}
+{"level":"info","msg":"Studies directory: studies, Retries: 3, Timeout: 30s","time":"2025-09-17T14:53:45.609+10:00"}
+{"level":"info","msg":"Connecting to PACS at localhost:4242","time":"2025-09-17T14:53:45.609+10:00"}
+{"level":"info","msg":"Connected to PACS server localhost:4242","time":"2025-09-17T14:53:45.611+10:00"}
+{"level":"info","msg":"Performing C-ECHO request","time":"2025-09-17T14:53:45.611+10:00"}
+{"level":"info","msg":"Disconnected from PACS server","time":"2025-09-17T14:53:45.613+10:00"}
+{"level":"fatal","msg":"Application error: C-ECHO failed: failed to receive C-ECHO response: EOF","time":"2025-09-17T14:53:45.613+10:00"}
+{"level":"info","msg":"Sending study 1.2.840.10008.5.1.4.1.1.1758084608.4462841482011563283 to PACS localhost:11112 (AEC: DICOM_MANAGER, AET: ORTHANC)","time":"2025-09-17T14:55:39.710+10:00"}
+{"level":"info","msg":"Studies directory: studies, Retries: 3, Timeout: 30s","time":"2025-09-17T14:55:39.710+10:00"}
+{"level":"info","msg":"Connecting to PACS at localhost:11112","time":"2025-09-17T14:55:39.710+10:00"}
+{"level":"info","msg":"Connected to PACS server localhost:11112","time":"2025-09-17T14:55:39.711+10:00"}
+{"level":"info","msg":"Performing C-ECHO request","time":"2025-09-17T14:55:39.711+10:00"}
+{"level":"info","msg":"Disconnected from PACS server","time":"2025-09-17T14:55:39.716+10:00"}
+{"level":"fatal","msg":"Application error: C-ECHO failed: failed to receive C-ECHO response: EOF","time":"2025-09-17T14:55:39.716+10:00"}
+{"level":"info","msg":"Sending study 1.2.840.10008.5.1.4.1.1.1758084608.4462841482011563283 to PACS localhost:11112 (AEC: CRGODICOM, AET: ORTHANC)","time":"2025-09-17T14:55:54.518+10:00"}
+{"level":"info","msg":"Studies directory: studies, Retries: 3, Timeout: 30s","time":"2025-09-17T14:55:54.518+10:00"}
+{"level":"info","msg":"Connecting to PACS at localhost:11112","time":"2025-09-17T14:55:54.518+10:00"}
+{"level":"info","msg":"Connected to PACS server localhost:11112","time":"2025-09-17T14:55:54.520+10:00"}
+{"level":"info","msg":"Performing C-ECHO request","time":"2025-09-17T14:55:54.520+10:00"}
+{"level":"info","msg":"Disconnected from PACS server","time":"2025-09-17T14:55:54.522+10:00"}
+{"level":"fatal","msg":"Application error: C-ECHO failed: failed to receive C-ECHO response: EOF","time":"2025-09-17T14:55:54.522+10:00"}
