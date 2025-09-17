@@ -62,3 +62,27 @@
 {"level":"info","msg":"Exporting series 1.2.840.10008.5.1.4.1.1.1758083618.1610799069534959723.series_001 with 1 images","time":"2025-09-17T14:33:46.147+10:00"}
 {"level":"info","msg":"Created PDF report: studies/1.2.840.10008.5.1.4.1.1.1758083618.1610799069534959723/exports/study_1.2.840.10008.5.1.4.1.1.1758083618.1610799069534959723_report.pdf","time":"2025-09-17T14:33:46.150+10:00"}
 {"level":"info","msg":"Successfully exported study to studies/1.2.840.10008.5.1.4.1.1.1758083618.1610799069534959723/exports","time":"2025-09-17T14:33:46.150+10:00"}
+{"level":"info","msg":"Creating 1 study(ies) with 2 series each and 2 images per series","time":"2025-09-17T14:38:04.904+10:00"}
+{"level":"info","msg":"Modality: US, Region: chest, Output: studies","time":"2025-09-17T14:38:04.904+10:00"}
+{"level":"info","msg":"Writing study 1.2.840.10008.5.1.4.1.1.1758083884.615900210705117783 to studies/1.2.840.10008.5.1.4.1.1.1758083884.615900210705117783","time":"2025-09-17T14:38:04.913+10:00"}
+{"level":"info","msg":"Study metadata: UID=1.2.840.10008.5.1.4.1.1.1758083884.615900210705117783, Patient=WILSON^SARAH^M (5EE3A65C), Description=Ultrasound Abdomen - Bilateral Study","time":"2025-09-17T14:38:04.913+10:00"}
+{"level":"info","msg":"Writing series 1.2.840.10008.5.1.4.1.1.1758083884.3611721890006598709 with 2 images","time":"2025-09-17T14:38:04.913+10:00"}
+{"level":"fatal","msg":"Application error: failed to write study 1: failed to write series 1: failed to write image 1: failed to write DICOM file: ValueType does not match the specified type in the VR","time":"2025-09-17T14:38:04.913+10:00"}
+{"level":"info","msg":"Exporting study 1.2.840.10008.5.1.4.1.1.1758083884.615900210705117783 to pdf format","time":"2025-09-17T14:38:29.824+10:00"}
+{"level":"info","msg":"Input directory: studies","time":"2025-09-17T14:38:29.824+10:00"}
+{"level":"info","msg":"Output file: ultrasound_bilateral_report.pdf","time":"2025-09-17T14:38:29.824+10:00"}
+{"level":"info","msg":"PDF export is handled as part of the general export process","time":"2025-09-17T14:38:29.825+10:00"}
+{"level":"info","msg":"Exporting study 1.2.840.10008.5.1.4.1.1.1758083884.615900210705117783 to studies/1.2.840.10008.5.1.4.1.1.1758083884.615900210705117783","time":"2025-09-17T14:38:29.825+10:00"}
+{"level":"info","msg":"Exporting series 1.2.840.10008.5.1.4.1.1.1758083884.615900210705117783.series_001 with 2 images","time":"2025-09-17T14:38:29.825+10:00"}
+{"level":"info","msg":"Exporting series 1.2.840.10008.5.1.4.1.1.1758083884.615900210705117783.series_002 with 2 images","time":"2025-09-17T14:38:29.830+10:00"}
+{"level":"info","msg":"Created PDF report: studies/1.2.840.10008.5.1.4.1.1.1758083884.615900210705117783/exports/study_1.2.840.10008.5.1.4.1.1.1758083884.615900210705117783_report.pdf","time":"2025-09-17T14:38:29.836+10:00"}
+{"level":"info","msg":"Successfully exported study to studies/1.2.840.10008.5.1.4.1.1.1758083884.615900210705117783/exports","time":"2025-09-17T14:38:29.836+10:00"}
+{"level":"info","msg":"Exporting study 1.2.840.10008.5.1.4.1.1.1758083884.615900210705117783 to pdf format","time":"2025-09-17T14:42:11.145+10:00"}
+{"level":"info","msg":"Input directory: studies","time":"2025-09-17T14:42:11.145+10:00"}
+{"level":"info","msg":"Output file: ultrasound_bilateral_report_with_images.pdf","time":"2025-09-17T14:42:11.145+10:00"}
+{"level":"info","msg":"PDF export is handled as part of the general export process","time":"2025-09-17T14:42:11.146+10:00"}
+{"level":"info","msg":"Exporting study 1.2.840.10008.5.1.4.1.1.1758083884.615900210705117783 to studies/1.2.840.10008.5.1.4.1.1.1758083884.615900210705117783","time":"2025-09-17T14:42:11.146+10:00"}
+{"level":"info","msg":"Exporting series 1.2.840.10008.5.1.4.1.1.1758083884.615900210705117783.series_001 with 2 images","time":"2025-09-17T14:42:11.146+10:00"}
+{"level":"info","msg":"Exporting series 1.2.840.10008.5.1.4.1.1.1758083884.615900210705117783.series_002 with 2 images","time":"2025-09-17T14:42:11.157+10:00"}
+{"level":"info","msg":"Created PDF report: studies/1.2.840.10008.5.1.4.1.1.1758083884.615900210705117783/exports/study_1.2.840.10008.5.1.4.1.1.1758083884.615900210705117783_report.pdf","time":"2025-09-17T14:42:11.167+10:00"}
+{"level":"info","msg":"Successfully exported study to studies/1.2.840.10008.5.1.4.1.1.1758083884.615900210705117783/exports","time":"2025-09-17T14:42:11.167+10:00"}

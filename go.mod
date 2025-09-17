@@ -1,6 +1,6 @@
 module github.com/flatmapit/crgodicom
 
-go 1.21
+go 1.24.0
 
 require (
 	github.com/sirupsen/logrus v1.9.3
@@ -16,7 +16,7 @@ require (
 	github.com/stretchr/testify v1.8.4 // indirect
 	github.com/suyashkumar/dicom v1.0.7 // indirect
 	github.com/xrash/smetrics v0.0.0-20201216005158-039620a65673 // indirect
-	golang.org/x/image v0.0.0-20191009234506-e7c1f5e7dbb8 // indirect
+	golang.org/x/image v0.31.0 // indirect
 	golang.org/x/sys v0.5.0 // indirect
-	golang.org/x/text v0.3.8 // indirect
+	golang.org/x/text v0.29.0 // indirect
 )
