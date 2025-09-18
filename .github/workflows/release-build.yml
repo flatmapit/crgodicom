@@ -15,9 +15,6 @@ jobs:
           - os: ubuntu-latest
             platform: linux-amd64
             installer_type: appimage
-          - os: ubuntu-latest
-            platform: linux-arm64
-            installer_type: appimage
           - os: windows-latest
             platform: windows-amd64
             installer_type: msi
@@ -139,16 +136,10 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y fuse libfuse2
           
-          # Download appropriate AppImageTool based on architecture
-          if [[ "${{ matrix.platform }}" == "linux-arm64" ]]; then
-            wget https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-aarch64.AppImage
-            chmod +x appimagetool-aarch64.AppImage
-            APPIMAGETOOL="./appimagetool-aarch64.AppImage"
-          else
-            wget https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
-            chmod +x appimagetool-x86_64.AppImage
-            APPIMAGETOOL="./appimagetool-x86_64.AppImage"
-          fi
+          # Download AppImageTool for AMD64
+          wget https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
+          chmod +x appimagetool-x86_64.AppImage
+          APPIMAGETOOL="./appimagetool-x86_64.AppImage"
           
           # Create AppImage structure
           mkdir -p dist/AppDir/usr/bin
