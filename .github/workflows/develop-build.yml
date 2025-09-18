@@ -50,11 +50,14 @@ jobs:
           echo "<!-- No tests found -->" > coverage.html
 
       - name: Build binary
+        shell: bash
         run: |
           GOOS=${{ matrix.platform == 'windows-amd64' && 'windows' || (matrix.platform == 'darwin-amd64' || matrix.platform == 'darwin-arm64') && 'darwin' || 'linux' }} \
           GOARCH=${{ matrix.platform == 'windows-amd64' && 'amd64' || matrix.platform == 'darwin-amd64' && 'amd64' || matrix.platform == 'darwin-arm64' && 'arm64' || 'amd64' }} \
+          OUTPUT_NAME="bin/crgodicom-${{ matrix.platform }}" && \
+          if [[ "${{ matrix.platform }}" == "windows-amd64" ]]; then OUTPUT_NAME="${OUTPUT_NAME}.exe"; fi && \
           go build -ldflags "-X main.Version=${{ steps.version.outputs.VERSION }} -X main.BuildDate=${{ steps.version.outputs.BUILD_DATE }} -s -w" \
-          -o bin/crgodicom-${{ matrix.platform }} cmd/crgodicom/main.go
+          -o "$OUTPUT_NAME" cmd/crgodicom/main.go
 
       # Windows Development Installer
       - name: Create Windows Development Installer
