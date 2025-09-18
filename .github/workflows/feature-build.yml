@@ -1,0 +1,295 @@
+name: Feature Branch Build and Installer
+
+on:
+  push:
+    branches:
+      - 'feature/*'
+      - 'feat/*'
+      - 'hotfix/*'
+  pull_request:
+    branches:
+      - develop
+      - main
+  workflow_dispatch:  # Allow manual triggering
+
+jobs:
+  build-and-test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            platform: linux-amd64
+          - os: windows-latest
+            platform: windows-amd64
+          - os: macos-latest
+            platform: darwin-amd64
+          - os: macos-latest
+            platform: darwin-arm64
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.21'
+
+      - name: Get feature version
+        id: version
+        shell: bash
+        run: |
+          BRANCH_NAME=${GITHUB_REF#refs/heads/}
+          echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_OUTPUT
+          echo "VERSION=feat-$(echo $BRANCH_NAME | sed 's/[^a-zA-Z0-9]/-/g')-$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+          echo "BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> $GITHUB_OUTPUT
+
+      - name: Install dependencies
+        shell: bash
+        run: go mod download && go mod tidy
+
+      - name: Run tests
+        shell: bash
+        run: |
+          go test -v -race -coverprofile=coverage.out ./...
+          go tool cover -html=coverage.out -o coverage.html
+
+      - name: Build binary
+        shell: bash
+        run: |
+          GOOS=${{ matrix.platform == 'windows-amd64' && 'windows' || (matrix.platform == 'darwin-amd64' || matrix.platform == 'darwin-arm64') && 'darwin' || 'linux' }} \
+          GOARCH=${{ matrix.platform == 'windows-amd64' && 'amd64' || matrix.platform == 'darwin-amd64' && 'amd64' || matrix.platform == 'darwin-arm64' && 'arm64' || 'amd64' }} \
+          OUTPUT_NAME="bin/crgodicom-${{ matrix.platform }}" && \
+          if [[ "${{ matrix.platform }}" == "windows-amd64" ]]; then OUTPUT_NAME="${OUTPUT_NAME}.exe"; fi && \
+          go build -ldflags "-X main.Version=${{ steps.version.outputs.VERSION }} -X main.BuildDate=${{ steps.version.outputs.BUILD_DATE }} -s -w" \
+          -o "$OUTPUT_NAME" cmd/crgodicom/main.go
+
+      # Windows Feature Installer
+      - name: Create Windows Feature Installer
+        if: matrix.os == 'windows-latest'
+        shell: bash
+        run: |
+          echo "Creating feature installer for Windows..."
+          
+          # Create feature distribution
+          mkdir -p dist/crgodicom-feat
+          cp bin/crgodicom-${{ matrix.platform }}.exe dist/crgodicom-feat/crgodicom.exe
+          cp README.md dist/crgodicom-feat/
+          cp crgodicom.yaml dist/crgodicom-feat/
+          
+          # Create feature info file
+          echo "Version: ${{ steps.version.outputs.VERSION }}" > dist/crgodicom-feat/version.txt
+          echo "Build Date: ${{ steps.version.outputs.BUILD_DATE }}" >> dist/crgodicom-feat/version.txt
+          echo "Platform: ${{ matrix.platform }}" >> dist/crgodicom-feat/version.txt
+          echo "Branch: ${{ steps.version.outputs.BRANCH_NAME }}" >> dist/crgodicom-feat/version.txt
+          echo "Commit: $(git rev-parse HEAD)" >> dist/crgodicom-feat/version.txt
+          
+          # Create ZIP installer
+          cd dist
+          powershell Compress-Archive -Path crgodicom-feat -DestinationPath crgodicom-feat-${{ steps.version.outputs.VERSION }}-${{ matrix.platform }}.zip
+          cd ..
+
+      # macOS Feature Installer
+      - name: Create macOS Feature Installer
+        if: matrix.os == 'macos-latest'
+        shell: bash
+        run: |
+          echo "Creating feature installer for macOS (${{ matrix.platform }})..."
+          
+          # Create architecture-specific app bundle name
+          BUNDLE_NAME="crgodicom-feat-${{ matrix.platform }}.app"
+          
+          # Create feature app bundle
+          mkdir -p dist/$BUNDLE_NAME/Contents/MacOS
+          mkdir -p dist/$BUNDLE_NAME/Contents/Resources
+          
+          # Copy binary
+          cp bin/crgodicom-${{ matrix.platform }} dist/$BUNDLE_NAME/Contents/MacOS/crgodicom
+          chmod +x dist/$BUNDLE_NAME/Contents/MacOS/crgodicom
+          
+          # Create Info.plist for feature
+          cat > dist/$BUNDLE_NAME/Contents/Info.plist << EOF
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+              <key>CFBundleExecutable</key>
+              <string>crgodicom</string>
+              <key>CFBundleIdentifier</key>
+              <string>com.flatmapit.crgodicom.feat.${{ matrix.platform }}</string>
+              <key>CFBundleName</key>
+              <string>CRGoDICOM Feature</string>
+              <key>CFBundleVersion</key>
+              <string>${{ steps.version.outputs.VERSION }}</string>
+              <key>CFBundleShortVersionString</key>
+              <string>${{ steps.version.outputs.VERSION }}</string>
+              <key>CFBundleInfoDictionaryVersion</key>
+              <string>6.0</string>
+              <key>CFBundlePackageType</key>
+              <string>APPL</string>
+              <key>NSHumanReadableCopyright</key>
+              <string>Feature Build - Experimental Features</string>
+          </dict>
+          </plist>
+          EOF
+          
+          # Copy additional files
+          cp README.md dist/$BUNDLE_NAME/Contents/Resources/
+          cp crgodicom.yaml dist/$BUNDLE_NAME/Contents/Resources/
+          
+          # Create feature info
+          echo "Version: ${{ steps.version.outputs.VERSION }}" > dist/$BUNDLE_NAME/Contents/Resources/version.txt
+          echo "Build Date: ${{ steps.version.outputs.BUILD_DATE }}" >> dist/$BUNDLE_NAME/Contents/Resources/version.txt
+          echo "Platform: ${{ matrix.platform }}" >> dist/$BUNDLE_NAME/Contents/Resources/version.txt
+          echo "Branch: ${{ steps.version.outputs.BRANCH_NAME }}" >> dist/$BUNDLE_NAME/Contents/Resources/version.txt
+          echo "Commit: $(git rev-parse HEAD)" >> dist/$BUNDLE_NAME/Contents/Resources/version.txt
+          
+          # Create DMG for feature
+          hdiutil create -volname "CRGoDICOM Feature ${{ steps.version.outputs.VERSION }}" \
+            -srcfolder dist/$BUNDLE_NAME \
+            -ov -format UDZO \
+            dist/crgodicom-feat-${{ steps.version.outputs.VERSION }}-${{ matrix.platform }}.dmg
+
+      # Linux Feature Installer
+      - name: Create Linux Feature Installer
+        if: matrix.os == 'ubuntu-latest'
+        shell: bash
+        run: |
+          echo "Creating feature installer for Linux..."
+          
+          # Create feature distribution
+          mkdir -p dist/crgodicom-feat/usr/bin
+          mkdir -p dist/crgodicom-feat/usr/share/applications
+          mkdir -p dist/crgodicom-feat/usr/share/doc/crgodicom
+          
+          # Copy binary
+          cp bin/crgodicom-${{ matrix.platform }} dist/crgodicom-feat/usr/bin/crgodicom
+          chmod +x dist/crgodicom-feat/usr/bin/crgodicom
+          
+          # Create desktop file
+          cat > dist/crgodicom-feat/usr/share/applications/crgodicom-feat.desktop << EOF
+          [Desktop Entry]
+          Name=CRGoDICOM Feature
+          Comment=DICOM Medical Imaging Utility (Feature Build)
+          Exec=crgodicom
+          Icon=crgodicom
+          Type=Application
+          Categories=Graphics;Medical;
+          EOF
+          
+          # Copy documentation
+          cp README.md dist/crgodicom-feat/usr/share/doc/crgodicom/
+          cp crgodicom.yaml dist/crgodicom-feat/usr/share/doc/crgodicom/
+          
+          # Create feature info
+          mkdir -p dist/crgodicom-feat/usr/share/doc/crgodicom
+          echo "Version: ${{ steps.version.outputs.VERSION }}" > dist/crgodicom-feat/usr/share/doc/crgodicom/version.txt
+          echo "Build Date: ${{ steps.version.outputs.BUILD_DATE }}" >> dist/crgodicom-feat/usr/share/doc/crgodicom/version.txt
+          echo "Platform: ${{ matrix.platform }}" >> dist/crgodicom-feat/usr/share/doc/crgodicom/version.txt
+          echo "Branch: ${{ steps.version.outputs.BRANCH_NAME }}" >> dist/crgodicom-feat/usr/share/doc/crgodicom/version.txt
+          echo "Commit: $(git rev-parse HEAD)" >> dist/crgodicom-feat/usr/share/doc/crgodicom/version.txt
+          
+          # Create tar.gz installer
+          cd dist
+          tar -czf crgodicom-feat-${{ steps.version.outputs.VERSION }}-${{ matrix.platform }}.tar.gz crgodicom-feat/
+          cd ..
+
+      - name: Upload Feature Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: feat-installer-${{ matrix.platform }}
+          path: dist/
+          retention-days: 3  # Very short retention for feature builds
+
+      - name: Upload Coverage Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-feat-${{ matrix.platform }}
+          path: coverage.html
+          retention-days: 3
+
+      - name: Comment PR with Feature Build Status
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+            
+            // Check if build artifacts exist
+            const artifacts = await github.rest.actions.listWorkflowRunArtifacts({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              run_id: context.runId
+            });
+            
+            let comment = `## 🚀 Feature Build Status\n\n`;
+            comment += `**Feature**: ${{ steps.version.outputs.BRANCH_NAME }}\n`;
+            comment += `**Version**: ${{ steps.version.outputs.VERSION }}\n`;
+            comment += `**Platform**: ${{ matrix.platform }}\n`;
+            comment += `**Build Date**: ${{ steps.version.outputs.BUILD_DATE }}\n\n`;
+            
+            if (artifacts.data.artifacts.length > 0) {
+              comment += `✅ **Build Successful**\n`;
+              comment += `📦 Feature installer available in artifacts\n\n`;
+              comment += `### 🧪 Testing Instructions\n`;
+              comment += `1. Download the installer from the artifacts\n`;
+              comment += `2. Install and test the new feature\n`;
+              comment += `3. Report any issues or feedback\n\n`;
+            } else {
+              comment += `❌ **Build Failed**\n`;
+              comment += `Check the workflow logs for details\n\n`;
+            }
+            
+            comment += `---\n`;
+            comment += `*This is an automated feature build. Features may be experimental.*`;
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+
+      - name: Create Feature Release (Draft)
+        if: startsWith(github.ref, 'refs/heads/feature/') && github.event_name == 'push'
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: feat-${{ steps.version.outputs.VERSION }}
+          name: Feature Build ${{ steps.version.outputs.VERSION }}
+          body: |
+            ## 🚀 Feature Build
+            
+            **Feature**: ${{ steps.version.outputs.BRANCH_NAME }}
+            **Version**: ${{ steps.version.outputs.VERSION }}
+            **Build Date**: ${{ steps.version.outputs.BUILD_DATE }}
+            **Platform**: ${{ matrix.platform }}
+            
+            ### ⚠️ Important Notes
+            - This is a **feature build** with experimental functionality
+            - Features may be unstable or incomplete
+            - This build is for testing purposes only
+            - Do not use in production environments
+            
+            ### 🧪 Testing
+            1. Download the appropriate installer for your platform
+            2. Install and test the new feature
+            3. Report any issues or feedback
+            4. Provide feedback on the feature implementation
+            
+            ### 📋 Feature Details
+            This build includes experimental features from the `${{ steps.version.outputs.BRANCH_NAME }}` branch.
+            
+            **Commit**: $(git rev-parse HEAD)
+            **Branch**: ${{ steps.version.outputs.BRANCH_NAME }}
+          files: |
+            dist/*.zip
+            dist/*.dmg
+            dist/*.tar.gz
+          draft: true
+          prerelease: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

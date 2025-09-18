@@ -1,0 +1,10 @@
+template:
+    anatomical_region: brain
+    image_count: 25
+    modality: CT
+    name: my-ct-brain
+    series_count: 2
+    study_description: Custom CT Brain Study
+usage:
+    description: Study template for DICOM generation
+    example: crgodicom create --template my-ct-brain

@@ -49,6 +49,37 @@ crgodicom export --study-id <study-uid> --format png --output-dir exports/
 crgodicom create-template --name my-template --modality CT --series-count 2 --image-count 20
 ```
 
+## Templates
+
+CRGoDICOM comes with built-in templates for common medical imaging modalities:
+
+### Built-in Templates
+- **chest-xray**: Computed Radiography (CR) chest imaging
+- **ct-chest**: Computed Tomography (CT) chest with multiple series
+- **ultrasound-abdomen**: Ultrasound (US) abdominal imaging
+- **mammography**: Mammography (MG) breast imaging
+- **digital-xray**: Digital X-Ray (DX) imaging
+- **mri-brain**: Magnetic Resonance Imaging (MR) brain studies
+
+### Template Examples
+📚 **[View Complete Template Examples](docs/template-examples/README.md)** - Comprehensive examples showing:
+- Generated images with burnt-in metadata
+- PDF reports with all images and technical details
+- DICOM metadata dumps
+- Usage examples and customization options
+- Clinical context and use cases
+
+### Custom Templates
+```bash
+# Create a custom template
+crgodicom create-template --name cardiac-mri \
+  --modality MR --series-count 4 --image-count 25 \
+  --anatomical-region heart --study-description "Cardiac MRI"
+
+# Use custom template
+crgodicom create --template cardiac-mri
+```
+
 ## Configuration
 
 The application uses a YAML configuration file (`crgodicom.yaml`) in the current working directory. CLI flags override configuration file values.

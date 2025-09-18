@@ -97,6 +97,7 @@ func main() {
 			internalcli.VerifyCommand(),
 			internalcli.ExportCommand(),
 			internalcli.CreateTemplateCommand(),
+			internalcli.CreateCheckDCMTKCommand(),
 			// Future: internalcli.QueryCommand(),
 		},
 	}

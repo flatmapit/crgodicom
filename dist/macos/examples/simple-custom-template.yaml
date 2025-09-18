@@ -1,0 +1,91 @@
+# Simple Custom Template Example
+# This is a basic template showing how to add custom DICOM tags
+
+template:
+  name: "custom-ct-brain"
+  modality: "CT"
+  series_count: 2
+  image_count: 25
+  anatomical_region: "brain"
+  study_description: "Custom CT Brain Study"
+  
+  # Standard template fields
+  patient_name: "BRAIN^STUDY^PATIENT"
+  patient_id: "BRAIN001"
+  accession_number: "ACC789012"
+  
+  # Custom DICOM tags - these will be added to the generated DICOM files
+  custom_tags:
+    # Patient information custom tags
+    patient:
+      "(0010,1010)": "45Y"                    # Patient Age
+      "(0010,1020)": "180.5"                  # Patient Height (cm)
+      "(0010,1030)": "75.0"                   # Patient Weight (kg)
+      "(0010,1040)": "M"                      # Patient Sex
+    
+    # Study information custom tags
+    study:
+      "(0008,103E)": "BRAIN_CT_PROTOCOL"      # Series Description
+      "(0018,0015)": "BRAIN"                  # Body Part Examined
+      "(0018,1030)": "HEAD_FIRST_SUPINE"      # Protocol Name
+      "(0020,0010)": "STUDY123"               # Study ID
+    
+    # Series information custom tags
+    series:
+      "(0018,0010)": "IV_CONTRAST"            # Contrast/Bolus Agent
+      "(0018,0012)": "IOPAMIDOL"              # Contrast/Bolus Agent Sequence
+      "(0018,0014)": "IV"                     # Contrast/Bolus Route
+      "(0018,1040)": "100"                    # Contrast/Bolus Volume
+      "(0018,1041)": "ML"                     # Contrast/Bolus Total Dose
+      "(0018,1048)": "2.5"                    # Contrast/Bolus Flow Rate
+      "(0018,1049)": "ML/S"                   # Contrast/Bolus Flow Rate Units
+      "(0018,1050)": "75"                     # Contrast/Bolus Start Time
+      "(0018,1072)": "85"                     # Contrast/Bolus Stop Time
+    
+    # Equipment information custom tags
+    equipment:
+      "(0008,0070)": "ACME_MEDICAL"           # Manufacturer
+      "(0008,1090)": "CT_SCANNER_PRO_2024"    # Manufacturer's Model Name
+      "(0018,1000)": "SN123456789"            # Device Serial Number
+      "(0018,1020)": "v2.1.4"                 # Software Version(s)
+    
+    # Institution information custom tags
+    institution:
+      "(0008,0080)": "ACME_HOSPITAL"          # Institution Name
+      "(0008,0081)": "123 MAIN ST"            # Institution Address
+      "(0008,1010)": "CT_STATION_01"          # Station Name
+      "(0008,1040)": "RADIOLOGY_DEPT"         # Institutional Department Name
+      "(0008,1048)": "DR_SMITH"               # Physician(s) of Record
+      "(0008,1049)": "DR_JONES"               # Physician(s) Reading Study
+      "(0008,1050)": "TECH_JOHNSON"           # Performing Physician's Name
+      "(0008,1060)": "RADIOLOGY"              # Name of Physician(s) Reading Study
+
+usage:
+  description: "Simple custom CT brain template with basic custom DICOM tags"
+  example: "crgodicom create --template custom-ct-brain"
+  
+  # How to use this template:
+  steps:
+    1: "Copy this file to your crgodicom configuration directory"
+    2: "Add the template section to your crgodicom.yaml file under study_templates:"
+    3: "Run: ./bin/crgodicom create --template custom-ct-brain"
+    4: "Optionally override custom tags: --custom-tag '(0010,1010)' '50Y'"
+
+  # Adding to crgodicom.yaml:
+  yaml_example: |
+    study_templates:
+      custom-ct-brain:
+        modality: "CT"
+        series_count: 2
+        image_count: 25
+        anatomical_region: "brain"
+        study_description: "Custom CT Brain Study"
+        patient_name: "BRAIN^STUDY^PATIENT"
+        patient_id: "BRAIN001"
+        accession_number: "ACC789012"
+        custom_tags:
+          patient:
+            "(0010,1010)": "45Y"
+            "(0010,1020)": "180.5"
+            "(0010,1030)": "75.0"
+          # ... rest of custom tags

@@ -1,0 +1,110 @@
+name: Simple Build Test
+
+on:
+  push:
+    branches:
+      - feature/autobuild-installer
+  workflow_dispatch:
+
+jobs:
+  test-build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            platform: linux-amd64
+          - os: windows-latest
+            platform: windows-amd64
+          - os: macos-latest
+            platform: darwin-amd64
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.21'
+
+      - name: Install dependencies
+        shell: bash
+        run: |
+          go mod download
+          go mod tidy
+
+      - name: Run tests
+        shell: bash
+        run: |
+          go test -v ./...
+
+      - name: Build binary
+        shell: bash
+        run: |
+          echo "Building for platform: ${{ matrix.platform }}"
+          echo "OS: ${{ matrix.os }}"
+          
+          # Set GOOS and GOARCH based on platform
+          case "${{ matrix.platform }}" in
+            "windows-amd64")
+              export GOOS=windows
+              export GOARCH=amd64
+              BINARY_NAME="crgodicom-windows-amd64.exe"
+              ;;
+            "darwin-amd64")
+              export GOOS=darwin
+              export GOARCH=amd64
+              BINARY_NAME="crgodicom-darwin-amd64"
+              ;;
+            "linux-amd64")
+              export GOOS=linux
+              export GOARCH=amd64
+              BINARY_NAME="crgodicom-linux-amd64"
+              ;;
+          esac
+          
+          echo "GOOS=$GOOS GOARCH=$GOARCH"
+          echo "Building binary: $BINARY_NAME"
+          
+          mkdir -p bin
+          go build -ldflags "-s -w" -o bin/$BINARY_NAME cmd/crgodicom/main.go
+          
+          echo "Build completed successfully"
+          ls -la bin/
+
+      - name: Test binary
+        shell: bash
+        run: |
+          case "${{ matrix.platform }}" in
+            "windows-amd64")
+              BINARY_NAME="crgodicom-windows-amd64.exe"
+              ;;
+            "darwin-amd64")
+              BINARY_NAME="crgodicom-darwin-amd64"
+              ;;
+            "linux-amd64")
+              BINARY_NAME="crgodicom-linux-amd64"
+              ;;
+          esac
+          
+          echo "Testing binary: $BINARY_NAME"
+          
+          if [ -f "bin/$BINARY_NAME" ]; then
+            echo "✅ Binary exists"
+            ls -la bin/$BINARY_NAME
+            echo "Binary size: $(wc -c < bin/$BINARY_NAME) bytes"
+          else
+            echo "❌ Binary not found"
+            ls -la bin/
+            exit 1
+          fi
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-${{ matrix.platform }}
+          path: bin/
+          retention-days: 1

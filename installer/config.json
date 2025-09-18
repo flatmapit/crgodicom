@@ -1,0 +1,148 @@
+{
+  "application": {
+    "name": "CRGoDICOM",
+    "displayName": "CRGoDICOM - DICOM Medical Imaging Utility",
+    "description": "A comprehensive DICOM medical imaging utility for creating, managing, and transmitting medical images",
+    "version": "1.0.0",
+    "vendor": "FlatMapIt",
+    "website": "https://flatmapit.com",
+    "license": "MIT",
+    "icon": "assets/icon.png"
+  },
+  "installer": {
+    "windows": {
+      "type": "msi",
+      "installDir": "C:\\Program Files\\CRGoDICOM",
+      "startMenu": true,
+      "desktopShortcut": true,
+      "uninstaller": true,
+      "registryKeys": [
+        {
+          "key": "HKEY_LOCAL_MACHINE\\SOFTWARE\\CRGoDICOM",
+          "values": {
+            "InstallPath": "{INSTALL_DIR}",
+            "Version": "{VERSION}"
+          }
+        }
+      ],
+      "fileAssociations": [
+        {
+          "extension": ".dcm",
+          "description": "DICOM Medical Image",
+          "icon": "assets/dicom-icon.ico"
+        }
+      ]
+    },
+    "macos": {
+      "type": "dmg",
+      "installDir": "/Applications",
+      "appBundle": true,
+      "codeSigning": {
+        "enabled": false,
+        "identity": "",
+        "entitlements": "installer/entitlements.plist"
+      },
+      "notarization": {
+        "enabled": false,
+        "appleId": "",
+        "password": "",
+        "teamId": ""
+      }
+    },
+    "linux": {
+      "type": "appimage",
+      "installDir": "/usr/local/bin",
+      "desktopFile": true,
+      "systemIntegration": true,
+      "packageFormats": ["appimage", "deb", "rpm", "tar.gz"]
+    }
+  },
+  "dependencies": {
+    "system": {
+      "windows": {
+        "minVersion": "Windows 10",
+        "architectures": ["x64", "arm64"],
+        "requirements": [
+          "Visual C++ Redistributable 2019+",
+          ".NET Framework 4.7.2+"
+        ]
+      },
+      "macos": {
+        "minVersion": "macOS 10.15",
+        "architectures": ["x64", "arm64"],
+        "requirements": []
+      },
+      "linux": {
+        "minVersion": "Ubuntu 18.04 / CentOS 7",
+        "architectures": ["x64", "arm64"],
+        "requirements": [
+          "libc6",
+          "libfuse2"
+        ]
+      }
+    },
+    "runtime": {
+      "go": "1.21+",
+      "dcmtk": "3.6.7+",
+      "optional": [
+        "ImageMagick",
+        "GDCM"
+      ]
+    }
+  },
+  "files": {
+    "include": [
+      "bin/crgodicom*",
+      "README.md",
+      "CHANGELOG.md",
+      "LICENSE",
+      "crgodicom.yaml",
+      "examples/",
+      "assets/"
+    ],
+    "exclude": [
+      "*.log",
+      "studies/",
+      "test/",
+      ".git/",
+      "*.tmp"
+    ]
+  },
+  "postInstall": {
+    "windows": [
+      {
+        "type": "script",
+        "script": "installer/scripts/windows-post-install.bat"
+      }
+    ],
+    "macos": [
+      {
+        "type": "script",
+        "script": "installer/scripts/macos-post-install.sh"
+      }
+    ],
+    "linux": [
+      {
+        "type": "script",
+        "script": "installer/scripts/linux-post-install.sh"
+      }
+    ]
+  },
+  "uninstall": {
+    "windows": {
+      "removeRegistry": true,
+      "removeFiles": true,
+      "removeShortcuts": true
+    },
+    "macos": {
+      "removeAppBundle": true,
+      "removePreferences": true,
+      "removeCache": true
+    },
+    "linux": {
+      "removeBinary": true,
+      "removeDesktopFile": true,
+      "removeSystemIntegration": true
+    }
+  }
+}

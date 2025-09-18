@@ -562,3 +562,45 @@
 {"level":"info","msg":"Creating template 'my-ct-brain' with modality CT","time":"2025-09-18T07:26:02.030+10:00"}
 {"level":"info","msg":"Series: 2, Images: 25, Region: brain","time":"2025-09-18T07:26:02.031+10:00"}
 {"level":"info","msg":"Output file: examples/my-ct-brain-template.yaml","time":"2025-09-18T07:26:02.031+10:00"}
+{"level":"info","msg":"Using template: chest-xray","time":"2025-09-18T10:38:14.637+10:00"}
+{"level":"info","msg":"Creating 1 study(ies) with 1 series each and 1 images per series","time":"2025-09-18T10:38:14.638+10:00"}
+{"level":"info","msg":"Modality: CR, Region: chest, Output: studies","time":"2025-09-18T10:38:14.638+10:00"}
+{"level":"info","msg":"Writing study 1.2.840.10008.5.1.4.1.1.1758155894.8832253873966626943 to studies/1.2.840.10008.5.1.4.1.1.1758155894.8832253873966626943","time":"2025-09-18T10:38:14.658+10:00"}
+{"level":"info","msg":"Study metadata: UID=1.2.840.10008.5.1.4.1.1.1758155894.8832253873966626943, Patient=DEMO^CHEST (CX001), Description=Generated Study","time":"2025-09-18T10:38:14.658+10:00"}
+{"level":"info","msg":"Writing series 1.2.840.10008.5.1.4.1.1.1758155894.7906707276168878551 with 1 images","time":"2025-09-18T10:38:14.658+10:00"}
+{"level":"fatal","msg":"Application error: failed to write study 1: failed to write series 1: failed to write image 1: failed to write DICOM file: ValueType does not match the specified type in the VR","time":"2025-09-18T10:38:14.659+10:00"}
+{"level":"fatal","msg":"Application error: flag provided but not defined: -verbose","time":"2025-09-18T10:38:22.224+10:00"}
+{"level":"info","msg":"Using template: chest-xray","time":"2025-09-18T10:38:26.001+10:00"}
+{"level":"info","msg":"Creating 1 study(ies) with 1 series each and 1 images per series","time":"2025-09-18T10:38:26.001+10:00"}
+{"level":"info","msg":"Modality: CR, Region: chest, Output: studies","time":"2025-09-18T10:38:26.001+10:00"}
+{"level":"info","msg":"Writing study 1.2.840.10008.5.1.4.1.1.1758155906.5064502216790425427 to studies/1.2.840.10008.5.1.4.1.1.1758155906.5064502216790425427","time":"2025-09-18T10:38:26.020+10:00"}
+{"level":"info","msg":"Study metadata: UID=1.2.840.10008.5.1.4.1.1.1758155906.5064502216790425427, Patient=DEMO^CHEST (CX001), Description=Generated Study","time":"2025-09-18T10:38:26.020+10:00"}
+{"level":"info","msg":"Writing series 1.2.840.10008.5.1.4.1.1.1758155906.457445904665300865 with 1 images","time":"2025-09-18T10:38:26.020+10:00"}
+{"level":"fatal","msg":"Application error: failed to write study 1: failed to write series 1: failed to write image 1: failed to write DICOM file: ValueType does not match the specified type in the VR","time":"2025-09-18T10:38:26.021+10:00"}
+{"level":"info","msg":"Creating 1 study(ies) with 1 series each and 2 images per series","time":"2025-09-18T10:38:30.008+10:00"}
+{"level":"info","msg":"Modality: CR, Region: chest, Output: studies","time":"2025-09-18T10:38:30.008+10:00"}
+{"level":"info","msg":"Writing study 1.2.840.10008.5.1.4.1.1.1758155910.7288677952477476729 to studies/1.2.840.10008.5.1.4.1.1.1758155910.7288677952477476729","time":"2025-09-18T10:38:30.042+10:00"}
+{"level":"info","msg":"Study metadata: UID=1.2.840.10008.5.1.4.1.1.1758155910.7288677952477476729, Patient=DEMO^CHEST (CX001), Description=Generated Study","time":"2025-09-18T10:38:30.042+10:00"}
+{"level":"info","msg":"Writing series 1.2.840.10008.5.1.4.1.1.1758155910.6524242818133065245 with 2 images","time":"2025-09-18T10:38:30.042+10:00"}
+{"level":"fatal","msg":"Application error: failed to write study 1: failed to write series 1: failed to write image 1: failed to write DICOM file: ValueType does not match the specified type in the VR","time":"2025-09-18T10:38:30.042+10:00"}
+{"level":"info","msg":"Listing studies in directory: studies","time":"2025-09-18T10:38:34.211+10:00"}
+{"level":"info","msg":"Output format: table, Verbose: false","time":"2025-09-18T10:38:34.211+10:00"}
+{"level":"info","msg":"Exporting study 1.2.840.10008.5.1.4.1.1.1758083884.615900210705117783 to png format","time":"2025-09-18T10:38:39.848+10:00"}
+{"level":"info","msg":"Input directory: studies","time":"2025-09-18T10:38:39.848+10:00"}
+{"level":"info","msg":"Output directory: docs/template-examples/chest-xray/images, Include metadata: false","time":"2025-09-18T10:38:39.848+10:00"}
+{"level":"info","msg":"PNG export is handled as part of the general export process","time":"2025-09-18T10:38:39.849+10:00"}
+{"level":"info","msg":"Exporting study 1.2.840.10008.5.1.4.1.1.1758083884.615900210705117783 to studies/1.2.840.10008.5.1.4.1.1.1758083884.615900210705117783","time":"2025-09-18T10:38:39.849+10:00"}
+{"level":"info","msg":"Exporting series 1.2.840.10008.5.1.4.1.1.1758083884.615900210705117783.series_001 with 2 images","time":"2025-09-18T10:38:39.849+10:00"}
+{"level":"info","msg":"Exporting series 1.2.840.10008.5.1.4.1.1.1758083884.615900210705117783.series_002 with 2 images","time":"2025-09-18T10:38:39.861+10:00"}
+{"level":"info","msg":"Created PDF report: studies/1.2.840.10008.5.1.4.1.1.1758083884.615900210705117783/exports/study_1.2.840.10008.5.1.4.1.1.1758083884.615900210705117783_report.pdf","time":"2025-09-18T10:38:39.872+10:00"}
+{"level":"info","msg":"Successfully exported study to studies/1.2.840.10008.5.1.4.1.1.1758083884.615900210705117783/exports","time":"2025-09-18T10:38:39.872+10:00"}
+{"level":"info","msg":"Exporting study 1.2.840.10008.5.1.4.1.1.1758083884.615900210705117783 to pdf format","time":"2025-09-18T10:38:43.954+10:00"}
+{"level":"info","msg":"Input directory: studies","time":"2025-09-18T10:38:43.954+10:00"}
+{"level":"info","msg":"Output file: docs/template-examples/chest-xray/pdf/chest-xray-example.pdf","time":"2025-09-18T10:38:43.954+10:00"}
+{"level":"info","msg":"PDF export is handled as part of the general export process","time":"2025-09-18T10:38:43.955+10:00"}
+{"level":"info","msg":"Exporting study 1.2.840.10008.5.1.4.1.1.1758083884.615900210705117783 to studies/1.2.840.10008.5.1.4.1.1.1758083884.615900210705117783","time":"2025-09-18T10:38:43.955+10:00"}
+{"level":"info","msg":"Exporting series 1.2.840.10008.5.1.4.1.1.1758083884.615900210705117783.series_001 with 2 images","time":"2025-09-18T10:38:43.955+10:00"}
+{"level":"info","msg":"Exporting series 1.2.840.10008.5.1.4.1.1.1758083884.615900210705117783.series_002 with 2 images","time":"2025-09-18T10:38:43.967+10:00"}
+{"level":"info","msg":"Created PDF report: studies/1.2.840.10008.5.1.4.1.1.1758083884.615900210705117783/exports/study_1.2.840.10008.5.1.4.1.1.1758083884.615900210705117783_report.pdf","time":"2025-09-18T10:38:43.978+10:00"}
+{"level":"info","msg":"Successfully exported study to studies/1.2.840.10008.5.1.4.1.1.1758083884.615900210705117783/exports","time":"2025-09-18T10:38:43.978+10:00"}
+{"level":"fatal","msg":"Application error: PNG format requires --output-dir parameter","time":"2025-09-18T10:39:39.330+10:00"}
