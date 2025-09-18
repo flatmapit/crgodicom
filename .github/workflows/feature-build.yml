@@ -53,9 +53,11 @@ jobs:
 
       - name: Run tests
         shell: bash
-        run: |
-          go test -v -race -coverprofile=coverage.out ./...
-          go tool cover -html=coverage.out -o coverage.html
+        run: go test -v -race -coverprofile=coverage.out ./...
+        
+      - name: Generate coverage report
+        shell: bash
+        run: go tool cover -html=coverage.out -o coverage.html
 
       - name: Build binary
         shell: bash
