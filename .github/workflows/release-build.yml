@@ -157,7 +157,6 @@ jobs:
           Name=CRGoDICOM
           Comment=DICOM Medical Imaging Utility
           Exec=crgodicom
-          Icon=crgodicom
           Type=Application
           Categories=Graphics;X-Medical;
           EOF
