@@ -24,6 +24,8 @@ jobs:
             platform: windows-amd64
           - os: macos-latest
             platform: darwin-amd64
+          - os: macos-latest
+            platform: darwin-arm64
 
     steps:
       - name: Checkout code
@@ -58,8 +60,8 @@ jobs:
       - name: Build binary
         shell: bash
         run: |
-          GOOS=${{ matrix.platform == 'windows-amd64' && 'windows' || matrix.platform == 'darwin-amd64' && 'darwin' || 'linux' }} \
-          GOARCH=${{ matrix.platform == 'windows-amd64' && 'amd64' || matrix.platform == 'darwin-amd64' && 'amd64' || 'amd64' }} \
+          GOOS=${{ matrix.platform == 'windows-amd64' && 'windows' || (matrix.platform == 'darwin-amd64' || matrix.platform == 'darwin-arm64') && 'darwin' || 'linux' }} \
+          GOARCH=${{ matrix.platform == 'windows-amd64' && 'amd64' || matrix.platform == 'darwin-amd64' && 'amd64' || matrix.platform == 'darwin-arm64' && 'arm64' || 'amd64' }} \
           OUTPUT_NAME="bin/crgodicom-${{ matrix.platform }}" && \
           if [[ "${{ matrix.platform }}" == "windows-amd64" ]]; then OUTPUT_NAME="${OUTPUT_NAME}.exe"; fi && \
           go build -ldflags "-X main.Version=${{ steps.version.outputs.VERSION }} -X main.BuildDate=${{ steps.version.outputs.BUILD_DATE }} -s -w" \
@@ -95,18 +97,21 @@ jobs:
         if: matrix.os == 'macos-latest'
         shell: bash
         run: |
-          echo "Creating feature installer for macOS..."
+          echo "Creating feature installer for macOS (${{ matrix.platform }})..."
+          
+          # Create architecture-specific app bundle name
+          BUNDLE_NAME="crgodicom-feat-${{ matrix.platform }}.app"
           
           # Create feature app bundle
-          mkdir -p dist/crgodicom-feat.app/Contents/MacOS
-          mkdir -p dist/crgodicom-feat.app/Contents/Resources
+          mkdir -p dist/$BUNDLE_NAME/Contents/MacOS
+          mkdir -p dist/$BUNDLE_NAME/Contents/Resources
           
           # Copy binary
-          cp bin/crgodicom-${{ matrix.platform }} dist/crgodicom-feat.app/Contents/MacOS/crgodicom
-          chmod +x dist/crgodicom-feat.app/Contents/MacOS/crgodicom
+          cp bin/crgodicom-${{ matrix.platform }} dist/$BUNDLE_NAME/Contents/MacOS/crgodicom
+          chmod +x dist/$BUNDLE_NAME/Contents/MacOS/crgodicom
           
           # Create Info.plist for feature
-          cat > dist/crgodicom-feat.app/Contents/Info.plist << EOF
+          cat > dist/$BUNDLE_NAME/Contents/Info.plist << EOF
           <?xml version="1.0" encoding="UTF-8"?>
           <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
           <plist version="1.0">
@@ -114,7 +119,7 @@ jobs:
               <key>CFBundleExecutable</key>
               <string>crgodicom</string>
               <key>CFBundleIdentifier</key>
-              <string>com.flatmapit.crgodicom.feat</string>
+              <string>com.flatmapit.crgodicom.feat.${{ matrix.platform }}</string>
               <key>CFBundleName</key>
               <string>CRGoDICOM Feature</string>
               <key>CFBundleVersion</key>
