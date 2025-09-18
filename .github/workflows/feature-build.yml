@@ -38,6 +38,7 @@ jobs:
 
       - name: Get feature version
         id: version
+        shell: bash
         run: |
           BRANCH_NAME=${GITHUB_REF#refs/heads/}
           echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_OUTPUT
@@ -45,14 +46,17 @@ jobs:
           echo "BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> $GITHUB_OUTPUT
 
       - name: Install dependencies
+        shell: bash
         run: go mod download && go mod tidy
 
       - name: Run tests
+        shell: bash
         run: |
           go test -v -race -coverprofile=coverage.out ./...
           go tool cover -html=coverage.out -o coverage.html
 
       - name: Build binary
+        shell: bash
         run: |
           GOOS=${{ matrix.platform == 'windows-amd64' && 'windows' || matrix.platform == 'darwin-amd64' && 'darwin' || 'linux' }} \
           GOARCH=${{ matrix.platform == 'windows-amd64' && 'amd64' || matrix.platform == 'darwin-amd64' && 'amd64' || 'amd64' }} \
@@ -62,6 +66,7 @@ jobs:
       # Windows Feature Installer
       - name: Create Windows Feature Installer
         if: matrix.os == 'windows-latest'
+        shell: bash
         run: |
           echo "Creating feature installer for Windows..."
           
@@ -86,6 +91,7 @@ jobs:
       # macOS Feature Installer
       - name: Create macOS Feature Installer
         if: matrix.os == 'macos-latest'
+        shell: bash
         run: |
           echo "Creating feature installer for macOS..."
           
@@ -143,6 +149,7 @@ jobs:
       # Linux Feature Installer
       - name: Create Linux Feature Installer
         if: matrix.os == 'ubuntu-latest'
+        shell: bash
         run: |
           echo "Creating feature installer for Linux..."
           
