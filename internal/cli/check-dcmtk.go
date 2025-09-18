@@ -2,7 +2,6 @@ package cli
 
 import (
 	"fmt"
-	"os"
 
 	"github.com/flatmapit/crgodicom/internal/dcmtk"
 	"github.com/sirupsen/logrus"
@@ -116,7 +115,7 @@ func checkDCMTKAction(c *cli.Context) error {
 func CheckDCMTKAvailability() error {
 	manager := dcmtk.NewManager()
 	
-	available, err := manager.CheckAvailability()
+	_, err := manager.CheckAvailability()
 	if err != nil {
 		logrus.Warnf("DCMTK not available: %v", err)
 		logrus.Info("Run 'crgodicom check-dcmtk --install-help' for installation instructions")
