@@ -608,3 +608,7 @@
 {"level":"debug","msg":"Auto-detected input type: hl7","time":"2025-09-18T14:43:50.575+10:00"}
 {"level":"debug","msg":"Generated template with 4 custom tag categories","time":"2025-09-18T14:43:50.575+10:00"}
 {"level":"info","msg":"Successfully generated DICOM template: examples/testris-generated-template.yaml","time":"2025-09-18T14:43:50.575+10:00"}
+{"level":"info","msg":"Generating DICOM template from ORM input: examples/hl7-orm-example.txt","time":"2025-09-18T15:32:48.426+10:00"}
+{"level":"debug","msg":"Auto-detected input type: hl7","time":"2025-09-18T15:32:48.426+10:00"}
+{"level":"debug","msg":"Generated template with 4 custom tag categories","time":"2025-09-18T15:32:48.426+10:00"}
+{"level":"info","msg":"Successfully generated DICOM template: demo-hospital-template.yaml","time":"2025-09-18T15:32:48.427+10:00"}
