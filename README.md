@@ -2,14 +2,16 @@
 
 A cross-platform CLI utility written in Go for creating synthetic DICOM data and sending it to PACS systems. This is a Go implementation of the Python [dicom-maker](https://github.com/flatmapit/dicom-maker) with improved performance and easier distribution.
 
+**PACS Integration**: Uses [DCMTK](https://github.com/DCMTK/dcmtk) (DICOM Toolkit) for reliable DICOM network communication with PACS servers.
+
 ## Features
 
 - **Cross-Platform**: Single binary for Windows, macOS, and Linux (amd64, arm64)
 - **DICOM 3.0 Compliant**: Full support for DICOM standard with configurable fields
 - **Study Templates**: Built-in and user-defined templates for common modalities
-- **PACS Integration**: C-ECHO and C-STORE operations for PACS communication
+- **PACS Integration**: C-ECHO and C-STORE operations via [DCMTK](https://github.com/DCMTK/dcmtk) integration
 - **Export Capabilities**: Export to PNG+text files or PDF with metadata
-- **Zero Dependencies**: No external runtime requirements
+- **Minimal Dependencies**: Core functionality requires no external dependencies
 - **Configuration**: YAML-based configuration with CLI overrides
 
 ## Quick Start
@@ -17,12 +19,42 @@ A cross-platform CLI utility written in Go for creating synthetic DICOM data and
 ### Installation
 
 ```bash
-# Download the latest release for your platform
+# Download the latest release for your platform from:
+# https://github.com/flatmapit/crgodicom/releases
+
 # Or build from source:
 git clone https://github.com/flatmapit/crgodicom.git
 cd crgodicom
 make build
 ```
+
+### Dependencies
+
+**Core Functionality** (DICOM generation, export):
+- No external dependencies required - single binary
+
+**PACS Integration** (C-ECHO, C-STORE operations):
+- **[DCMTK](https://github.com/DCMTK/dcmtk)** (DICOM Toolkit) - Optional but recommended for PACS communication
+- Check DCMTK availability: `crgodicom check-dcmtk`
+- DCMTK installation guides available for all platforms
+
+**DCMTK Installation:**
+```bash
+# Check if DCMTK is available
+crgodicom check-dcmtk
+
+# macOS (via Homebrew)
+brew install dcmtk
+
+# Ubuntu/Debian
+sudo apt-get install dcmtk
+
+# Windows
+# Download from: https://dicom.offis.de/dcmtk.php.en
+# Or use package managers like vcpkg, chocolatey
+```
+
+**Note**: CRGoDICOM can generate and export DICOM studies without DCMTK. DCMTK is only required for sending studies to PACS servers.
 
 ### Basic Usage
 
@@ -36,11 +68,14 @@ crgodicom create --template chest-xray --series-count 1 --image-count 2
 # List local studies
 crgodicom list
 
-# Verify PACS connection
-crgodicom verify --host localhost --port 11112 --aec CLIENT --aet PACS
+# Check DCMTK availability for PACS integration
+crgodicom check-dcmtk
 
-# Send study to PACS
-crgodicom send --study-id <study-uid> --host localhost --port 11112 --aec CLIENT --aet PACS
+# Verify PACS connection (requires DCMTK)
+crgodicom echo --host localhost --port 11112 --aec CLIENT --aet PACS
+
+# Send study to PACS (requires DCMTK)
+crgodicom dcmtk --study-id <study-uid> --host localhost --port 4242 --aec CLIENT --aet PACS
 
 # Export study to PNG files
 crgodicom export --study-id <study-uid> --format png --output-dir exports/
