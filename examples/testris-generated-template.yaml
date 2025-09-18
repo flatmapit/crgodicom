@@ -1,0 +1,38 @@
+study_templates:
+    testris-mri-brain-contrast:
+        accession_number: ""
+        anatomical_region: brain
+        custom_tags:
+            patient:
+                (0010,0010): '{{ .Patient.PatientName }}'
+                (0010,0020): '{{ .Patient.PatientID }}'
+                (0010,0030): '{{ .Patient.PatientBirthDate.Format "20060102" }}'
+                (0010,0040): '{{ .Patient.PatientSex }}'
+                (0010,1040): '{{ .Patient.PatientAddress }}'
+            procedure:
+                (0008,1050): '{{ .Order.OrderingProvider }}'
+                (0040,1001): '{{ .Order.OrderControl }}'
+                (0040,2016): '{{ .Order.PlacerOrderNumber }}'
+                (0040,2017): '{{ .Order.FillerOrderNumber }}'
+            study:
+                (0008,0020): '{{ .Study.StudyDate.Format "20060102" }}'
+                (0008,0030): '{{ .Study.StudyTime.Format "150405.000000" }}'
+                (0008,0050): '{{ .Study.AccessionNumber }}'
+                (0008,0090): '{{ .Study.ReferringPhysician }}'
+                (0008,1030): '{{ .Study.StudyDescription }}'
+                (0008,1032): '{{ .Study.ProcedureCode }}'
+                (0020,000D): '{{ .Study.StudyInstanceUID }}'
+            visit:
+                (0008,0080): '{{ .Visit.AssignedPatientLocation }}'
+                (0008,1048): '{{ .Visit.AttendingDoctor }}'
+                (0038,0300): '{{ .Visit.PatientClass }}'
+        image_count: 25
+        metadata:
+            generated_at: "2025-09-18T14:43:50+10:00"
+            generated_from: HL7_ORM
+            models_count: 4
+        modality: MR
+        patient_id: ""
+        patient_name: ""
+        series_count: 3
+        study_description: Generated from HL7 ORM
