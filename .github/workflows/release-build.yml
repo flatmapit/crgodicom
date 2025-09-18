@@ -44,6 +44,7 @@ jobs:
 
       - name: Get version from tag
         id: version
+        shell: bash
         run: |
           if [[ "${{ github.ref }}" == refs/tags/* ]]; then
             echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
@@ -166,7 +167,7 @@ jobs:
           Exec=crgodicom
           Icon=crgodicom
           Type=Application
-          Categories=Graphics;Medical;
+          Categories=Graphics;X-Medical;
           EOF
           
           # Also create it in the applications directory for completeness
