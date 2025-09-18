@@ -604,3 +604,7 @@
 {"level":"info","msg":"Created PDF report: studies/1.2.840.10008.5.1.4.1.1.1758083884.615900210705117783/exports/study_1.2.840.10008.5.1.4.1.1.1758083884.615900210705117783_report.pdf","time":"2025-09-18T10:38:43.978+10:00"}
 {"level":"info","msg":"Successfully exported study to studies/1.2.840.10008.5.1.4.1.1.1758083884.615900210705117783/exports","time":"2025-09-18T10:38:43.978+10:00"}
 {"level":"fatal","msg":"Application error: PNG format requires --output-dir parameter","time":"2025-09-18T10:39:39.330+10:00"}
+{"level":"info","msg":"Generating DICOM template from ORM input: examples/hl7-orm-example.txt","time":"2025-09-18T14:43:50.574+10:00"}
+{"level":"debug","msg":"Auto-detected input type: hl7","time":"2025-09-18T14:43:50.575+10:00"}
+{"level":"debug","msg":"Generated template with 4 custom tag categories","time":"2025-09-18T14:43:50.575+10:00"}
+{"level":"info","msg":"Successfully generated DICOM template: examples/testris-generated-template.yaml","time":"2025-09-18T14:43:50.575+10:00"}

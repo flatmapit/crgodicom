@@ -14,7 +14,7 @@ import (
 )
 
 var (
-	Version   = "0.0.1-beta"
+	Version   = "0.2.0"
 	BuildDate = "unknown"
 	GitCommit = "unknown"
 )
@@ -98,6 +98,7 @@ func main() {
 			internalcli.ExportCommand(),
 			internalcli.CreateTemplateCommand(),
 			internalcli.CreateCheckDCMTKCommand(),
+			internalcli.CreateORMCommand(),
 			// Future: internalcli.QueryCommand(),
 		},
 	}
