@@ -10,81 +10,81 @@ import (
 
 // HL7ORMParser parses HL7 ORM (Order Management) messages to extract DICOM mappings
 type HL7ORMParser struct {
-	fieldSeparator    string
-	componentSeparator string
-	repetitionSeparator string
-	escapeCharacter   string
+	fieldSeparator        string
+	componentSeparator    string
+	repetitionSeparator   string
+	escapeCharacter       string
 	subComponentSeparator string
 }
 
 // NewHL7ORMParser creates a new HL7 ORM parser
 func NewHL7ORMParser() *HL7ORMParser {
 	return &HL7ORMParser{
-		fieldSeparator:      "|",
-		componentSeparator:  "^",
-		repetitionSeparator: "~",
-		escapeCharacter:     "\\",
+		fieldSeparator:        "|",
+		componentSeparator:    "^",
+		repetitionSeparator:   "~",
+		escapeCharacter:       "\\",
 		subComponentSeparator: "&",
 	}
 }
 
 // HL7Message represents a parsed HL7 message
 type HL7Message struct {
-	MSH HL7MSH // Message Header
-	PID HL7PID // Patient Identification
-	PV1 HL7PV1 // Patient Visit
-	ORC HL7ORC // Common Order
-	OBR HL7OBR // Observation Request
+	MSH HL7MSH   // Message Header
+	PID HL7PID   // Patient Identification
+	PV1 HL7PV1   // Patient Visit
+	ORC HL7ORC   // Common Order
+	OBR HL7OBR   // Observation Request
 	OBX []HL7OBX // Observation/Result
 }
 
 // HL7MSH represents the Message Header segment
 type HL7MSH struct {
 	SendingApplication   string
-	SendingFacility     string
+	SendingFacility      string
 	ReceivingApplication string
-	ReceivingFacility   string
-	DateTimeOfMessage   time.Time
-	MessageType         string
-	MessageControlID    string
-	ProcessingID        string
-	VersionID           string
+	ReceivingFacility    string
+	DateTimeOfMessage    time.Time
+	MessageType          string
+	MessageControlID     string
+	ProcessingID         string
+	VersionID            string
 }
 
 // HL7PID represents the Patient Identification segment
 type HL7PID struct {
-	PatientID           []string
-	PatientName         string
-	DateOfBirth         time.Time
-	Sex                 string
-	PatientAddress      string
-	CountryCode         string
-	PhoneNumber         string
-	PrimaryLanguage     string
-	MaritalStatus       string
-	Religion            string
+	PatientID            []string
+	PatientName          string
+	DateOfBirth          time.Time
+	Sex                  string
+	PatientAddress       string
+	CountryCode          string
+	PhoneNumber          string
+	PrimaryLanguage      string
+	MaritalStatus        string
+	Religion             string
 	PatientAccountNumber string
 }
 
 // HL7PV1 represents the Patient Visit segment
 type HL7PV1 struct {
-	PatientClass        string
+	PatientClass            string
 	AssignedPatientLocation string
-	AttendingDoctor     string
-	ReferringDoctor     string
-	HospitalService     string
-	AdmissionType       string
-	FinancialClass      string
+	AttendingDoctor         string
+	ReferringDoctor         string
+	HospitalService         string
+	AdmissionType           string
+	FinancialClass          string
 }
 
 // HL7ORC represents the Common Order segment
 type HL7ORC struct {
-	OrderControl        string
-	PlacerOrderNumber   string
-	FillerOrderNumber   string
-	PlacerGroupNumber   string
-	OrderStatus         string
-	OrderingProvider    string
+	OrderControl      string
+	PlacerOrderNumber string
+	FillerOrderNumber string
+	PlacerGroupNumber string
+	OrderStatus       string
+	OrderingProvider  string
 }
 
 // HL7OBR represents the Observation Request segment
@@ -105,13 +105,13 @@ type HL7OBR struct {
 
 // HL7OBX represents the Observation/Result segment
 type HL7OBX struct {
-	SetID           string
-	ValueType       string
-	ObservationID   string
+	SetID            string
+	ValueType        string
+	ObservationID    string
 	ObservationSubID string
 	ObservationValue string
-	Units           string
-	ResultStatus    string
+	Units            string
+	ResultStatus     string
 }
 
 // Parse parses HL7 ORM message and returns model definitions
@@ -194,9 +194,9 @@ func (p *HL7ORMParser) generatePatientModel(pid HL7PID) orm.ModelDefinition {
 				Transform: "date_format:20060102",
 			},
 			{
-				FieldName: "PatientSex",
-				FieldType: orm.FieldTypeString,
-				DICOMTag:  orm.DICOMTag{Group: 0x0010, Element: 0x0040},
+				FieldName:  "PatientSex",
+				FieldType:  orm.FieldTypeString,
+				DICOMTag:   orm.DICOMTag{Group: 0x0010, Element: 0x0040},
 				Validation: "enum:M,F,O",
 			},
 			{
@@ -330,25 +330,41 @@ func (p *HL7ORMParser) generateVisitModel(pv1 HL7PV1) orm.ModelDefinition {
 // Helper parsing methods for HL7 segments
 func (p *HL7ORMParser) parseMSH(segments []string) HL7MSH {
 	msh := HL7MSH{}
-	if len(segments) > 2 { msh.SendingApplication = segments[2] }
-	if len(segments) > 3 { msh.SendingFacility = segments[3] }
-	if len(segments) > 4 { msh.ReceivingApplication = segments[4] }
-	if len(segments) > 5 { msh.ReceivingFacility = segments[5] }
-	if len(segments) > 6 { 
+	if len(segments) > 2 {
+		msh.SendingApplication = segments[2]
+	}
+	if len(segments) > 3 {
+		msh.SendingFacility = segments[3]
+	}
+	if len(segments) > 4 {
+		msh.ReceivingApplication = segments[4]
+	}
+	if len(segments) > 5 {
+		msh.ReceivingFacility = segments[5]
+	}
+	if len(segments) > 6 {
 		if dt, err := time.Parse("20060102150405-0700", segments[6]); err == nil {
 			msh.DateTimeOfMessage = dt
 		}
 	}
-	if len(segments) > 8 { msh.MessageType = segments[8] }
-	if len(segments) > 9 { msh.MessageControlID = segments[9] }
-	if len(segments) > 10 { msh.ProcessingID = segments[10] }
-	if len(segments) > 11 { msh.VersionID = segments[11] }
+	if len(segments) > 8 {
+		msh.MessageType = segments[8]
+	}
+	if len(segments) > 9 {
+		msh.MessageControlID = segments[9]
+	}
+	if len(segments) > 10 {
+		msh.ProcessingID = segments[10]
+	}
+	if len(segments) > 11 {
+		msh.VersionID = segments[11]
+	}
 	return msh
 }
 
 func (p *HL7ORMParser) parsePID(segments []string) HL7PID {
 	pid := HL7PID{}
-	if len(segments) > 3 { 
+	if len(segments) > 3 {
 		// Parse patient ID list
 		idList := strings.Split(segments[3], p.repetitionSeparator)
 		for _, id := range idList {
@@ -357,7 +373,7 @@ func (p *HL7ORMParser) parsePID(segments []string) HL7PID {
 			}
 		}
 	}
-	if len(segments) > 5 { 
+	if len(segments) > 5 {
 		// Parse patient name (LAST^FIRST^MIDDLE^SUFFIX^PREFIX)
 		nameComponents := strings.Split(segments[5], p.componentSeparator)
 		if len(nameComponents) >= 2 {
@@ -367,45 +383,81 @@ func (p *HL7ORMParser) parsePID(segments []string) HL7PID {
 			}
 		}
 	}
-	if len(segments) > 7 { 
+	if len(segments) > 7 {
 		if dob, err := time.Parse("20060102", segments[7]); err == nil {
 			pid.DateOfBirth = dob
 		}
 	}
-	if len(segments) > 8 { pid.Sex = segments[8] }
-	if len(segments) > 11 { pid.PatientAddress = segments[11] }
+	if len(segments) > 8 {
+		pid.Sex = segments[8]
+	}
+	if len(segments) > 11 {
+		pid.PatientAddress = segments[11]
+	}
 	return pid
 }
 
 func (p *HL7ORMParser) parsePV1(segments []string) HL7PV1 {
 	pv1 := HL7PV1{}
-	if len(segments) > 2 { pv1.PatientClass = segments[2] }
-	if len(segments) > 3 { pv1.AssignedPatientLocation = segments[3] }
-	if len(segments) > 7 { pv1.AttendingDoctor = segments[7] }
-	if len(segments) > 8 { pv1.ReferringDoctor = segments[8] }
-	if len(segments) > 10 { pv1.HospitalService = segments[10] }
-	if len(segments) > 18 { pv1.AdmissionType = segments[18] }
-	if len(segments) > 20 { pv1.FinancialClass = segments[20] }
+	if len(segments) > 2 {
+		pv1.PatientClass = segments[2]
+	}
+	if len(segments) > 3 {
+		pv1.AssignedPatientLocation = segments[3]
+	}
+	if len(segments) > 7 {
+		pv1.AttendingDoctor = segments[7]
+	}
+	if len(segments) > 8 {
+		pv1.ReferringDoctor = segments[8]
+	}
+	if len(segments) > 10 {
+		pv1.HospitalService = segments[10]
+	}
+	if len(segments) > 18 {
+		pv1.AdmissionType = segments[18]
+	}
+	if len(segments) > 20 {
+		pv1.FinancialClass = segments[20]
+	}
 	return pv1
 }
 
 func (p *HL7ORMParser) parseORC(segments []string) HL7ORC {
 	orc := HL7ORC{}
-	if len(segments) > 1 { orc.OrderControl = segments[1] }
-	if len(segments) > 2 { orc.PlacerOrderNumber = segments[2] }
-	if len(segments) > 3 { orc.FillerOrderNumber = segments[3] }
-	if len(segments) > 4 { orc.PlacerGroupNumber = segments[4] }
-	if len(segments) > 5 { orc.OrderStatus = segments[5] }
-	if len(segments) > 12 { orc.OrderingProvider = segments[12] }
+	if len(segments) > 1 {
+		orc.OrderControl = segments[1]
+	}
+	if len(segments) > 2 {
+		orc.PlacerOrderNumber = segments[2]
+	}
+	if len(segments) > 3 {
+		orc.FillerOrderNumber = segments[3]
+	}
+	if len(segments) > 4 {
+		orc.PlacerGroupNumber = segments[4]
+	}
+	if len(segments) > 5 {
+		orc.OrderStatus = segments[5]
+	}
+	if len(segments) > 12 {
+		orc.OrderingProvider = segments[12]
+	}
 	return orc
 }
 
 func (p *HL7ORMParser) parseOBR(segments []string) HL7OBR {
 	obr := HL7OBR{}
-	if len(segments) > 1 { obr.SetID = segments[1] }
-	if len(segments) > 2 { obr.PlacerOrderNumber = segments[2] }
-	if len(segments) > 3 { obr.FillerOrderNumber = segments[3] }
-	if len(segments) > 4 { 
+	if len(segments) > 1 {
+		obr.SetID = segments[1]
+	}
+	if len(segments) > 2 {
+		obr.PlacerOrderNumber = segments[2]
+	}
+	if len(segments) > 3 {
+		obr.FillerOrderNumber = segments[3]
+	}
+	if len(segments) > 4 {
 		// Parse Universal Service ID (procedure code)
 		serviceComponents := strings.Split(segments[4], p.componentSeparator)
 		if len(serviceComponents) > 0 {
@@ -415,21 +467,41 @@ func (p *HL7ORMParser) parseOBR(segments []string) HL7OBR {
 			obr.ProcedureCode = serviceComponents[1]
 		}
 	}
-	if len(segments) > 6 { obr.Priority = segments[6] }
-	if len(segments) > 16 { obr.OrderingProvider = segments[16] }
-	if len(segments) > 31 { obr.ReasonForStudy = segments[31] }
+	if len(segments) > 6 {
+		obr.Priority = segments[6]
+	}
+	if len(segments) > 16 {
+		obr.OrderingProvider = segments[16]
+	}
+	if len(segments) > 31 {
+		obr.ReasonForStudy = segments[31]
+	}
 	return obr
 }
 
 func (p *HL7ORMParser) parseOBX(segments []string) HL7OBX {
 	obx := HL7OBX{}
-	if len(segments) > 1 { obx.SetID = segments[1] }
-	if len(segments) > 2 { obx.ValueType = segments[2] }
-	if len(segments) > 3 { obx.ObservationID = segments[3] }
-	if len(segments) > 4 { obx.ObservationSubID = segments[4] }
-	if len(segments) > 5 { obx.ObservationValue = segments[5] }
-	if len(segments) > 6 { obx.Units = segments[6] }
-	if len(segments) > 11 { obx.ResultStatus = segments[11] }
+	if len(segments) > 1 {
+		obx.SetID = segments[1]
+	}
+	if len(segments) > 2 {
+		obx.ValueType = segments[2]
+	}
+	if len(segments) > 3 {
+		obx.ObservationID = segments[3]
+	}
+	if len(segments) > 4 {
+		obx.ObservationSubID = segments[4]
+	}
+	if len(segments) > 5 {
+		obx.ObservationValue = segments[5]
+	}
+	if len(segments) > 6 {
+		obx.Units = segments[6]
+	}
+	if len(segments) > 11 {
+		obx.ResultStatus = segments[11]
+	}
 	return obx
 }
 
