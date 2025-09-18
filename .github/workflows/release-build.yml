@@ -151,12 +151,16 @@ jobs:
           cp bin/crgodicom-${{ matrix.platform }} dist/AppDir/usr/bin/crgodicom
           chmod +x dist/AppDir/usr/bin/crgodicom
           
+          # Create a simple placeholder icon
+          echo "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==" | base64 -d > dist/AppDir/crgodicom.png
+          
           # Create desktop file in the correct location
           cat > dist/AppDir/crgodicom.desktop << EOF
           [Desktop Entry]
           Name=CRGoDICOM
           Comment=DICOM Medical Imaging Utility
           Exec=crgodicom
+          Icon=crgodicom
           Type=Application
           Categories=Graphics;X-Medical;
           EOF
