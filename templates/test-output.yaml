@@ -1,0 +1,31 @@
+study_templates:
+    test:
+        accession_number: ""
+        anatomical_region: chest
+        custom_tags:
+            institution:
+                (0008,0080): '{{ .Institution.InstitutionName }}'
+            patient:
+                (0010,0010): TEST^PATIENT
+                (0010,0020): TEST123
+                (0010,0030): '{{ .Patient.PatientBirthDate }}'
+                (0010,0040): '{{ .Patient.PatientSex }}'
+            study:
+                (0008,0020): "20241215"
+                (0008,0030): '{{ .Study.StudyTime }}'
+                (0008,0050): '{{ .Study.AccessionNumber }}'
+                (0008,0060): CT
+                (0008,0090): '{{ .Study.ReferringPhysician }}'
+                (0008,1030): '{{ .Study.StudyDescription }}'
+                (0020,000D): 1.2.840.113619.2.5.1762583153.215519.978957063.78
+                (0020,0010): '{{ .Study.StudyID }}'
+        image_count: 10
+        metadata:
+            generated_at: "2025-09-19T07:00:04+10:00"
+            generated_from: HL7_ORM
+            models_count: 3
+        modality: ""
+        patient_id: ""
+        patient_name: ""
+        series_count: 1
+        study_description: Generated from HL7 ORM

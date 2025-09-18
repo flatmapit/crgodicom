@@ -99,6 +99,7 @@ func main() {
 			internalcli.CreateTemplateCommand(),
 			internalcli.CreateCheckDCMTKCommand(),
 			internalcli.CreateORMCommand(),
+			internalcli.CreatePACSCFindCommand(),
 			// Future: internalcli.QueryCommand(),
 		},
 	}

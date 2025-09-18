@@ -35,7 +35,7 @@ func checkDCMTKAction(c *cli.Context) error {
 	showInstallHelp := c.Bool("install-help")
 
 	manager := dcmtk.NewManager()
-	
+
 	fmt.Println("🔍 Checking DCMTK Installation...")
 	fmt.Println()
 
@@ -44,13 +44,13 @@ func checkDCMTKAction(c *cli.Context) error {
 	if err != nil {
 		fmt.Printf("❌ DCMTK Status: %v\n", err)
 		fmt.Println()
-		
+
 		if showInstallHelp {
 			fmt.Println("📋 Installation Instructions:")
 			fmt.Println(manager.GetInstallationInstructions())
 			return nil
 		}
-		
+
 		fmt.Println("💡 To see installation instructions, run:")
 		fmt.Println("   crgodicom check-dcmtk --install-help")
 		return nil
@@ -58,7 +58,7 @@ func checkDCMTKAction(c *cli.Context) error {
 
 	// Get installation info
 	info := manager.GetInstallationInfo()
-	
+
 	if available {
 		fmt.Printf("✅ DCMTK Status: Available\n")
 		if info.Bundled {
@@ -68,7 +68,7 @@ func checkDCMTKAction(c *cli.Context) error {
 		}
 		fmt.Printf("📍 Path: %s\n", info.Path)
 		fmt.Printf("🔢 Version: %s\n", info.Version)
-		
+
 		if verbose {
 			fmt.Println()
 			fmt.Println("🛠️  Available Tools:")
@@ -76,12 +76,12 @@ func checkDCMTKAction(c *cli.Context) error {
 				fmt.Printf("   • %s: %s\n", tool, path)
 			}
 		}
-		
+
 		// Test key tools
 		fmt.Println()
 		fmt.Println("🧪 Testing Key Tools:")
-		
-		keyTools := []string{"storescu", "echoscu"}
+
+		keyTools := []string{"storescu", "echoscu", "findscu"}
 		for _, tool := range keyTools {
 			if path, err := manager.GetDCMTKPath(tool); err == nil {
 				fmt.Printf("   ✅ %s: Available at %s\n", tool, path)
@@ -89,14 +89,14 @@ func checkDCMTKAction(c *cli.Context) error {
 				fmt.Printf("   ❌ %s: %v\n", tool, err)
 			}
 		}
-		
+
 		fmt.Println()
 		fmt.Println("🎉 DCMTK is ready for use with CRGoDICOM!")
-		
+
 	} else {
 		fmt.Printf("❌ DCMTK Status: Not Available\n")
 		fmt.Println()
-		
+
 		if showInstallHelp {
 			fmt.Println("📋 Installation Instructions:")
 			fmt.Println(manager.GetInstallationInstructions())
@@ -104,7 +104,7 @@ func checkDCMTKAction(c *cli.Context) error {
 			fmt.Println("💡 To see installation instructions, run:")
 			fmt.Println("   crgodicom check-dcmtk --install-help")
 		}
-		
+
 		return fmt.Errorf("DCMTK is required for PACS operations")
 	}
 
@@ -114,21 +114,21 @@ func checkDCMTKAction(c *cli.Context) error {
 // CheckDCMTKAvailability is a helper function for other commands
 func CheckDCMTKAvailability() error {
 	manager := dcmtk.NewManager()
-	
+
 	_, err := manager.CheckAvailability()
 	if err != nil {
 		logrus.Warnf("DCMTK not available: %v", err)
 		logrus.Info("Run 'crgodicom check-dcmtk --install-help' for installation instructions")
 		return err
 	}
-	
+
 	info := manager.GetInstallationInfo()
 	if info.Bundled {
 		logrus.Info("Using bundled DCMTK installation")
 	} else {
 		logrus.Info("Using system DCMTK installation")
 	}
-	
+
 	return nil
 }
 

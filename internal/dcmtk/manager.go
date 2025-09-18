@@ -29,13 +29,13 @@ func (m *Manager) CheckAvailability() (bool, error) {
 	if m.checkSystemDCMTK() {
 		return true, nil
 	}
-	
+
 	// Then check bundled DCMTK
 	if m.checkBundledDCMTK() {
 		m.bundled = true
 		return true, nil
 	}
-	
+
 	return false, fmt.Errorf("DCMTK not found in system PATH or bundled installation")
 }
 
@@ -45,17 +45,17 @@ func (m *Manager) GetDCMTKPath(tool string) (string, error) {
 	if path, err := exec.LookPath(tool); err == nil {
 		return path, nil
 	}
-	
+
 	// Check bundled installation
 	bundledPath := filepath.Join(m.installDir, "dcmtk", tool)
 	if runtime.GOOS == "windows" {
 		bundledPath += ".exe"
 	}
-	
+
 	if _, err := os.Stat(bundledPath); err == nil {
 		return bundledPath, nil
 	}
-	
+
 	return "", fmt.Errorf("DCMTK tool %s not found", tool)
 }
 
@@ -68,7 +68,7 @@ func (m *Manager) GetInstallationInfo() *InstallationInfo {
 		Version:   "",
 		Tools:     make(map[string]string),
 	}
-	
+
 	// Check system installation
 	if systemPath, err := exec.LookPath("storescu"); err == nil {
 		info.Available = true
@@ -77,7 +77,7 @@ func (m *Manager) GetInstallationInfo() *InstallationInfo {
 		info.Tools = m.getAvailableTools(info.Path)
 		return info
 	}
-	
+
 	// Check bundled installation
 	bundledDir := filepath.Join(m.installDir, "dcmtk")
 	if _, err := os.Stat(bundledDir); err == nil {
@@ -88,7 +88,7 @@ func (m *Manager) GetInstallationInfo() *InstallationInfo {
 		info.Tools = m.getAvailableTools(bundledDir)
 		return info
 	}
-	
+
 	return info
 }
 
@@ -128,7 +128,7 @@ func (m *Manager) checkBundledDCMTK() bool {
 	if runtime.GOOS == "windows" {
 		storescuPath += ".exe"
 	}
-	
+
 	_, err := os.Stat(storescuPath)
 	return err == nil
 }
@@ -139,7 +139,7 @@ func getInstallDir() string {
 	if exePath, err := os.Executable(); err == nil {
 		return filepath.Dir(exePath)
 	}
-	
+
 	// Fallback to current directory
 	wd, _ := os.Getwd()
 	return wd
@@ -151,18 +151,18 @@ func (m *Manager) getVersion(tool string) string {
 	if err != nil {
 		return "unknown"
 	}
-	
+
 	cmd := exec.Command(path, "--version")
 	output, err := cmd.Output()
 	if err != nil {
 		return "unknown"
 	}
-	
+
 	lines := strings.Split(string(output), "\n")
 	if len(lines) > 0 {
 		return strings.TrimSpace(lines[0])
 	}
-	
+
 	return "unknown"
 }
 
@@ -172,7 +172,7 @@ func (m *Manager) getBundledVersion() string {
 	if content, err := os.ReadFile(versionFile); err == nil {
 		return strings.TrimSpace(string(content))
 	}
-	
+
 	// Try to get version from bundled storescu
 	return m.getVersion("storescu")
 }
@@ -180,19 +180,19 @@ func (m *Manager) getBundledVersion() string {
 // getAvailableTools returns a map of available DCMTK tools
 func (m *Manager) getAvailableTools(dir string) map[string]string {
 	tools := make(map[string]string)
-	requiredTools := []string{"storescu", "echoscu", "dcmdump", "dcmodify"}
-	
+	requiredTools := []string{"storescu", "echoscu", "dcmdump", "dcmodify", "findscu"}
+
 	for _, tool := range requiredTools {
 		toolPath := filepath.Join(dir, tool)
 		if runtime.GOOS == "windows" {
 			toolPath += ".exe"
 		}
-		
+
 		if _, err := os.Stat(toolPath); err == nil {
 			tools[tool] = toolPath
 		}
 	}
-	
+
 	return tools
 }
 

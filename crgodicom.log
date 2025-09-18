@@ -608,7 +608,48 @@
 {"level":"debug","msg":"Auto-detected input type: hl7","time":"2025-09-18T14:43:50.575+10:00"}
 {"level":"debug","msg":"Generated template with 4 custom tag categories","time":"2025-09-18T14:43:50.575+10:00"}
 {"level":"info","msg":"Successfully generated DICOM template: examples/testris-generated-template.yaml","time":"2025-09-18T14:43:50.575+10:00"}
-{"level":"info","msg":"Generating DICOM template from ORM input: examples/hl7-orm-example.txt","time":"2025-09-18T15:32:48.426+10:00"}
-{"level":"debug","msg":"Auto-detected input type: hl7","time":"2025-09-18T15:32:48.426+10:00"}
-{"level":"debug","msg":"Generated template with 4 custom tag categories","time":"2025-09-18T15:32:48.426+10:00"}
-{"level":"info","msg":"Successfully generated DICOM template: demo-hospital-template.yaml","time":"2025-09-18T15:32:48.427+10:00"}
+{"level":"info","msg":"Using system DCMTK installation","time":"2025-09-19T06:58:20.441+10:00"}
+{"level":"info","msg":"Parsing CFIND response data","time":"2025-09-19T06:58:20.449+10:00"}
+{"level":"info","msg":"Converted 2 PACS studies to 6 ORM models","time":"2025-09-19T06:58:20.449+10:00"}
+{"level":"fatal","msg":"Application error: failed to generate template: failed to write template file: open templates/examples/generated-pacs-template.yaml: no such file or directory","time":"2025-09-19T06:58:20.449+10:00"}
+{"level":"info","msg":"Using system DCMTK installation","time":"2025-09-19T06:58:26.846+10:00"}
+{"level":"info","msg":"Parsing CFIND response data","time":"2025-09-19T06:58:26.853+10:00"}
+{"level":"info","msg":"Converted 2 PACS studies to 6 ORM models","time":"2025-09-19T06:58:26.854+10:00"}
+{"level":"fatal","msg":"Application error: failed to generate template: failed to write template file: open templates/examples/generated-pacs-template.yaml: no such file or directory","time":"2025-09-19T06:58:26.854+10:00"}
+{"level":"info","msg":"Using system DCMTK installation","time":"2025-09-19T06:58:39.152+10:00"}
+{"level":"info","msg":"Parsing CFIND response data","time":"2025-09-19T06:58:39.160+10:00"}
+{"level":"info","msg":"Converted 0 PACS studies to 0 ORM models","time":"2025-09-19T06:58:39.160+10:00"}
+{"level":"fatal","msg":"Application error: no studies found matching the query criteria","time":"2025-09-19T06:58:39.160+10:00"}
+{"level":"info","msg":"Using system DCMTK installation","time":"2025-09-19T06:58:48.393+10:00"}
+{"level":"info","msg":"Parsing CFIND response data","time":"2025-09-19T06:58:48.401+10:00"}
+{"level":"info","msg":"Converted 0 PACS studies to 0 ORM models","time":"2025-09-19T06:58:48.401+10:00"}
+{"level":"fatal","msg":"Application error: no studies found matching the query criteria","time":"2025-09-19T06:58:48.402+10:00"}
+{"level":"info","msg":"Using system DCMTK installation","time":"2025-09-19T06:58:56.058+10:00"}
+{"level":"fatal","msg":"Application error: failed to query PACS: direct PACS querying not yet implemented - use --input with a Study Instance UID or saved CFIND response file","time":"2025-09-19T06:58:56.066+10:00"}
+{"level":"info","msg":"Using system DCMTK installation","time":"2025-09-19T06:59:27.471+10:00"}
+{"level":"info","msg":"Parsing CFIND response data","time":"2025-09-19T06:59:27.479+10:00"}
+{"level":"info","msg":"Converted 0 PACS studies to 0 ORM models","time":"2025-09-19T06:59:27.479+10:00"}
+{"level":"fatal","msg":"Application error: no studies found matching the query criteria","time":"2025-09-19T06:59:27.479+10:00"}
+{"level":"info","msg":"Using system DCMTK installation","time":"2025-09-19T07:00:04.218+10:00"}
+{"level":"info","msg":"Parsing CFIND response data","time":"2025-09-19T07:00:04.227+10:00"}
+{"level":"info","msg":"Converted 1 PACS studies to 3 ORM models","time":"2025-09-19T07:00:04.227+10:00"}
+{"level":"info","msg":"📋 Generated Template Summary:","time":"2025-09-19T07:00:04.227+10:00"}
+{"level":"info","msg":"• Template Name: test","time":"2025-09-19T07:00:04.227+10:00"}
+{"level":"info","msg":"• Modality: ","time":"2025-09-19T07:00:04.227+10:00"}
+{"level":"info","msg":"• Series Count: 1","time":"2025-09-19T07:00:04.227+10:00"}
+{"level":"info","msg":"• Image Count: 10","time":"2025-09-19T07:00:04.227+10:00"}
+{"level":"info","msg":"• Patient:  (ID: )","time":"2025-09-19T07:00:04.227+10:00"}
+{"level":"info","msg":"• Accession: ","time":"2025-09-19T07:00:04.227+10:00"}
+{"level":"info","msg":"• Study Description: Generated from HL7 ORM","time":"2025-09-19T07:00:04.227+10:00"}
+{"level":"info","msg":"🎯 Usage:","time":"2025-09-19T07:00:04.227+10:00"}
+{"level":"info","msg":"crgodicom create --template test","time":"2025-09-19T07:00:04.227+10:00"}
+{"level":"info","msg":"📁 Output File: templates/test-output.yaml","time":"2025-09-19T07:00:04.227+10:00"}
+{"level":"info","msg":"🎉 Successfully generated template from 1 PACS studies","time":"2025-09-19T07:00:04.227+10:00"}
+{"level":"info","msg":"Using system DCMTK installation","time":"2025-09-19T07:00:17.132+10:00"}
+{"level":"info","msg":"Parsing CFIND response data","time":"2025-09-19T07:00:17.140+10:00"}
+{"level":"info","msg":"Converted 2 PACS studies to 6 ORM models","time":"2025-09-19T07:00:17.140+10:00"}
+{"level":"fatal","msg":"Application error: failed to generate template: failed to write template file: open templates/examples/generated-pacs-template.yaml: no such file or directory","time":"2025-09-19T07:00:17.140+10:00"}
+{"level":"info","msg":"Using system DCMTK installation","time":"2025-09-19T07:12:28.370+10:00"}
+{"level":"info","msg":"Parsing CFIND response data","time":"2025-09-19T07:12:28.378+10:00"}
+{"level":"info","msg":"Converted 2 PACS studies to 6 ORM models","time":"2025-09-19T07:12:28.378+10:00"}
+{"level":"fatal","msg":"Application error: failed to generate template: failed to write template file: open templates/examples/demo-pacs-template.yaml: no such file or directory","time":"2025-09-19T07:12:28.378+10:00"}
