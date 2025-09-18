@@ -137,19 +137,19 @@ jobs:
           EOF
           
           # Copy additional files
-          cp README.md dist/crgodicom-feat.app/Contents/Resources/
-          cp crgodicom.yaml dist/crgodicom-feat.app/Contents/Resources/
+          cp README.md dist/$BUNDLE_NAME/Contents/Resources/
+          cp crgodicom.yaml dist/$BUNDLE_NAME/Contents/Resources/
           
           # Create feature info
-          echo "Version: ${{ steps.version.outputs.VERSION }}" > dist/crgodicom-feat.app/Contents/Resources/version.txt
-          echo "Build Date: ${{ steps.version.outputs.BUILD_DATE }}" >> dist/crgodicom-feat.app/Contents/Resources/version.txt
-          echo "Platform: ${{ matrix.platform }}" >> dist/crgodicom-feat.app/Contents/Resources/version.txt
-          echo "Branch: ${{ steps.version.outputs.BRANCH_NAME }}" >> dist/crgodicom-feat.app/Contents/Resources/version.txt
-          echo "Commit: $(git rev-parse HEAD)" >> dist/crgodicom-feat.app/Contents/Resources/version.txt
+          echo "Version: ${{ steps.version.outputs.VERSION }}" > dist/$BUNDLE_NAME/Contents/Resources/version.txt
+          echo "Build Date: ${{ steps.version.outputs.BUILD_DATE }}" >> dist/$BUNDLE_NAME/Contents/Resources/version.txt
+          echo "Platform: ${{ matrix.platform }}" >> dist/$BUNDLE_NAME/Contents/Resources/version.txt
+          echo "Branch: ${{ steps.version.outputs.BRANCH_NAME }}" >> dist/$BUNDLE_NAME/Contents/Resources/version.txt
+          echo "Commit: $(git rev-parse HEAD)" >> dist/$BUNDLE_NAME/Contents/Resources/version.txt
           
           # Create DMG for feature
           hdiutil create -volname "CRGoDICOM Feature ${{ steps.version.outputs.VERSION }}" \
-            -srcfolder dist/crgodicom-feat.app \
+            -srcfolder dist/$BUNDLE_NAME \
             -ov -format UDZO \
             dist/crgodicom-feat-${{ steps.version.outputs.VERSION }}-${{ matrix.platform }}.dmg
 
