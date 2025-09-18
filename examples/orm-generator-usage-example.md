@@ -17,8 +17,8 @@ The ORM template generator can create DICOM templates from:
 MSH|^~\&|TESTRIS|TESTRIS|EXT_DEF||20241215143022+1100||ORM^O01^|abc123xyz-def|P|2.4
 PID|||200000001^^^2006630&&GUID^005~7777777^^^E335&&GUID^017^E335||JOHNSON^SARAH^MARIE^""^MS||19820623|F|||MAPLE STREET 789^""^MELBOURNE^VIC^3001^1201^home^""~CANADA^""^""^""^""^""^Birth^""|||||||4444444||||3|||||||""
 PV1||I|CNR^^^E304^^^^^Melbourne General Hospital|||||789012CD^ATTENDINGDR||||||||||||MC
-ORC|XO|4339239594|2024WS0000001|2024WS0000001|E|||||||789012CD^ATTENDINGDR^^^^Dr
-OBR|1|4444444444|2024WS0000001-1|MRIBRAINCON^MRI Brain with Contrast^WS-MGH.ORDERABLES|||||||||Research Acc: Y||^^^Neurological, Brain, Head, Neck|||2024WS0000001-1||||MR|||^^^20241215140500+1100^^Routine||||^Clinical History: Progressive headaches with visual disturbances||SRV-VICG-EXT-DEF@vichealth.net||||||||||||MRIBRAINCON^MRI Brain with Contrast^WS-MGH.PROCEDURES
+ORC|XO|4339239594|2025TY0000001|2025TY0000001|E|||||||789012CD^ATTENDINGDR^^^^Dr
+OBR|1|4444444444|2025TY0000001-1|MRIBRAINCON^MRI Brain with Contrast^WS-MGH.ORDERABLES|||||||||Research Acc: Y||^^^Neurological, Brain, Head, Neck|||2025TY0000001-1||||MR|||^^^20241215140500+1100^^Routine||||^Clinical History: Progressive headaches with visual disturbances||SRV-VICG-EXT-DEF@vichealth.net||||||||||||MRIBRAINCON^MRI Brain with Contrast^WS-MGH.PROCEDURES
 ```
 
 ### Command: Generate Template
@@ -72,7 +72,7 @@ study_templates:
       study:
         "(0008,0020)": "20241215"                   # Study Date
         "(0008,0030)": "140500.000000"              # Study Time
-        "(0008,0050)": "2024WS0000001"              # Accession Number
+        "(0008,0050)": "2025TY0000001"              # Accession Number
         "(0008,1030)": "MRI Brain with Contrast"    # Study Description
         "(0008,0090)": "DR^ATTENDING^PHYSICIAN"     # Referring Physician Name
         

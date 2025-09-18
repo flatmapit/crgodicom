@@ -11,7 +11,7 @@ study_templates:
     study_description: "MRI Brain with Contrast - Generated from TESTRIS HL7 ORM"
     patient_name: "JOHNSON^SARAH^MARIE"
     patient_id: "200000001"
-    accession_number: "2024WS0000001"
+    accession_number: "2025TY0000001"
     
     # Custom DICOM tags extracted from HL7 ORM message
     custom_tags:
@@ -30,10 +30,10 @@ study_templates:
       study:
         "(0008,0020)": "20241215"                   # Study Date
         "(0008,0030)": "140500.000000"              # Study Time
-        "(0008,0050)": "2024WS0000001"              # Accession Number
+        "(0008,0050)": "2025TY0000001"              # Accession Number
         "(0008,1030)": "MRI Brain with Contrast"    # Study Description
         "(0008,0090)": "DR^ATTENDING^PHYSICIAN"     # Referring Physician Name
-        "(0020,0010)": "2024WS0000001"              # Study ID
+        "(0020,0010)": "2025TY0000001"              # Study ID
         "(0008,103E)": "MRIBRAINCON"                # Series Description
         "(0032,1032)": "DR^JENNIFER^MARTINEZ"       # Requesting Physician
         "(0032,1060)": "MRI Brain with Contrast as requested by neurology consultant" # Requested Procedure Description
@@ -73,7 +73,7 @@ study_templates:
       procedure:
         "(0040,1001)": "4339239594"                 # Requested Procedure ID
         "(0040,2016)": "4339239594"                 # Placer Order Number
-        "(0040,2017)": "2024WS0000001"              # Filler Order Number
+        "(0040,2017)": "2025TY0000001"              # Filler Order Number
         "(0040,0254)": "MRI Brain with Contrast Procedure" # Procedure Step Description
         "(0040,0260)": "SCHEDULED"                  # Performed Procedure Step Status
         "(0040,0270)": "20241215"                   # Scheduled Procedure Step Start Date
