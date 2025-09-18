@@ -30,9 +30,6 @@ jobs:
           - os: macos-latest
             platform: darwin-arm64
             installer_type: dmg
-          - os: macos-latest
-            platform: darwin-arm64
-            installer_type: dmg
 
     steps:
       - name: Checkout code
