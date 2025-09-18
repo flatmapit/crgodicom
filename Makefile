@@ -1,7 +1,9 @@
 # Makefile for crgodicom
 BINARY_NAME=crgodicom
 VERSION?=$(shell git describe --tags --always --dirty)
-LDFLAGS=-ldflags "-X main.Version=${VERSION} -s -w"
+BUILD_DATE?=$(shell date -u +'%Y-%m-%dT%H:%M:%SZ')
+GIT_COMMIT?=$(shell git rev-parse HEAD)
+LDFLAGS=-ldflags "-X main.Version=${VERSION} -X main.BuildDate=${BUILD_DATE} -X main.GitCommit=${GIT_COMMIT} -s -w"
 
 .PHONY: build build-all clean test install deps docker-test-setup
 
