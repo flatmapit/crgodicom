@@ -649,3 +649,7 @@
 {"level":"info","msg":"Parsing CFIND response data","time":"2025-09-19T07:00:17.140+10:00"}
 {"level":"info","msg":"Converted 2 PACS studies to 6 ORM models","time":"2025-09-19T07:00:17.140+10:00"}
 {"level":"fatal","msg":"Application error: failed to generate template: failed to write template file: open templates/examples/generated-pacs-template.yaml: no such file or directory","time":"2025-09-19T07:00:17.140+10:00"}
+{"level":"info","msg":"Using system DCMTK installation","time":"2025-09-19T07:12:28.370+10:00"}
+{"level":"info","msg":"Parsing CFIND response data","time":"2025-09-19T07:12:28.378+10:00"}
+{"level":"info","msg":"Converted 2 PACS studies to 6 ORM models","time":"2025-09-19T07:12:28.378+10:00"}
+{"level":"fatal","msg":"Application error: failed to generate template: failed to write template file: open templates/examples/demo-pacs-template.yaml: no such file or directory","time":"2025-09-19T07:12:28.378+10:00"}

@@ -84,29 +84,29 @@ Examples:
 
 			// PACS connection options
 			&cli.StringFlag{
-				Name:    "host",
-				Usage:   "PACS host address",
-				Value:   "localhost",
+				Name:  "host",
+				Usage: "PACS host address",
+				Value: "localhost",
 			},
 			&cli.IntFlag{
-				Name:    "port",
-				Usage:   "PACS port",
-				Value:   4242,
+				Name:  "port",
+				Usage: "PACS port",
+				Value: 4242,
 			},
 			&cli.StringFlag{
-				Name:    "aec",
-				Usage:   "Application Entity Caller",
-				Value:   "DICOM_CLIENT",
+				Name:  "aec",
+				Usage: "Application Entity Caller",
+				Value: "DICOM_CLIENT",
 			},
 			&cli.StringFlag{
-				Name:    "aet",
-				Usage:   "Application Entity Title",
-				Value:   "PACS1",
+				Name:  "aet",
+				Usage: "Application Entity Title",
+				Value: "PACS1",
 			},
 			&cli.IntFlag{
-				Name:    "timeout",
-				Usage:   "Connection timeout in seconds",
-				Value:   30,
+				Name:  "timeout",
+				Usage: "Connection timeout in seconds",
+				Value: 30,
 			},
 
 			// Output options
@@ -117,35 +117,35 @@ Examples:
 				Value:   "pacs-template.yaml",
 			},
 			&cli.StringFlag{
-				Name:    "template-name",
-				Usage:   "Template name for generated template",
-				Value:   "pacs-study",
+				Name:  "template-name",
+				Usage: "Template name for generated template",
+				Value: "pacs-study",
 			},
 			&cli.StringFlag{
-				Name:    "save-response",
-				Usage:   "Save CFIND response to file (JSON format)",
+				Name:  "save-response",
+				Usage: "Save CFIND response to file (JSON format)",
 			},
 			&cli.StringFlag{
-				Name:    "output-dir",
-				Usage:   "Output directory for templates",
-				Value:   "templates",
+				Name:  "output-dir",
+				Usage: "Output directory for templates",
+				Value: "templates",
 			},
 
 			// Template generation options
 			&cli.IntFlag{
-				Name:    "series-count",
-				Usage:   "Number of series for generated template",
-				Value:   1,
+				Name:  "series-count",
+				Usage: "Number of series for generated template",
+				Value: 1,
 			},
 			&cli.IntFlag{
-				Name:    "image-count",
-				Usage:   "Number of images per series for generated template",
-				Value:   10,
+				Name:  "image-count",
+				Usage: "Number of images per series for generated template",
+				Value: 10,
 			},
 			&cli.StringFlag{
-				Name:    "anatomical-region",
-				Usage:   "Anatomical region for template",
-				Value:   "unknown",
+				Name:  "anatomical-region",
+				Usage: "Anatomical region for template",
+				Value: "unknown",
 			},
 
 			// General options
@@ -155,8 +155,8 @@ Examples:
 				Aliases: []string{"v"},
 			},
 			&cli.BoolFlag{
-				Name:    "test-connection",
-				Usage:   "Test PACS connection with C-ECHO before querying",
+				Name:  "test-connection",
+				Usage: "Test PACS connection with C-ECHO before querying",
 			},
 		},
 		Action: pacsCFindAction,
@@ -177,7 +177,7 @@ func pacsCFindAction(c *cli.Context) error {
 	// Get DCMTK path
 	dcmtkManager := dcmtk.NewManager()
 	dcmtkInfo := dcmtkManager.GetInstallationInfo()
-	
+
 	var pacsParser *parser.PACSParser
 	if dcmtkInfo.Bundled {
 		pacsParser = parser.NewPACSParser(dcmtkInfo.Path)
