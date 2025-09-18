@@ -1,0 +1,2886 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>cli: Go Coverage Report</title>
+		<style>
+			body {
+				background: black;
+				color: rgb(80, 80, 80);
+			}
+			body, pre, #legend span {
+				font-family: Menlo, monospace;
+				font-weight: bold;
+			}
+			#topbar {
+				background: black;
+				position: fixed;
+				top: 0; left: 0; right: 0;
+				height: 42px;
+				border-bottom: 1px solid rgb(80, 80, 80);
+			}
+			#content {
+				margin-top: 50px;
+			}
+			#nav, #legend {
+				float: left;
+				margin-left: 10px;
+			}
+			#legend {
+				margin-top: 12px;
+			}
+			#nav {
+				margin-top: 10px;
+			}
+			#legend span {
+				margin: 0 5px;
+			}
+			.cov0 { color: rgb(192, 0, 0) }
+.cov1 { color: rgb(128, 128, 128) }
+.cov2 { color: rgb(116, 140, 131) }
+.cov3 { color: rgb(104, 152, 134) }
+.cov4 { color: rgb(92, 164, 137) }
+.cov5 { color: rgb(80, 176, 140) }
+.cov6 { color: rgb(68, 188, 143) }
+.cov7 { color: rgb(56, 200, 146) }
+.cov8 { color: rgb(44, 212, 149) }
+.cov9 { color: rgb(32, 224, 152) }
+.cov10 { color: rgb(20, 236, 155) }
+
+		</style>
+	</head>
+	<body>
+		<div id="topbar">
+			<div id="nav">
+				<select id="files">
+				
+				<option value="file0">github.com/flatmapit/crgodicom/internal/cli/associate.go (0.0%)</option>
+				
+				<option value="file1">github.com/flatmapit/crgodicom/internal/cli/check-dcmtk.go (0.0%)</option>
+				
+				<option value="file2">github.com/flatmapit/crgodicom/internal/cli/create.go (83.7%)</option>
+				
+				<option value="file3">github.com/flatmapit/crgodicom/internal/cli/dcmtk.go (0.0%)</option>
+				
+				<option value="file4">github.com/flatmapit/crgodicom/internal/cli/echo.go (0.0%)</option>
+				
+				<option value="file5">github.com/flatmapit/crgodicom/internal/cli/export.go (35.9%)</option>
+				
+				<option value="file6">github.com/flatmapit/crgodicom/internal/cli/list.go (79.4%)</option>
+				
+				<option value="file7">github.com/flatmapit/crgodicom/internal/cli/orm.go (72.2%)</option>
+				
+				<option value="file8">github.com/flatmapit/crgodicom/internal/cli/send.go (0.0%)</option>
+				
+				<option value="file9">github.com/flatmapit/crgodicom/internal/cli/store.go (0.0%)</option>
+				
+				<option value="file10">github.com/flatmapit/crgodicom/internal/cli/template.go (0.0%)</option>
+				
+				<option value="file11">github.com/flatmapit/crgodicom/internal/cli/verify.go (0.0%)</option>
+				
+				<option value="file12">github.com/flatmapit/crgodicom/internal/orm/parser/go_struct_parser.go (0.0%)</option>
+				
+				<option value="file13">github.com/flatmapit/crgodicom/internal/orm/parser/hl7_parser.go (86.2%)</option>
+				
+				</select>
+			</div>
+			<div id="legend">
+				<span>not tracked</span>
+			
+				<span class="cov0">not covered</span>
+				<span class="cov8">covered</span>
+			
+			</div>
+		</div>
+		<div id="content">
+		
+		<pre class="file" id="file0" style="display: none">package cli
+
+import (
+        "context"
+        "time"
+
+        "github.com/flatmapit/crgodicom/internal/config"
+        "github.com/flatmapit/crgodicom/internal/pacs"
+        "github.com/sirupsen/logrus"
+        "github.com/urfave/cli/v2"
+)
+
+// AssociateCommand returns the association test command
+func AssociateCommand() *cli.Command <span class="cov0" title="0">{
+        return &amp;cli.Command{
+                Name:  "associate",
+                Usage: "Test DICOM association only (no DIMSE commands)",
+                Flags: []cli.Flag{
+                        &amp;cli.StringFlag{
+                                Name:  "host",
+                                Usage: "PACS host address",
+                                Value: "localhost",
+                        },
+                        &amp;cli.IntFlag{
+                                Name:  "port",
+                                Usage: "PACS port",
+                                Value: 4242,
+                        },
+                        &amp;cli.StringFlag{
+                                Name:  "aec",
+                                Usage: "Application Entity Caller",
+                                Value: "DICOM_CLIENT",
+                        },
+                        &amp;cli.StringFlag{
+                                Name:  "aet",
+                                Usage: "Application Entity Title",
+                                Value: "PACS1",
+                        },
+                        &amp;cli.IntFlag{
+                                Name:  "timeout",
+                                Usage: "Connection timeout in seconds",
+                                Value: 30,
+                        },
+                },
+                Action: associateAction,
+        }
+}</span>
+
+func associateAction(c *cli.Context) error <span class="cov0" title="0">{
+        logrus.Infof("Testing DICOM association to PACS %s:%d (AEC: %s, AET: %s)",
+                c.String("host"), c.Int("port"), c.String("aec"), c.String("aet"))
+
+        // Create PACS configuration
+        pacsConfig := &amp;config.PACSConfig{
+                Host:    c.String("host"),
+                Port:    c.Int("port"),
+                AEC:     c.String("aec"),
+                AET:     c.String("aet"),
+                Timeout: c.Int("timeout"),
+        }
+
+        // Create PACS client
+        client := pacs.NewClient(pacsConfig)
+
+        // Create context with timeout
+        ctx, cancel := context.WithTimeout(context.Background(), time.Duration(pacsConfig.Timeout)*time.Second)
+        defer cancel()
+
+        // Test association only
+        logrus.Info("Establishing DICOM association...")
+        if err := client.Connect(ctx); err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+
+        <span class="cov0" title="0">logrus.Info("✅ DICOM association established successfully!")
+        logrus.Info("✅ Association negotiation complete")
+        logrus.Info("✅ Ready for DIMSE commands")
+
+        // Hold association for a moment
+        time.Sleep(2 * time.Second)
+
+        // Release association
+        logrus.Info("Releasing DICOM association...")
+        client.Disconnect()
+
+        logrus.Info("✅ Association test completed successfully")
+        return nil</span>
+}
+
+</pre>
+		
+		<pre class="file" id="file1" style="display: none">package cli
+
+import (
+        "fmt"
+
+        "github.com/flatmapit/crgodicom/internal/dcmtk"
+        "github.com/sirupsen/logrus"
+        "github.com/urfave/cli/v2"
+)
+
+// CreateCheckDCMTKCommand returns the check-dcmtk command
+func CreateCheckDCMTKCommand() *cli.Command <span class="cov0" title="0">{
+        return &amp;cli.Command{
+                Name:    "check-dcmtk",
+                Usage:   "Check DCMTK installation and provide setup instructions",
+                Aliases: []string{"check", "dcmtk-status"},
+                Flags: []cli.Flag{
+                        &amp;cli.BoolFlag{
+                                Name:  "verbose",
+                                Usage: "Show detailed DCMTK information",
+                                Value: false,
+                        },
+                        &amp;cli.BoolFlag{
+                                Name:  "install-help",
+                                Usage: "Show installation instructions",
+                                Value: false,
+                        },
+                },
+                Action: checkDCMTKAction,
+        }
+}</span>
+
+func checkDCMTKAction(c *cli.Context) error <span class="cov0" title="0">{
+        verbose := c.Bool("verbose")
+        showInstallHelp := c.Bool("install-help")
+
+        manager := dcmtk.NewManager()
+        
+        fmt.Println("🔍 Checking DCMTK Installation...")
+        fmt.Println()
+
+        // Check availability
+        available, err := manager.CheckAvailability()
+        if err != nil </span><span class="cov0" title="0">{
+                fmt.Printf("❌ DCMTK Status: %v\n", err)
+                fmt.Println()
+                
+                if showInstallHelp </span><span class="cov0" title="0">{
+                        fmt.Println("📋 Installation Instructions:")
+                        fmt.Println(manager.GetInstallationInstructions())
+                        return nil
+                }</span>
+                
+                <span class="cov0" title="0">fmt.Println("💡 To see installation instructions, run:")
+                fmt.Println("   crgodicom check-dcmtk --install-help")
+                return nil</span>
+        }
+
+        // Get installation info
+        <span class="cov0" title="0">info := manager.GetInstallationInfo()
+        
+        if available </span><span class="cov0" title="0">{
+                fmt.Printf("✅ DCMTK Status: Available\n")
+                if info.Bundled </span><span class="cov0" title="0">{
+                        fmt.Printf("📦 Installation: Bundled with CRGoDICOM\n")
+                }</span> else<span class="cov0" title="0"> {
+                        fmt.Printf("💻 Installation: System installation\n")
+                }</span>
+                <span class="cov0" title="0">fmt.Printf("📍 Path: %s\n", info.Path)
+                fmt.Printf("🔢 Version: %s\n", info.Version)
+                
+                if verbose </span><span class="cov0" title="0">{
+                        fmt.Println()
+                        fmt.Println("🛠️  Available Tools:")
+                        for tool, path := range info.Tools </span><span class="cov0" title="0">{
+                                fmt.Printf("   • %s: %s\n", tool, path)
+                        }</span>
+                }
+                
+                // Test key tools
+                <span class="cov0" title="0">fmt.Println()
+                fmt.Println("🧪 Testing Key Tools:")
+                
+                keyTools := []string{"storescu", "echoscu"}
+                for _, tool := range keyTools </span><span class="cov0" title="0">{
+                        if path, err := manager.GetDCMTKPath(tool); err == nil </span><span class="cov0" title="0">{
+                                fmt.Printf("   ✅ %s: Available at %s\n", tool, path)
+                        }</span> else<span class="cov0" title="0"> {
+                                fmt.Printf("   ❌ %s: %v\n", tool, err)
+                        }</span>
+                }
+                
+                <span class="cov0" title="0">fmt.Println()
+                fmt.Println("🎉 DCMTK is ready for use with CRGoDICOM!")</span>
+                
+        } else<span class="cov0" title="0"> {
+                fmt.Printf("❌ DCMTK Status: Not Available\n")
+                fmt.Println()
+                
+                if showInstallHelp </span><span class="cov0" title="0">{
+                        fmt.Println("📋 Installation Instructions:")
+                        fmt.Println(manager.GetInstallationInstructions())
+                }</span> else<span class="cov0" title="0"> {
+                        fmt.Println("💡 To see installation instructions, run:")
+                        fmt.Println("   crgodicom check-dcmtk --install-help")
+                }</span>
+                
+                <span class="cov0" title="0">return fmt.Errorf("DCMTK is required for PACS operations")</span>
+        }
+
+        <span class="cov0" title="0">return nil</span>
+}
+
+// CheckDCMTKAvailability is a helper function for other commands
+func CheckDCMTKAvailability() error <span class="cov0" title="0">{
+        manager := dcmtk.NewManager()
+        
+        _, err := manager.CheckAvailability()
+        if err != nil </span><span class="cov0" title="0">{
+                logrus.Warnf("DCMTK not available: %v", err)
+                logrus.Info("Run 'crgodicom check-dcmtk --install-help' for installation instructions")
+                return err
+        }</span>
+        
+        <span class="cov0" title="0">info := manager.GetInstallationInfo()
+        if info.Bundled </span><span class="cov0" title="0">{
+                logrus.Info("Using bundled DCMTK installation")
+        }</span> else<span class="cov0" title="0"> {
+                logrus.Info("Using system DCMTK installation")
+        }</span>
+        
+        <span class="cov0" title="0">return nil</span>
+}
+
+// GetDCMTKPath is a helper function to get DCMTK tool path
+func GetDCMTKPath(tool string) (string, error) <span class="cov0" title="0">{
+        manager := dcmtk.NewManager()
+        return manager.GetDCMTKPath(tool)
+}</span>
+
+// ShowDCMTKInstallationHelp displays installation help
+func ShowDCMTKInstallationHelp() <span class="cov0" title="0">{
+        manager := dcmtk.NewManager()
+        fmt.Println("📋 DCMTK Installation Instructions:")
+        fmt.Println(manager.GetInstallationInstructions())
+}</span>
+</pre>
+		
+		<pre class="file" id="file2" style="display: none">package cli
+
+import (
+        "fmt"
+
+        "github.com/flatmapit/crgodicom/internal/config"
+        "github.com/flatmapit/crgodicom/internal/dicom"
+        "github.com/flatmapit/crgodicom/pkg/types"
+        "github.com/sirupsen/logrus"
+        "github.com/urfave/cli/v2"
+)
+
+// CreateCommand returns the create command
+func CreateCommand() *cli.Command <span class="cov8" title="1">{
+        return &amp;cli.Command{
+                Name:  "create",
+                Usage: "Create synthetic DICOM studies",
+                Flags: []cli.Flag{
+                        &amp;cli.IntFlag{
+                                Name:  "study-count",
+                                Usage: "Number of studies to create",
+                                Value: 1,
+                        },
+                        &amp;cli.IntFlag{
+                                Name:  "series-count",
+                                Usage: "Number of series per study",
+                                Value: 1,
+                        },
+                        &amp;cli.IntFlag{
+                                Name:  "image-count",
+                                Usage: "Number of images per series",
+                                Value: 1,
+                        },
+                        &amp;cli.StringFlag{
+                                Name:  "modality",
+                                Usage: "DICOM modality: CR, CT, MR, US, DX, MG",
+                                Value: "CR",
+                        },
+                        &amp;cli.StringFlag{
+                                Name:  "template",
+                                Usage: "Study template name",
+                        },
+                        &amp;cli.StringFlag{
+                                Name:  "anatomical-region",
+                                Usage: "Anatomical region",
+                                Value: "chest",
+                        },
+                        &amp;cli.StringFlag{
+                                Name:  "patient-id",
+                                Usage: "Patient ID",
+                        },
+                        &amp;cli.StringFlag{
+                                Name:  "patient-name",
+                                Usage: "Patient name (format: LAST^FIRST^MIDDLE)",
+                        },
+                        &amp;cli.StringFlag{
+                                Name:  "accession-number",
+                                Usage: "Accession number",
+                        },
+                        &amp;cli.StringFlag{
+                                Name:  "study-description",
+                                Usage: "Study description",
+                        },
+                        &amp;cli.StringFlag{
+                                Name:  "output-dir",
+                                Usage: "Output directory",
+                                Value: "studies",
+                        },
+                },
+                Action: createAction,
+        }
+}</span>
+
+func createAction(c *cli.Context) error <span class="cov8" title="1">{
+        // Get configuration from context
+        cfg, ok := c.Context.Value("config").(*config.Config)
+        if !ok </span><span class="cov0" title="0">{
+                return fmt.Errorf("configuration not found in context")
+        }</span>
+
+        // Parse template if specified
+        <span class="cov8" title="1">var template *config.TemplateConfig
+        if templateName := c.String("template"); templateName != "" </span><span class="cov8" title="1">{
+                t, exists := cfg.GetTemplate(templateName)
+                if !exists </span><span class="cov0" title="0">{
+                        return fmt.Errorf("template '%s' not found. Available templates: %v", templateName, cfg.ListTemplates())
+                }</span>
+                <span class="cov8" title="1">template = &amp;t
+                logrus.Infof("Using template: %s", templateName)</span>
+        }
+
+        // Create study parameters
+        <span class="cov8" title="1">params := StudyCreateParams{
+                StudyCount:       c.Int("study-count"),
+                SeriesCount:      c.Int("series-count"),
+                ImageCount:       c.Int("image-count"),
+                Modality:         c.String("modality"),
+                AnatomicalRegion: c.String("anatomical-region"),
+                PatientID:        c.String("patient-id"),
+                PatientName:      c.String("patient-name"),
+                AccessionNumber:  c.String("accession-number"),
+                StudyDescription: c.String("study-description"),
+                OutputDir:        c.String("output-dir"),
+                Template:         template,
+        }
+
+        // Validate parameters
+        if err := validateCreateParams(params); err != nil </span><span class="cov8" title="1">{
+                return fmt.Errorf("invalid parameters: %w", err)
+        }</span>
+
+        <span class="cov8" title="1">logrus.Infof("Creating %d study(ies) with %d series each and %d images per series", 
+                params.StudyCount, params.SeriesCount, params.ImageCount)
+        logrus.Infof("Modality: %s, Region: %s, Output: %s", 
+                params.Modality, params.AnatomicalRegion, params.OutputDir)
+
+        // Create DICOM generator and writer
+        generator := dicom.NewGenerator(cfg)
+        writer := dicom.NewWriter(cfg)
+
+        // Create studies
+        for i := 0; i &lt; params.StudyCount; i++ </span><span class="cov8" title="1">{
+                studyParams := types.StudyParams{
+                        StudyCount:       1,
+                        SeriesCount:      params.SeriesCount,
+                        ImageCount:       params.ImageCount,
+                        Modality:         params.Modality,
+                        AnatomicalRegion: params.AnatomicalRegion,
+                        PatientName:      params.PatientName,
+                        PatientID:        params.PatientID,
+                        AccessionNumber:  params.AccessionNumber,
+                        StudyDescription: params.StudyDescription,
+                        OutputDir:        params.OutputDir,
+                        Template:         params.Template,
+                }
+
+                // Generate study
+                study, err := generator.GenerateStudy(studyParams)
+                if err != nil </span><span class="cov0" title="0">{
+                        return fmt.Errorf("failed to generate study %d: %w", i+1, err)
+                }</span>
+
+                // Write study to disk
+                <span class="cov8" title="1">if err := writer.WriteStudy(study, params.OutputDir); err != nil </span><span class="cov8" title="1">{
+                        return fmt.Errorf("failed to write study %d: %w", i+1, err)
+                }</span>
+
+                <span class="cov0" title="0">logrus.Infof("Successfully created study %d: %s", i+1, study.StudyInstanceUID)</span>
+        }
+
+        <span class="cov0" title="0">fmt.Printf("Successfully created %d study(ies) in directory: %s\n", params.StudyCount, params.OutputDir)
+        return nil</span>
+}
+
+// StudyCreateParams represents parameters for study creation
+type StudyCreateParams struct {
+        StudyCount       int
+        SeriesCount      int
+        ImageCount       int
+        Modality         string
+        AnatomicalRegion string
+        PatientID        string
+        PatientName      string
+        AccessionNumber  string
+        StudyDescription string
+        OutputDir        string
+        Template         *config.TemplateConfig
+}
+
+// validateCreateParams validates the study creation parameters
+func validateCreateParams(params StudyCreateParams) error <span class="cov8" title="1">{
+        if params.StudyCount &lt;= 0 </span><span class="cov8" title="1">{
+                return fmt.Errorf("study count must be greater than 0")
+        }</span>
+        <span class="cov8" title="1">if params.SeriesCount &lt;= 0 </span><span class="cov0" title="0">{
+                return fmt.Errorf("series count must be greater than 0")
+        }</span>
+        <span class="cov8" title="1">if params.ImageCount &lt;= 0 </span><span class="cov8" title="1">{
+                return fmt.Errorf("image count must be greater than 0")
+        }</span>
+
+        // Validate modality
+        <span class="cov8" title="1">validModalities := []string{"CR", "CT", "MR", "US", "DX", "MG"}
+        validModality := false
+        for _, mod := range validModalities </span><span class="cov8" title="1">{
+                if params.Modality == mod </span><span class="cov8" title="1">{
+                        validModality = true
+                        break</span>
+                }
+        }
+        <span class="cov8" title="1">if !validModality </span><span class="cov8" title="1">{
+                return fmt.Errorf("invalid modality '%s'. Valid modalities: %v", params.Modality, validModalities)
+        }</span>
+
+        <span class="cov8" title="1">return nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file3" style="display: none">package cli
+
+import (
+        "context"
+        "fmt"
+        "os"
+        "os/exec"
+        "path/filepath"
+        "strings"
+        "time"
+
+        "github.com/sirupsen/logrus"
+        "github.com/urfave/cli/v2"
+)
+
+// DCMTKCommand returns the DCMTK subprocess command for sending DICOM files
+func DCMTKCommand() *cli.Command <span class="cov0" title="0">{
+        return &amp;cli.Command{
+                Name:  "dcmtk",
+                Usage: "Send DICOM files using DCMTK storescu subprocess (100% compatibility)",
+                Flags: []cli.Flag{
+                        &amp;cli.StringFlag{
+                                Name:     "study-id",
+                                Usage:    "Study Instance UID (required)",
+                                Required: true,
+                        },
+                        &amp;cli.StringFlag{
+                                Name:  "host",
+                                Usage: "PACS host address",
+                                Value: "localhost",
+                        },
+                        &amp;cli.IntFlag{
+                                Name:  "port",
+                                Usage: "PACS port",
+                                Value: 4242,
+                        },
+                        &amp;cli.StringFlag{
+                                Name:  "aec",
+                                Usage: "Application Entity Caller",
+                                Value: "DICOM_CLIENT",
+                        },
+                        &amp;cli.StringFlag{
+                                Name:  "aet",
+                                Usage: "Application Entity Title",
+                                Value: "PACS1",
+                        },
+                        &amp;cli.StringFlag{
+                                Name:  "output-dir",
+                                Usage: "Studies directory",
+                                Value: "studies",
+                        },
+                        &amp;cli.IntFlag{
+                                Name:  "timeout",
+                                Usage: "Connection timeout in seconds",
+                                Value: 30,
+                        },
+                        &amp;cli.BoolFlag{
+                                Name:  "verbose",
+                                Usage: "Verbose DCMTK output",
+                                Value: false,
+                        },
+                },
+                Action: dcmtkAction,
+        }
+}</span>
+
+func dcmtkAction(c *cli.Context) error <span class="cov0" title="0">{
+        studyID := c.String("study-id")
+        outputDir := c.String("output-dir")
+
+        logrus.Infof("Sending study %s using DCMTK storescu to PACS %s:%d",
+                studyID, c.String("host"), c.Int("port"))
+
+        // Check DCMTK availability using the manager
+        if err := CheckDCMTKAvailability(); err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("DCMTK not available: %w", err)
+        }</span>
+
+        // Find DICOM files for the study
+        <span class="cov0" title="0">studyDir := filepath.Join(outputDir, studyID)
+        dicomFiles, err := findDICOMFilesForDCMTK(studyDir)
+        if err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("failed to find DICOM files: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">if len(dicomFiles) == 0 </span><span class="cov0" title="0">{
+                return fmt.Errorf("no DICOM files found for study %s", studyID)
+        }</span>
+
+        <span class="cov0" title="0">logrus.Infof("Found %d DICOM files to send via DCMTK", len(dicomFiles))
+
+        // Test connectivity first with echoscu
+        logrus.Info("Testing PACS connectivity with DCMTK echoscu...")
+        if err := runEchoSCU(c.String("host"), c.Int("port"), c.String("aec"), c.String("aet"), c.Bool("verbose")); err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("PACS connectivity test failed: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">logrus.Info("✅ PACS connectivity confirmed with DCMTK echoscu")
+
+        // Send each DICOM file using storescu
+        successCount := 0
+        for i, filePath := range dicomFiles </span><span class="cov0" title="0">{
+                logrus.Infof("Sending file %d/%d via DCMTK storescu: %s", i+1, len(dicomFiles), filepath.Base(filePath))
+
+                if err := runStoreSCU(c.String("host"), c.Int("port"), c.String("aec"), c.String("aet"), filePath, c.Bool("verbose")); err != nil </span><span class="cov0" title="0">{
+                        logrus.Errorf("Failed to send %s via DCMTK: %v", filepath.Base(filePath), err)
+                        continue</span>
+                }
+
+                <span class="cov0" title="0">successCount++
+                logrus.Infof("✅ Successfully sent %s via DCMTK storescu", filepath.Base(filePath))</span>
+        }
+
+        <span class="cov0" title="0">if successCount == 0 </span><span class="cov0" title="0">{
+                return fmt.Errorf("failed to send any DICOM files via DCMTK")
+        }</span>
+
+        <span class="cov0" title="0">logrus.Infof("🎉 Successfully sent %d/%d DICOM files to PACS via DCMTK", successCount, len(dicomFiles))
+        return nil</span>
+}
+
+// runEchoSCU runs DCMTK echoscu to test connectivity
+func runEchoSCU(host string, port int, aec, aet string, verbose bool) error <span class="cov0" title="0">{
+        // Get DCMTK tool path
+        echoscuPath, err := GetDCMTKPath("echoscu")
+        if err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("failed to get echoscu path: %w", err)
+        }</span>
+        
+        <span class="cov0" title="0">args := []string{
+                "-aec", aec,
+                "-aet", aet,
+                host,
+                fmt.Sprintf("%d", port),
+        }
+
+        if verbose </span><span class="cov0" title="0">{
+                args = append([]string{"-v"}, args...)
+        }</span>
+
+        <span class="cov0" title="0">cmd := exec.Command(echoscuPath, args...)
+
+        logrus.Debugf("Running: %s %s", echoscuPath, strings.Join(args, " "))
+
+        output, err := cmd.CombinedOutput()
+        if err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("echoscu failed: %w\nOutput: %s", err, string(output))
+        }</span>
+
+        <span class="cov0" title="0">logrus.Debugf("echoscu output: %s", string(output))
+        return nil</span>
+}
+
+// runStoreSCU runs DCMTK storescu to send a DICOM file
+func runStoreSCU(host string, port int, aec, aet, filePath string, verbose bool) error <span class="cov0" title="0">{
+        // Get DCMTK tool path
+        storescuPath, err := GetDCMTKPath("storescu")
+        if err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("failed to get storescu path: %w", err)
+        }</span>
+        
+        <span class="cov0" title="0">args := []string{
+                "-aec", aec,
+                "-aet", aet,
+                host,
+                fmt.Sprintf("%d", port),
+                filePath,
+        }
+
+        if verbose </span><span class="cov0" title="0">{
+                args = append([]string{"-v"}, args...)
+        }</span>
+
+        <span class="cov0" title="0">logrus.Debugf("Running: %s %s", storescuPath, strings.Join(args, " "))
+
+        // Set timeout
+        ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+        defer cancel()
+        cmd := exec.CommandContext(ctx, storescuPath, args...)
+
+        output, err := cmd.CombinedOutput()
+        if err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("storescu failed: %w\nOutput: %s", err, string(output))
+        }</span>
+
+        // Check for success indicators in output
+        <span class="cov0" title="0">outputStr := string(output)
+        if strings.Contains(outputStr, "Store Response (Success)") ||
+                strings.Contains(outputStr, "Received Store Response (Success)") ||
+                strings.Contains(outputStr, "I: Received Store Response (Success)") ||
+                (strings.Contains(outputStr, "Association Accepted") &amp;&amp;
+                        strings.Contains(outputStr, "Sending Store Request") &amp;&amp;
+                        !strings.Contains(outputStr, "Store SCU Failed")) </span><span class="cov0" title="0">{
+                logrus.Debugf("storescu success detected")
+                return nil
+        }</span>
+
+        // Check for specific failure indicators
+        <span class="cov0" title="0">if strings.Contains(outputStr, "Store SCU Failed") ||
+                strings.Contains(outputStr, "No presentation context") ||
+                strings.Contains(outputStr, "Aborting Association") </span><span class="cov0" title="0">{
+                return fmt.Errorf("storescu failed: %s", outputStr)
+        }</span>
+
+        <span class="cov0" title="0">return fmt.Errorf("storescu status unclear: %s", outputStr)</span>
+}
+
+// findDICOMFilesForDCMTK finds all DICOM files in a study directory
+func findDICOMFilesForDCMTK(studyDir string) ([]string, error) <span class="cov0" title="0">{
+        var dicomFiles []string
+
+        err := filepath.Walk(studyDir, func(path string, info os.FileInfo, err error) error </span><span class="cov0" title="0">{
+                if err != nil </span><span class="cov0" title="0">{
+                        return err
+                }</span>
+
+                <span class="cov0" title="0">if !info.IsDir() &amp;&amp; filepath.Ext(path) == ".dcm" </span><span class="cov0" title="0">{
+                        dicomFiles = append(dicomFiles, path)
+                }</span>
+
+                <span class="cov0" title="0">return nil</span>
+        })
+
+        <span class="cov0" title="0">return dicomFiles, err</span>
+}
+</pre>
+		
+		<pre class="file" id="file4" style="display: none">package cli
+
+import (
+        "context"
+        "time"
+
+        "github.com/flatmapit/crgodicom/internal/config"
+        "github.com/flatmapit/crgodicom/internal/pacs"
+        "github.com/sirupsen/logrus"
+        "github.com/urfave/cli/v2"
+)
+
+// EchoCommand returns the C-ECHO command
+func EchoCommand() *cli.Command <span class="cov0" title="0">{
+        return &amp;cli.Command{
+                Name:  "echo",
+                Usage: "Send C-ECHO request to PACS server",
+                Flags: []cli.Flag{
+                        &amp;cli.StringFlag{
+                                Name:  "host",
+                                Usage: "PACS host address",
+                                Value: "localhost",
+                        },
+                        &amp;cli.IntFlag{
+                                Name:  "port",
+                                Usage: "PACS port",
+                                Value: 4242,
+                        },
+                        &amp;cli.StringFlag{
+                                Name:  "aec",
+                                Usage: "Application Entity Caller",
+                                Value: "DICOM_CLIENT",
+                        },
+                        &amp;cli.StringFlag{
+                                Name:  "aet",
+                                Usage: "Application Entity Title",
+                                Value: "PACS1",
+                        },
+                        &amp;cli.IntFlag{
+                                Name:  "timeout",
+                                Usage: "Connection timeout in seconds",
+                                Value: 30,
+                        },
+                },
+                Action: echoAction,
+        }
+}</span>
+
+func echoAction(c *cli.Context) error <span class="cov0" title="0">{
+        logrus.Infof("Sending C-ECHO to PACS %s:%d (AEC: %s, AET: %s)",
+                c.String("host"), c.Int("port"), c.String("aec"), c.String("aet"))
+
+        // Create PACS configuration
+        pacsConfig := &amp;config.PACSConfig{
+                Host:    c.String("host"),
+                Port:    c.Int("port"),
+                AEC:     c.String("aec"),
+                AET:     c.String("aet"),
+                Timeout: c.Int("timeout"),
+        }
+
+        // Create PACS client
+        client := pacs.NewClient(pacsConfig)
+
+        // Create context with timeout
+        ctx, cancel := context.WithTimeout(context.Background(), time.Duration(pacsConfig.Timeout)*time.Second)
+        defer cancel()
+
+        // Connect to PACS
+        logrus.Info("Establishing DICOM association...")
+        if err := client.Connect(ctx); err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+        <span class="cov0" title="0">defer client.Disconnect()
+
+        logrus.Info("DICOM association established successfully")
+
+        // Send C-ECHO
+        logrus.Info("Sending C-ECHO request...")
+        if err := client.CEcho(ctx); err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+
+        <span class="cov0" title="0">logrus.Info("C-ECHO successful - PACS is responding")
+        return nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file5" style="display: none">package cli
+
+import (
+        "fmt"
+        "os"
+        "path/filepath"
+
+        "github.com/flatmapit/crgodicom/internal/config"
+        "github.com/flatmapit/crgodicom/internal/export"
+        "github.com/flatmapit/crgodicom/pkg/types"
+        "github.com/sirupsen/logrus"
+        "github.com/urfave/cli/v2"
+)
+
+// ExportCommand returns the export command
+func ExportCommand() *cli.Command <span class="cov8" title="1">{
+        return &amp;cli.Command{
+                Name:  "export",
+                Usage: "Export DICOM study to various formats",
+                Flags: []cli.Flag{
+                        &amp;cli.StringFlag{
+                                Name:     "study-id",
+                                Usage:    "Study Instance UID (required)",
+                                Required: true,
+                        },
+                        &amp;cli.StringFlag{
+                                Name:     "format",
+                                Usage:    "Export format: png, pdf (required)",
+                                Required: true,
+                        },
+                        &amp;cli.StringFlag{
+                                Name:  "output-dir",
+                                Usage: "Output directory (for PNG format)",
+                        },
+                        &amp;cli.StringFlag{
+                                Name:  "output-file",
+                                Usage: "Output file path (for PDF format)",
+                        },
+                        &amp;cli.StringFlag{
+                                Name:  "input-dir",
+                                Usage: "Studies directory",
+                                Value: "studies",
+                        },
+                        &amp;cli.BoolFlag{
+                                Name:  "include-metadata",
+                                Usage: "Include metadata files (PNG format)",
+                        },
+                },
+                Action: exportAction,
+        }
+}</span>
+
+func exportAction(c *cli.Context) error <span class="cov8" title="1">{
+        // Get configuration from context
+        _, ok := c.Context.Value("config").(*config.Config)
+        if !ok </span><span class="cov0" title="0">{
+                return fmt.Errorf("configuration not found in context")
+        }</span>
+
+        <span class="cov8" title="1">studyID := c.String("study-id")
+        format := c.String("format")
+        outputDir := c.String("output-dir")
+        outputFile := c.String("output-file")
+        inputDir := c.String("input-dir")
+        includeMetadata := c.Bool("include-metadata")
+
+        // Validate format
+        validFormats := []string{"png", "pdf"}
+        validFormat := false
+        for _, f := range validFormats </span><span class="cov8" title="1">{
+                if format == f </span><span class="cov8" title="1">{
+                        validFormat = true
+                        break</span>
+                }
+        }
+        <span class="cov8" title="1">if !validFormat </span><span class="cov8" title="1">{
+                return fmt.Errorf("invalid format '%s'. Valid formats: %v", format, validFormats)
+        }</span>
+
+        // Validate output parameters based on format
+        <span class="cov8" title="1">if format == "png" &amp;&amp; outputDir == "" </span><span class="cov8" title="1">{
+                return fmt.Errorf("PNG format requires --output-dir parameter")
+        }</span>
+        <span class="cov8" title="1">if format == "pdf" &amp;&amp; outputFile == "" </span><span class="cov8" title="1">{
+                return fmt.Errorf("PDF format requires --output-file parameter")
+        }</span>
+
+        <span class="cov8" title="1">logrus.Infof("Exporting study %s to %s format", studyID, format)
+        logrus.Infof("Input directory: %s", inputDir)
+        if format == "png" </span><span class="cov0" title="0">{
+                logrus.Infof("Output directory: %s, Include metadata: %v", outputDir, includeMetadata)
+        }</span> else<span class="cov8" title="1"> {
+                logrus.Infof("Output file: %s", outputFile)
+        }</span>
+
+        // Find the study directory
+        <span class="cov8" title="1">studyDir := filepath.Join(inputDir, studyID)
+        if _, err := os.Stat(studyDir); os.IsNotExist(err) </span><span class="cov8" title="1">{
+                return fmt.Errorf("study directory not found: %s", studyDir)
+        }</span>
+
+        // Create exporter
+        <span class="cov0" title="0">exporter := export.NewExporter(inputDir)
+
+        // For now, we'll create a mock study from the directory structure
+        // In a real implementation, you'd parse the DICOM files to reconstruct the study
+        study, err := reconstructStudyFromDirectory(studyDir)
+        if err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("failed to reconstruct study: %w", err)
+        }</span>
+
+        // Export based on format
+        <span class="cov0" title="0">switch format </span>{
+        case "png":<span class="cov0" title="0">
+                logrus.Info("PNG export is handled as part of the general export process")</span>
+        case "pdf":<span class="cov0" title="0">
+                logrus.Info("PDF export is handled as part of the general export process")</span>
+        case "both":<span class="cov0" title="0">
+                logrus.Info("Exporting both PNG and PDF formats")</span>
+        default:<span class="cov0" title="0">
+                return fmt.Errorf("unsupported export format: %s", format)</span>
+        }
+
+        // Export the study
+        <span class="cov0" title="0">if err := exporter.ExportStudy(study); err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("failed to export study: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">fmt.Printf("Successfully exported study %s\n", studyID)
+        return nil</span>
+}
+
+// reconstructStudyFromDirectory reconstructs a study from directory structure
+func reconstructStudyFromDirectory(studyDir string) (*types.Study, error) <span class="cov0" title="0">{
+        // This is a simplified implementation that creates a mock study
+        // In a real implementation, you'd parse the DICOM files to extract metadata
+
+        studyUID := filepath.Base(studyDir)
+
+        // Create a basic study structure
+        study := &amp;types.Study{
+                StudyInstanceUID: studyUID,
+                StudyDate:        "20250917",
+                StudyTime:        "143000",
+                AccessionNumber:  "ACC123456",
+                StudyDescription: "Ultrasound Abdomen",
+                PatientName:      "SMITH^JANE^M",
+                PatientID:        "P123456",
+                PatientBirthDate: "19800101",
+                Series:           []types.Series{},
+        }
+
+        // Find series directories
+        entries, err := os.ReadDir(studyDir)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, fmt.Errorf("failed to read study directory: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">for _, entry := range entries </span><span class="cov0" title="0">{
+                if entry.IsDir() &amp;&amp; filepath.Base(entry.Name()) != "exports" </span><span class="cov0" title="0">{
+                        seriesDir := filepath.Join(studyDir, entry.Name())
+
+                        // Create series
+                        series := types.Series{
+                                SeriesInstanceUID: fmt.Sprintf("%s.%s", studyUID, entry.Name()),
+                                SeriesNumber:      1, // Simplified
+                                Modality:          "US",
+                                SeriesDescription: "Ultrasound Series",
+                                Images:            []types.Image{},
+                        }
+
+                        // Find DICOM files in series
+                        dicomFiles, err := findDICOMFilesInDirectory(seriesDir)
+                        if err != nil </span><span class="cov0" title="0">{
+                                continue</span> // Skip this series if we can't read it
+                        }
+
+                        // Create mock images
+                        <span class="cov0" title="0">for i := range dicomFiles </span><span class="cov0" title="0">{
+                                image := types.Image{
+                                        SOPInstanceUID: fmt.Sprintf("%s.%d", series.SeriesInstanceUID, i+1),
+                                        SOPClassUID:    "1.2.840.10008.5.1.4.1.1.6.1", // Ultrasound
+                                        InstanceNumber: i + 1,
+                                        Width:          640, // US dimensions
+                                        Height:         480,
+                                        BitsPerPixel:   8,
+                                        Modality:       "US",
+                                        PixelData:      generateMockPixelData(640, 480, 8),
+                                }
+                                series.Images = append(series.Images, image)
+                        }</span>
+
+                        <span class="cov0" title="0">study.Series = append(study.Series, series)</span>
+                }
+        }
+
+        <span class="cov0" title="0">return study, nil</span>
+}
+
+// findDICOMFilesInDirectory finds DICOM files in a directory
+func findDICOMFilesInDirectory(dir string) ([]string, error) <span class="cov0" title="0">{
+        var dicomFiles []string
+
+        entries, err := os.ReadDir(dir)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov0" title="0">for _, entry := range entries </span><span class="cov0" title="0">{
+                if !entry.IsDir() &amp;&amp; filepath.Ext(entry.Name()) == ".dcm" </span><span class="cov0" title="0">{
+                        dicomFiles = append(dicomFiles, filepath.Join(dir, entry.Name()))
+                }</span>
+        }
+
+        <span class="cov0" title="0">return dicomFiles, nil</span>
+}
+
+// generateMockPixelData generates mock pixel data for testing
+func generateMockPixelData(width, height, bitsPerPixel int) []byte <span class="cov0" title="0">{
+        bytesPerPixel := bitsPerPixel / 8
+        if bitsPerPixel%8 != 0 </span><span class="cov0" title="0">{
+                bytesPerPixel++
+        }</span>
+
+        <span class="cov0" title="0">pixelData := make([]byte, width*height*bytesPerPixel)
+
+        // Generate simple pattern
+        for y := 0; y &lt; height; y++ </span><span class="cov0" title="0">{
+                for x := 0; x &lt; width; x++ </span><span class="cov0" title="0">{
+                        idx := (y*width + x) * bytesPerPixel
+
+                        // Create a simple pattern
+                        value := uint8((x + y) % 256)
+                        pixelData[idx] = value
+                }</span>
+        }
+
+        <span class="cov0" title="0">return pixelData</span>
+}
+</pre>
+		
+		<pre class="file" id="file6" style="display: none">package cli
+
+import (
+        "fmt"
+        "os"
+        "path/filepath"
+        "strings"
+
+        "github.com/flatmapit/crgodicom/internal/config"
+        "github.com/sirupsen/logrus"
+        "github.com/urfave/cli/v2"
+)
+
+// ListCommand returns the list command
+func ListCommand() *cli.Command <span class="cov8" title="1">{
+        return &amp;cli.Command{
+                Name:  "list",
+                Usage: "List local DICOM studies",
+                Flags: []cli.Flag{
+                        &amp;cli.StringFlag{
+                                Name:  "output-dir",
+                                Usage: "Studies directory",
+                                Value: "studies",
+                        },
+                        &amp;cli.StringFlag{
+                                Name:  "format",
+                                Usage: "Output format: table, json, csv",
+                                Value: "table",
+                        },
+                        &amp;cli.BoolFlag{
+                                Name:    "verbose",
+                                Aliases: []string{"v"},
+                                Usage:   "Show detailed information",
+                        },
+                },
+                Action: listAction,
+        }
+}</span>
+
+func listAction(c *cli.Context) error <span class="cov8" title="1">{
+        // Get configuration from context
+        _, ok := c.Context.Value("config").(*config.Config)
+        if !ok </span><span class="cov0" title="0">{
+                return fmt.Errorf("configuration not found in context")
+        }</span>
+
+        <span class="cov8" title="1">outputDir := c.String("output-dir")
+        format := c.String("format")
+        verbose := c.Bool("verbose")
+
+        // Validate format
+        validFormats := []string{"table", "json", "csv"}
+        validFormat := false
+        for _, f := range validFormats </span><span class="cov8" title="1">{
+                if format == f </span><span class="cov8" title="1">{
+                        validFormat = true
+                        break</span>
+                }
+        }
+        <span class="cov8" title="1">if !validFormat </span><span class="cov8" title="1">{
+                return fmt.Errorf("invalid format '%s'. Valid formats: %v", format, validFormats)
+        }</span>
+
+        <span class="cov8" title="1">logrus.Infof("Listing studies in directory: %s", outputDir)
+        logrus.Infof("Output format: %s, Verbose: %v", format, verbose)
+
+        // Check if output directory exists
+        if _, err := os.Stat(outputDir); os.IsNotExist(err) </span><span class="cov8" title="1">{
+                logrus.Warnf("Studies directory does not exist: %s", outputDir)
+                fmt.Printf("No studies directory found at: %s\n", outputDir)
+                fmt.Println("Use 'crgodicom create' to generate some studies first.")
+                return nil
+        }</span>
+
+        // TODO: Implement actual study listing
+        // For now, just show directory structure
+        <span class="cov8" title="1">studies, err := listStudies(outputDir)
+        if err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("failed to list studies: %w", err)
+        }</span>
+
+        <span class="cov8" title="1">if len(studies) == 0 </span><span class="cov8" title="1">{
+                fmt.Println("No studies found.")
+                return nil
+        }</span>
+
+        // Display studies based on format
+        <span class="cov8" title="1">switch format </span>{
+        case "table":<span class="cov8" title="1">
+                displayStudiesTable(studies, verbose)</span>
+        case "json":<span class="cov0" title="0">
+                displayStudiesJSON(studies, verbose)</span>
+        case "csv":<span class="cov0" title="0">
+                displayStudiesCSV(studies, verbose)</span>
+        }
+
+        <span class="cov8" title="1">return nil</span>
+}
+
+// StudyInfo represents basic study information
+type StudyInfo struct {
+        StudyUID         string
+        PatientName      string
+        PatientID        string
+        StudyDate        string
+        StudyDescription string
+        SeriesCount      int
+        ImageCount       int
+        Modality         string
+        AccessionNumber  string
+}
+
+// listStudies lists all studies in the directory
+func listStudies(outputDir string) ([]StudyInfo, error) <span class="cov8" title="1">{
+        var studies []StudyInfo
+
+        // Walk through the studies directory
+        err := filepath.Walk(outputDir, func(path string, info os.FileInfo, err error) error </span><span class="cov8" title="1">{
+                if err != nil </span><span class="cov0" title="0">{
+                        return err
+                }</span>
+
+                // Look for study directories (directories with UID-like names)
+                <span class="cov8" title="1">if info.IsDir() &amp;&amp; path != outputDir </span><span class="cov8" title="1">{
+                        // Check if this looks like a study directory
+                        studyUID := filepath.Base(path)
+                        if isUIDFormat(studyUID) </span><span class="cov8" title="1">{
+                                studyInfo, err := getStudyInfo(path)
+                                if err != nil </span><span class="cov0" title="0">{
+                                        logrus.Warnf("Failed to read study info for %s: %v", studyUID, err)
+                                        // Still include it but with minimal info
+                                        studies = append(studies, StudyInfo{
+                                                StudyUID: studyUID,
+                                        })
+                                }</span> else<span class="cov8" title="1"> {
+                                        studies = append(studies, studyInfo)
+                                }</span>
+                        }
+                }
+
+                <span class="cov8" title="1">return nil</span>
+        })
+
+        <span class="cov8" title="1">return studies, err</span>
+}
+
+// isUIDFormat checks if a string looks like a DICOM UID
+func isUIDFormat(s string) bool <span class="cov8" title="1">{
+        // Basic UID format check (contains dots and digits)
+        if len(s) &lt; 10 </span><span class="cov0" title="0">{
+                return false
+        }</span>
+        // More sophisticated UID validation could be added here
+        <span class="cov8" title="1">return true</span>
+}
+
+// getStudyInfo reads study information from directory
+func getStudyInfo(studyPath string) (StudyInfo, error) <span class="cov8" title="1">{
+        studyUID := filepath.Base(studyPath)
+
+        // TODO: Read actual DICOM metadata from files
+        // For now, return placeholder info
+        return StudyInfo{
+                StudyUID:         studyUID,
+                PatientName:      "DOE^JOHN^M",
+                PatientID:        "P123456",
+                StudyDate:        "20250101",
+                StudyDescription: "Generated Study",
+                SeriesCount:      1,
+                ImageCount:       1,
+                Modality:         "CR",
+                AccessionNumber:  "ACC123456",
+        }, nil
+}</span>
+
+// displayStudiesTable displays studies in table format
+func displayStudiesTable(studies []StudyInfo, verbose bool) <span class="cov8" title="1">{
+        if verbose </span><span class="cov0" title="0">{
+                fmt.Printf("%-40s %-20s %-12s %-15s %-8s %-8s %-8s %-12s\n",
+                        "Study UID", "Patient Name", "Patient ID", "Study Date", "Series", "Images", "Modality", "Accession")
+                fmt.Println(strings.Repeat("-", 120))
+        }</span> else<span class="cov8" title="1"> {
+                fmt.Printf("%-40s %-20s %-12s %-15s %-8s %-8s\n",
+                        "Study UID", "Patient Name", "Patient ID", "Study Date", "Series", "Images")
+                fmt.Println(strings.Repeat("-", 95))
+        }</span>
+
+        <span class="cov8" title="1">for _, study := range studies </span><span class="cov8" title="1">{
+                if verbose </span><span class="cov0" title="0">{
+                        fmt.Printf("%-40s %-20s %-12s %-15s %-8d %-8d %-8s %-12s\n",
+                                study.StudyUID, study.PatientName, study.PatientID, study.StudyDate,
+                                study.SeriesCount, study.ImageCount, study.Modality, study.AccessionNumber)
+                }</span> else<span class="cov8" title="1"> {
+                        fmt.Printf("%-40s %-20s %-12s %-15s %-8d %-8d\n",
+                                study.StudyUID, study.PatientName, study.PatientID, study.StudyDate,
+                                study.SeriesCount, study.ImageCount)
+                }</span>
+        }
+}
+
+// displayStudiesJSON displays studies in JSON format
+func displayStudiesJSON(studies []StudyInfo, verbose bool) <span class="cov0" title="0">{
+        // TODO: Implement JSON output
+        fmt.Println("JSON output not yet implemented")
+}</span>
+
+// displayStudiesCSV displays studies in CSV format
+func displayStudiesCSV(studies []StudyInfo, verbose bool) <span class="cov0" title="0">{
+        // TODO: Implement CSV output
+        fmt.Println("CSV output not yet implemented")
+}</span>
+</pre>
+		
+		<pre class="file" id="file7" style="display: none">package cli
+
+import (
+        "fmt"
+        "os"
+        "path/filepath"
+        "strings"
+
+        "github.com/flatmapit/crgodicom/internal/orm"
+        "github.com/flatmapit/crgodicom/internal/orm/generator"
+        "github.com/flatmapit/crgodicom/internal/orm/parser"
+        "github.com/sirupsen/logrus"
+        "github.com/urfave/cli/v2"
+)
+
+// CreateORMCommand creates the ORM template generation command
+func CreateORMCommand() *cli.Command <span class="cov8" title="1">{
+        return &amp;cli.Command{
+                Name:    "orm-generate",
+                Aliases: []string{"orm"},
+                Usage:   "Generate DICOM templates from ORM models or HL7 messages",
+                Description: `Generate DICOM study templates from various input sources:
+- HL7 ORM messages (.hl7, .txt files)
+- Go struct definitions (.go files)
+- SQL schema files (.sql files)
+- JSON schema files (.json files)
+
+The generated templates can be used with the 'create' command to generate
+DICOM studies that match your existing data models.`,
+                Flags: []cli.Flag{
+                        &amp;cli.StringFlag{
+                                Name:     "input",
+                                Aliases:  []string{"i"},
+                                Usage:    "Input file path (HL7 message, Go structs, SQL schema, etc.)",
+                                Required: true,
+                        },
+                        &amp;cli.StringFlag{
+                                Name:    "output",
+                                Aliases: []string{"o"},
+                                Usage:   "Output template file path",
+                                Value:   "generated-template.yaml",
+                        },
+                        &amp;cli.StringFlag{
+                                Name:  "type",
+                                Aliases: []string{"t"},
+                                Usage: "Input type: hl7, go, sql, json (auto-detected if not specified)",
+                        },
+                        &amp;cli.StringFlag{
+                                Name:  "template-name",
+                                Usage: "Name for the generated template",
+                                Value: "orm-generated-template",
+                        },
+                        &amp;cli.StringFlag{
+                                Name:  "modality",
+                                Usage: "Default modality for the template",
+                                Value: "MR",
+                        },
+                        &amp;cli.IntFlag{
+                                Name:  "series-count",
+                                Usage: "Default number of series",
+                                Value: 1,
+                        },
+                        &amp;cli.IntFlag{
+                                Name:  "image-count",
+                                Usage: "Default number of images per series",
+                                Value: 10,
+                        },
+                        &amp;cli.BoolFlag{
+                                Name:  "verbose",
+                                Usage: "Enable verbose output",
+                        },
+                },
+                Action: generateORMTemplate,
+        }
+}</span>
+
+// generateORMTemplate handles the ORM template generation
+func generateORMTemplate(c *cli.Context) error <span class="cov8" title="1">{
+        inputFile := c.String("input")
+        outputFile := c.String("output")
+        inputType := c.String("type")
+        templateName := c.String("template-name")
+        modality := c.String("modality")
+        seriesCount := c.Int("series-count")
+        imageCount := c.Int("image-count")
+        verbose := c.Bool("verbose")
+
+        if verbose </span><span class="cov0" title="0">{
+                logrus.SetLevel(logrus.DebugLevel)
+        }</span>
+
+        <span class="cov8" title="1">logrus.Infof("Generating DICOM template from ORM input: %s", inputFile)
+
+        // Read input file
+        inputData, err := os.ReadFile(inputFile)
+        if err != nil </span><span class="cov8" title="1">{
+                return fmt.Errorf("failed to read input file %s: %w", inputFile, err)
+        }</span>
+
+        // Auto-detect input type if not specified
+        <span class="cov8" title="1">if inputType == "" </span><span class="cov8" title="1">{
+                inputType = detectInputType(inputFile)
+                logrus.Debugf("Auto-detected input type: %s", inputType)
+        }</span>
+
+        // Create ORM manager
+        <span class="cov8" title="1">manager := orm.NewORMManager(nil)
+        
+        // Register parsers
+        manager.RegisterParser("hl7", parser.NewHL7ORMParser())
+        manager.RegisterParser("go", parser.NewGoStructParser())
+        
+        // Set generator
+        manager.SetGenerator(generator.NewDICOMTemplateGenerator())
+
+        // Create generation config
+        config := orm.TemplateGenerationConfig{
+                TemplateName:       templateName,
+                DefaultModality:    modality,
+                DefaultSeriesCount: seriesCount,
+                DefaultImageCount:  imageCount,
+                FieldMappings:      make(map[string]string),
+                CustomTags:         make(map[string]map[string]string),
+                Transformations:    make(map[string]string),
+        }
+
+        // Generate template
+        template, err := manager.GenerateTemplate(inputData, inputType, config)
+        if err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("failed to generate template: %w", err)
+        }</span>
+
+        <span class="cov8" title="1">logrus.Debugf("Generated template with %d custom tag categories", len(template.CustomTags))
+
+        // Export template
+        templateData, err := manager.GetGenerator().ExportTemplate(template, "yaml")
+        if err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("failed to export template: %w", err)
+        }</span>
+
+        // Write output file
+        <span class="cov8" title="1">if err := os.WriteFile(outputFile, templateData, 0644); err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("failed to write output file %s: %w", outputFile, err)
+        }</span>
+
+        <span class="cov8" title="1">logrus.Infof("Successfully generated DICOM template: %s", outputFile)
+        
+        if verbose </span><span class="cov0" title="0">{
+                fmt.Printf("\n📋 Generated Template Summary:\n")
+                fmt.Printf("• Template Name: %s\n", template.Name)
+                fmt.Printf("• Modality: %s\n", template.Modality)
+                fmt.Printf("• Series Count: %d\n", template.SeriesCount)
+                fmt.Printf("• Image Count: %d\n", template.ImageCount)
+                fmt.Printf("• Custom Tag Categories: %d\n", len(template.CustomTags))
+                
+                for category, tags := range template.CustomTags </span><span class="cov0" title="0">{
+                        fmt.Printf("  - %s: %d tags\n", category, len(tags))
+                }</span>
+                
+                <span class="cov0" title="0">fmt.Printf("\n🎯 Usage:\n")
+                fmt.Printf("crgodicom create --template %s\n", template.Name)
+                fmt.Printf("\n📁 Output File: %s\n", outputFile)</span>
+        }
+
+        <span class="cov8" title="1">return nil</span>
+}
+
+// detectInputType attempts to detect the input type from file extension
+func detectInputType(filename string) string <span class="cov8" title="1">{
+        ext := strings.ToLower(filepath.Ext(filename))
+        switch ext </span>{
+        case ".hl7", ".txt":<span class="cov8" title="1">
+                return "hl7"</span>
+        case ".go":<span class="cov8" title="1">
+                return "go"</span>
+        case ".sql":<span class="cov8" title="1">
+                return "sql"</span>
+        case ".json":<span class="cov8" title="1">
+                return "json"</span>
+        case ".yaml", ".yml":<span class="cov8" title="1">
+                return "yaml"</span>
+        default:<span class="cov8" title="1">
+                return "hl7"</span> // Default to HL7 for unknown extensions
+        }
+}
+
+</pre>
+		
+		<pre class="file" id="file8" style="display: none">package cli
+
+import (
+        "fmt"
+        "os"
+        "path/filepath"
+
+        "github.com/flatmapit/crgodicom/internal/config"
+        "github.com/flatmapit/crgodicom/internal/pacs"
+        "github.com/sirupsen/logrus"
+        "github.com/urfave/cli/v2"
+)
+
+// SendCommand returns the send command
+func SendCommand() *cli.Command <span class="cov0" title="0">{
+        return &amp;cli.Command{
+                Name:  "send",
+                Usage: "Send DICOM study to PACS",
+                Flags: []cli.Flag{
+                        &amp;cli.StringFlag{
+                                Name:     "study-id",
+                                Usage:    "Study Instance UID (required)",
+                                Required: true,
+                        },
+                        &amp;cli.StringFlag{
+                                Name:  "host",
+                                Usage: "PACS host address",
+                        },
+                        &amp;cli.IntFlag{
+                                Name:  "port",
+                                Usage: "PACS port",
+                                Value: 11112,
+                        },
+                        &amp;cli.StringFlag{
+                                Name:  "aec",
+                                Usage: "Application Entity Caller",
+                        },
+                        &amp;cli.StringFlag{
+                                Name:  "aet",
+                                Usage: "Application Entity Title",
+                        },
+                        &amp;cli.StringFlag{
+                                Name:  "output-dir",
+                                Usage: "Studies directory",
+                                Value: "studies",
+                        },
+                        &amp;cli.IntFlag{
+                                Name:  "timeout",
+                                Usage: "Connection timeout in seconds",
+                                Value: 30,
+                        },
+                        &amp;cli.IntFlag{
+                                Name:  "retries",
+                                Usage: "Retry attempts",
+                                Value: 3,
+                        },
+                },
+                Action: sendAction,
+        }
+}</span>
+
+func sendAction(c *cli.Context) error <span class="cov0" title="0">{
+        // Get configuration from context
+        cfg, ok := c.Context.Value("config").(*config.Config)
+        if !ok </span><span class="cov0" title="0">{
+                return fmt.Errorf("configuration not found in context")
+        }</span>
+
+        // Build PACS connection parameters
+        <span class="cov0" title="0">pacsConfig := config.PACSConfig{
+                Host:    c.String("host"),
+                Port:    c.Int("port"),
+                AEC:     c.String("aec"),
+                AET:     c.String("aet"),
+                Timeout: c.Int("timeout"),
+        }
+
+        // Use default PACS config if not specified via CLI
+        if pacsConfig.Host == "" </span><span class="cov0" title="0">{
+                pacsConfig = cfg.DefaultPACS
+                logrus.Info("Using default PACS configuration")
+        }</span>
+
+        // Validate required PACS parameters
+        <span class="cov0" title="0">if pacsConfig.Host == "" || pacsConfig.AEC == "" || pacsConfig.AET == "" </span><span class="cov0" title="0">{
+                return fmt.Errorf("PACS connection requires host, aec, and aet parameters")
+        }</span>
+
+        <span class="cov0" title="0">studyID := c.String("study-id")
+        outputDir := c.String("output-dir")
+        retries := c.Int("retries")
+
+        logrus.Infof("Sending study %s to PACS %s:%d (AEC: %s, AET: %s)",
+                studyID, pacsConfig.Host, pacsConfig.Port, pacsConfig.AEC, pacsConfig.AET)
+        logrus.Infof("Studies directory: %s, Retries: %d, Timeout: %ds",
+                outputDir, retries, pacsConfig.Timeout)
+
+        // Create PACS client
+        client := pacs.NewClient(&amp;pacsConfig)
+
+        // Connect to PACS
+        if err := client.Connect(c.Context); err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("failed to connect to PACS: %w", err)
+        }</span>
+        <span class="cov0" title="0">defer client.Disconnect()
+
+        // Test connectivity with C-ECHO
+        if err := client.CEcho(c.Context); err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("C-ECHO failed: %w", err)
+        }</span>
+
+        // Find and send DICOM files for the study
+        <span class="cov0" title="0">studyDir := filepath.Join(outputDir, studyID)
+        dicomFiles, err := findDICOMFiles(studyDir)
+        if err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("failed to find DICOM files: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">logrus.Infof("Found %d DICOM files to send", len(dicomFiles))
+
+        successCount := 0
+        for _, filePath := range dicomFiles </span><span class="cov0" title="0">{
+                logrus.Infof("Sending %s", filePath)
+
+                // Read DICOM file
+                dicomData, err := os.ReadFile(filePath)
+                if err != nil </span><span class="cov0" title="0">{
+                        logrus.Errorf("Failed to read %s: %v", filePath, err)
+                        continue</span>
+                }
+
+                // Extract SOP Instance UID from filename or data (simplified)
+                <span class="cov0" title="0">sopInstanceUID := extractSOPInstanceUID(filePath)
+
+                // Send to PACS
+                if err := client.CStore(c.Context, dicomData, sopInstanceUID); err != nil </span><span class="cov0" title="0">{
+                        logrus.Errorf("Failed to send %s: %v", filePath, err)
+                        continue</span>
+                }
+
+                <span class="cov0" title="0">successCount++</span>
+        }
+
+        <span class="cov0" title="0">fmt.Printf("Successfully sent %d/%d DICOM files to PACS\n", successCount, len(dicomFiles))
+        return nil</span>
+}
+
+// findDICOMFiles recursively finds all DICOM files in a directory
+func findDICOMFiles(dir string) ([]string, error) <span class="cov0" title="0">{
+        var dicomFiles []string
+
+        err := filepath.Walk(dir, func(path string, info os.FileInfo, err error) error </span><span class="cov0" title="0">{
+                if err != nil </span><span class="cov0" title="0">{
+                        return err
+                }</span>
+
+                // Check if it's a DICOM file (.dcm extension)
+                <span class="cov0" title="0">if !info.IsDir() &amp;&amp; filepath.Ext(path) == ".dcm" </span><span class="cov0" title="0">{
+                        dicomFiles = append(dicomFiles, path)
+                }</span>
+
+                <span class="cov0" title="0">return nil</span>
+        })
+
+        <span class="cov0" title="0">return dicomFiles, err</span>
+}
+
+// extractSOPInstanceUID extracts SOP Instance UID from file path
+// This is a simplified implementation - in a real scenario, you'd parse the DICOM file
+func extractSOPInstanceUID(filePath string) string <span class="cov0" title="0">{
+        // For now, use a simple approach based on filename
+        // In a real implementation, you'd parse the DICOM file to extract the actual UID
+        base := filepath.Base(filePath)
+        if base == "image_001.dcm" </span><span class="cov0" title="0">{
+                // This is a placeholder - in reality you'd extract from DICOM metadata
+                return "1.2.840.10008.5.1.4.1.1.1.1"
+        }</span>
+        <span class="cov0" title="0">return "1.2.840.10008.5.1.4.1.1.1.1"</span> // Default placeholder
+}
+</pre>
+		
+		<pre class="file" id="file9" style="display: none">package cli
+
+import (
+        "context"
+        "fmt"
+        "os"
+        "path/filepath"
+        "time"
+
+        "github.com/flatmapit/crgodicom/internal/config"
+        "github.com/flatmapit/crgodicom/internal/pacs"
+        "github.com/sirupsen/logrus"
+        "github.com/urfave/cli/v2"
+)
+
+// StoreCommand returns the C-STORE command for sending DICOM files
+func StoreCommand() *cli.Command <span class="cov0" title="0">{
+        return &amp;cli.Command{
+                Name:  "store",
+                Usage: "Send DICOM files to PACS using C-STORE (bypasses C-ECHO)",
+                Flags: []cli.Flag{
+                        &amp;cli.StringFlag{
+                                Name:     "study-id",
+                                Usage:    "Study Instance UID (required)",
+                                Required: true,
+                        },
+                        &amp;cli.StringFlag{
+                                Name:  "host",
+                                Usage: "PACS host address",
+                                Value: "localhost",
+                        },
+                        &amp;cli.IntFlag{
+                                Name:  "port",
+                                Usage: "PACS port",
+                                Value: 4242,
+                        },
+                        &amp;cli.StringFlag{
+                                Name:  "aec",
+                                Usage: "Application Entity Caller",
+                                Value: "DICOM_CLIENT",
+                        },
+                        &amp;cli.StringFlag{
+                                Name:  "aet",
+                                Usage: "Application Entity Title",
+                                Value: "PACS1",
+                        },
+                        &amp;cli.StringFlag{
+                                Name:  "output-dir",
+                                Usage: "Studies directory",
+                                Value: "studies",
+                        },
+                        &amp;cli.IntFlag{
+                                Name:  "timeout",
+                                Usage: "Connection timeout in seconds",
+                                Value: 30,
+                        },
+                },
+                Action: storeAction,
+        }
+}</span>
+
+func storeAction(c *cli.Context) error <span class="cov0" title="0">{
+        studyID := c.String("study-id")
+        outputDir := c.String("output-dir")
+
+        logrus.Infof("Sending study %s to PACS %s:%d (AEC: %s, AET: %s)",
+                studyID, c.String("host"), c.Int("port"), c.String("aec"), c.String("aet"))
+
+        // Create PACS configuration
+        pacsConfig := &amp;config.PACSConfig{
+                Host:    c.String("host"),
+                Port:    c.Int("port"),
+                AEC:     c.String("aec"),
+                AET:     c.String("aet"),
+                Timeout: c.Int("timeout"),
+        }
+
+        // Find DICOM files for the study
+        studyDir := filepath.Join(outputDir, studyID)
+        dicomFiles, err := findDICOMFilesInStudy(studyDir)
+        if err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("failed to find DICOM files: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">if len(dicomFiles) == 0 </span><span class="cov0" title="0">{
+                return fmt.Errorf("no DICOM files found for study %s", studyID)
+        }</span>
+
+        <span class="cov0" title="0">logrus.Infof("Found %d DICOM files to send", len(dicomFiles))
+
+        // Create PACS client
+        client := pacs.NewClient(pacsConfig)
+
+        // Create context with timeout
+        ctx, cancel := context.WithTimeout(context.Background(), time.Duration(pacsConfig.Timeout)*time.Second)
+        defer cancel()
+
+        // Connect to PACS (association only)
+        logrus.Info("Establishing DICOM association...")
+        if err := client.Connect(ctx); err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("failed to establish DICOM association: %w", err)
+        }</span>
+        <span class="cov0" title="0">defer client.Disconnect()
+
+        logrus.Info("DICOM association established successfully - bypassing C-ECHO")
+
+        // Send each DICOM file directly with C-STORE
+        successCount := 0
+        for i, filePath := range dicomFiles </span><span class="cov0" title="0">{
+                logrus.Infof("Sending file %d/%d: %s", i+1, len(dicomFiles), filepath.Base(filePath))
+
+                // Read DICOM file
+                dicomData, err := os.ReadFile(filePath)
+                if err != nil </span><span class="cov0" title="0">{
+                        logrus.Errorf("Failed to read DICOM file %s: %v", filePath, err)
+                        continue</span>
+                }
+
+                // Extract SOP Instance UID from filename (simplified)
+                <span class="cov0" title="0">sopInstanceUID := extractSOPInstanceUIDFromPath(filePath)
+
+                logrus.Debugf("Attempting C-STORE for SOP Instance UID: %s", sopInstanceUID)
+
+                // Send C-STORE directly
+                if err := client.CStore(ctx, dicomData, sopInstanceUID); err != nil </span><span class="cov0" title="0">{
+                        logrus.Errorf("C-STORE failed for %s: %v", filePath, err)
+                        continue</span>
+                }
+
+                <span class="cov0" title="0">successCount++
+                logrus.Infof("Successfully sent %s", filepath.Base(filePath))</span>
+        }
+
+        <span class="cov0" title="0">if successCount == 0 </span><span class="cov0" title="0">{
+                return fmt.Errorf("failed to send any DICOM files")
+        }</span>
+
+        <span class="cov0" title="0">logrus.Infof("Successfully sent %d/%d DICOM files to PACS", successCount, len(dicomFiles))
+        return nil</span>
+}
+
+// findDICOMFilesInStudy finds all DICOM files in a study directory
+func findDICOMFilesInStudy(studyDir string) ([]string, error) <span class="cov0" title="0">{
+        var dicomFiles []string
+
+        err := filepath.Walk(studyDir, func(path string, info os.FileInfo, err error) error </span><span class="cov0" title="0">{
+                if err != nil </span><span class="cov0" title="0">{
+                        return err
+                }</span>
+
+                <span class="cov0" title="0">if !info.IsDir() &amp;&amp; filepath.Ext(path) == ".dcm" </span><span class="cov0" title="0">{
+                        dicomFiles = append(dicomFiles, path)
+                }</span>
+
+                <span class="cov0" title="0">return nil</span>
+        })
+
+        <span class="cov0" title="0">return dicomFiles, err</span>
+}
+
+// extractSOPInstanceUIDFromPath extracts SOP Instance UID from file path (simplified)
+func extractSOPInstanceUIDFromPath(filePath string) string <span class="cov0" title="0">{
+        // For now, generate a simple UID based on filename
+        // In a real implementation, you'd parse the DICOM file
+        return fmt.Sprintf("1.2.840.10008.1.1.%d", time.Now().UnixNano())
+}</span>
+</pre>
+		
+		<pre class="file" id="file10" style="display: none">package cli
+
+import (
+        "fmt"
+        "os"
+        "path/filepath"
+
+        "github.com/flatmapit/crgodicom/internal/config"
+        "github.com/sirupsen/logrus"
+        "github.com/urfave/cli/v2"
+        "gopkg.in/yaml.v3"
+)
+
+// CreateTemplateCommand returns the create-template command
+func CreateTemplateCommand() *cli.Command <span class="cov0" title="0">{
+        return &amp;cli.Command{
+                Name:  "create-template",
+                Usage: "Create a new study template",
+                Flags: []cli.Flag{
+                        &amp;cli.StringFlag{
+                                Name:     "name",
+                                Usage:    "Template name (required)",
+                                Required: true,
+                        },
+                        &amp;cli.StringFlag{
+                                Name:     "modality",
+                                Usage:    "DICOM modality: CR, CT, MR, US, DX, MG (required)",
+                                Required: true,
+                        },
+                        &amp;cli.IntFlag{
+                                Name:  "series-count",
+                                Usage: "Number of series per study",
+                                Value: 1,
+                        },
+                        &amp;cli.IntFlag{
+                                Name:  "image-count",
+                                Usage: "Number of images per series",
+                                Value: 1,
+                        },
+                        &amp;cli.StringFlag{
+                                Name:  "anatomical-region",
+                                Usage: "Anatomical region",
+                                Value: "chest",
+                        },
+                        &amp;cli.StringFlag{
+                                Name:  "study-description",
+                                Usage: "Study description",
+                        },
+                        &amp;cli.StringFlag{
+                                Name:  "output-file",
+                                Usage: "Output file path for template",
+                        },
+                },
+                Action: createTemplateAction,
+        }
+}</span>
+
+func createTemplateAction(c *cli.Context) error <span class="cov0" title="0">{
+        // Get configuration from context
+        _, ok := c.Context.Value("config").(*config.Config)
+        if !ok </span><span class="cov0" title="0">{
+                return fmt.Errorf("configuration not found in context")
+        }</span>
+
+        <span class="cov0" title="0">name := c.String("name")
+        modality := c.String("modality")
+        seriesCount := c.Int("series-count")
+        imageCount := c.Int("image-count")
+        anatomicalRegion := c.String("anatomical-region")
+        studyDescription := c.String("study-description")
+        outputFile := c.String("output-file")
+
+        // Validate modality
+        validModalities := []string{"CR", "CT", "MR", "US", "DX", "MG"}
+        validModality := false
+        for _, mod := range validModalities </span><span class="cov0" title="0">{
+                if modality == mod </span><span class="cov0" title="0">{
+                        validModality = true
+                        break</span>
+                }
+        }
+        <span class="cov0" title="0">if !validModality </span><span class="cov0" title="0">{
+                return fmt.Errorf("invalid modality '%s'. Valid modalities: %v", modality, validModalities)
+        }</span>
+
+        // Validate parameters
+        <span class="cov0" title="0">if seriesCount &lt;= 0 </span><span class="cov0" title="0">{
+                return fmt.Errorf("series count must be greater than 0")
+        }</span>
+        <span class="cov0" title="0">if imageCount &lt;= 0 </span><span class="cov0" title="0">{
+                return fmt.Errorf("image count must be greater than 0")
+        }</span>
+
+        // Set default study description if not provided
+        <span class="cov0" title="0">if studyDescription == "" </span><span class="cov0" title="0">{
+                studyDescription = fmt.Sprintf("%s %s", modality, anatomicalRegion)
+        }</span>
+
+        // Create template
+        <span class="cov0" title="0">template := config.TemplateConfig{
+                Modality:         modality,
+                SeriesCount:      seriesCount,
+                ImageCount:       imageCount,
+                AnatomicalRegion: anatomicalRegion,
+                StudyDescription: studyDescription,
+        }
+
+        // Generate output file path if not provided
+        if outputFile == "" </span><span class="cov0" title="0">{
+                outputFile = fmt.Sprintf("%s-template.yaml", name)
+        }</span>
+
+        <span class="cov0" title="0">logrus.Infof("Creating template '%s' with modality %s", name, modality)
+        logrus.Infof("Series: %d, Images: %d, Region: %s", seriesCount, imageCount, anatomicalRegion)
+        logrus.Infof("Output file: %s", outputFile)
+
+        // Create template file
+        if err := createTemplateFile(template, outputFile, name); err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("failed to create template file: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">fmt.Printf("Template '%s' created successfully: %s\n", name, outputFile)
+        fmt.Println("\nTo use this template:")
+        fmt.Printf("1. Add it to your crgodicom.yaml configuration file\n")
+        fmt.Printf("2. Use it with: crgodicom create --template %s\n", name)
+
+        return nil</span>
+}
+
+// createTemplateFile creates a template file
+func createTemplateFile(template config.TemplateConfig, outputFile, name string) error <span class="cov0" title="0">{
+        // Ensure directory exists
+        if err := os.MkdirAll(filepath.Dir(outputFile), 0755); err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("failed to create output directory: %w", err)
+        }</span>
+
+        // Create template data
+        <span class="cov0" title="0">templateData := map[string]interface{}{
+                "name":              name,
+                "modality":          template.Modality,
+                "series_count":      template.SeriesCount,
+                "image_count":       template.ImageCount,
+                "anatomical_region": template.AnatomicalRegion,
+                "study_description": template.StudyDescription,
+        }
+
+        // Add optional fields if they exist
+        if template.PatientName != "" </span><span class="cov0" title="0">{
+                templateData["patient_name"] = template.PatientName
+        }</span>
+        <span class="cov0" title="0">if template.PatientID != "" </span><span class="cov0" title="0">{
+                templateData["patient_id"] = template.PatientID
+        }</span>
+        <span class="cov0" title="0">if template.AccessionNumber != "" </span><span class="cov0" title="0">{
+                templateData["accession_number"] = template.AccessionNumber
+        }</span>
+
+        // Create YAML content
+        <span class="cov0" title="0">yamlData := map[string]interface{}{
+                "template": templateData,
+                "usage": map[string]interface{}{
+                        "description": "Study template for DICOM generation",
+                        "example":     fmt.Sprintf("crgodicom create --template %s", name),
+                },
+        }
+
+        // Marshal to YAML
+        data, err := yaml.Marshal(yamlData)
+        if err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("failed to marshal template to YAML: %w", err)
+        }</span>
+
+        // Write to file
+        <span class="cov0" title="0">if err := os.WriteFile(outputFile, data, 0644); err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("failed to write template file: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">return nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file11" style="display: none">package cli
+
+import (
+        "fmt"
+
+        "github.com/flatmapit/crgodicom/internal/config"
+        "github.com/sirupsen/logrus"
+        "github.com/urfave/cli/v2"
+)
+
+// VerifyCommand returns the verify command
+func VerifyCommand() *cli.Command <span class="cov0" title="0">{
+        return &amp;cli.Command{
+                Name:  "verify",
+                Usage: "Verify PACS connection using C-ECHO",
+                Flags: []cli.Flag{
+                        &amp;cli.StringFlag{
+                                Name:  "host",
+                                Usage: "PACS host address",
+                        },
+                        &amp;cli.IntFlag{
+                                Name:  "port",
+                                Usage: "PACS port",
+                                Value: 11112,
+                        },
+                        &amp;cli.StringFlag{
+                                Name:  "aec",
+                                Usage: "Application Entity Caller",
+                        },
+                        &amp;cli.StringFlag{
+                                Name:  "aet",
+                                Usage: "Application Entity Title",
+                        },
+                        &amp;cli.IntFlag{
+                                Name:  "timeout",
+                                Usage: "Connection timeout in seconds",
+                                Value: 10,
+                        },
+                },
+                Action: verifyAction,
+        }
+}</span>
+
+func verifyAction(c *cli.Context) error <span class="cov0" title="0">{
+        // Get configuration from context
+        cfg, ok := c.Context.Value("config").(*config.Config)
+        if !ok </span><span class="cov0" title="0">{
+                return fmt.Errorf("configuration not found in context")
+        }</span>
+
+        // Build PACS connection parameters
+        <span class="cov0" title="0">pacsConfig := config.PACSConfig{
+                Host:    c.String("host"),
+                Port:    c.Int("port"),
+                AEC:     c.String("aec"),
+                AET:     c.String("aet"),
+                Timeout: c.Int("timeout"),
+        }
+
+        // Use default PACS config if not specified via CLI
+        if pacsConfig.Host == "" </span><span class="cov0" title="0">{
+                pacsConfig = cfg.DefaultPACS
+                logrus.Info("Using default PACS configuration")
+        }</span>
+
+        // Validate required PACS parameters
+        <span class="cov0" title="0">if pacsConfig.Host == "" || pacsConfig.AEC == "" || pacsConfig.AET == "" </span><span class="cov0" title="0">{
+                return fmt.Errorf("PACS connection requires host, aec, and aet parameters")
+        }</span>
+
+        <span class="cov0" title="0">logrus.Infof("Verifying PACS connection to %s:%d (AEC: %s, AET: %s)",
+                pacsConfig.Host, pacsConfig.Port, pacsConfig.AEC, pacsConfig.AET)
+        logrus.Infof("Timeout: %ds", pacsConfig.Timeout)
+
+        // TODO: Implement actual PACS verification (C-ECHO)
+        // For now, just log the parameters
+        logrus.Info("PACS verification not yet implemented")
+
+        return nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file12" style="display: none">package parser
+
+import (
+        "fmt"
+        "go/ast"
+        "go/parser"
+        "go/token"
+        "strconv"
+        "strings"
+
+        "github.com/flatmapit/crgodicom/internal/orm"
+)
+
+// GoStructParser parses Go struct definitions to extract DICOM mappings
+type GoStructParser struct {
+        fileSet *token.FileSet
+}
+
+// NewGoStructParser creates a new Go struct parser
+func NewGoStructParser() *GoStructParser <span class="cov0" title="0">{
+        return &amp;GoStructParser{
+                fileSet: token.NewFileSet(),
+        }
+}</span>
+
+// Parse parses Go source code and extracts model definitions
+func (p *GoStructParser) Parse(input []byte) ([]orm.ModelDefinition, error) <span class="cov0" title="0">{
+        // Parse the Go source code
+        file, err := parser.ParseFile(p.fileSet, "", input, parser.ParseComments)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, fmt.Errorf("failed to parse Go source: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">var models []orm.ModelDefinition
+
+        // Walk through the AST to find struct declarations
+        ast.Inspect(file, func(n ast.Node) bool </span><span class="cov0" title="0">{
+                switch node := n.(type) </span>{
+                case *ast.TypeSpec:<span class="cov0" title="0">
+                        if structType, ok := node.Type.(*ast.StructType); ok </span><span class="cov0" title="0">{
+                                model, err := p.parseStruct(node.Name.Name, structType)
+                                if err != nil </span><span class="cov0" title="0">{
+                                        // Log error but continue parsing other structs
+                                        return true
+                                }</span>
+                                <span class="cov0" title="0">models = append(models, model)</span>
+                        }
+                }
+                <span class="cov0" title="0">return true</span>
+        })
+
+        <span class="cov0" title="0">if len(models) == 0 </span><span class="cov0" title="0">{
+                return nil, fmt.Errorf("no struct definitions found in input")
+        }</span>
+
+        <span class="cov0" title="0">return models, nil</span>
+}
+
+// parseStruct parses a single struct type and extracts field mappings
+func (p *GoStructParser) parseStruct(name string, structType *ast.StructType) (orm.ModelDefinition, error) <span class="cov0" title="0">{
+        model := orm.ModelDefinition{
+                Name:     name,
+                Package:  "", // Will be extracted from package declaration if needed
+                Fields:   []orm.FieldMapping{},
+                Metadata: make(map[string]interface{}),
+        }
+
+        for _, field := range structType.Fields.List </span><span class="cov0" title="0">{
+                fieldMappings, err := p.parseField(field)
+                if err != nil </span><span class="cov0" title="0">{
+                        // Skip fields that can't be parsed
+                        continue</span>
+                }
+                <span class="cov0" title="0">model.Fields = append(model.Fields, fieldMappings...)</span>
+        }
+
+        <span class="cov0" title="0">return model, nil</span>
+}
+
+// parseField parses a single struct field and extracts DICOM mapping
+func (p *GoStructParser) parseField(field *ast.Field) ([]orm.FieldMapping, error) <span class="cov0" title="0">{
+        var mappings []orm.FieldMapping
+
+        // Handle multiple field names (e.g., Name, Alias string)
+        for _, name := range field.Names </span><span class="cov0" title="0">{
+                mapping := orm.FieldMapping{
+                        FieldName: name.Name,
+                        FieldType: p.getFieldType(field.Type),
+                }
+
+                // Parse struct tags
+                if field.Tag != nil </span><span class="cov0" title="0">{
+                        tagValue := field.Tag.Value
+                        // Remove backticks
+                        tagValue = strings.Trim(tagValue, "`")
+                        
+                        // Parse DICOM tag from struct tag
+                        if dicomTag := p.parseDICOMTag(tagValue); dicomTag != nil </span><span class="cov0" title="0">{
+                                mapping.DICOMTag = *dicomTag
+                        }</span>
+
+                        // Parse other attributes from struct tags
+                        <span class="cov0" title="0">mapping.Required = p.parseRequired(tagValue)
+                        mapping.DefaultValue = p.parseDefaultValue(tagValue)
+                        mapping.Validation = p.parseValidation(tagValue)
+                        mapping.Transform = p.parseTransform(tagValue)</span>
+                }
+
+                // Only include fields that have DICOM tags
+                <span class="cov0" title="0">if mapping.DICOMTag.Group != 0 || mapping.DICOMTag.Element != 0 </span><span class="cov0" title="0">{
+                        mappings = append(mappings, mapping)
+                }</span>
+        }
+
+        <span class="cov0" title="0">return mappings, nil</span>
+}
+
+// getFieldType determines the ORM field type from Go AST type
+func (p *GoStructParser) getFieldType(expr ast.Expr) orm.FieldType <span class="cov0" title="0">{
+        switch t := expr.(type) </span>{
+        case *ast.Ident:<span class="cov0" title="0">
+                switch t.Name </span>{
+                case "string":<span class="cov0" title="0">
+                        return orm.FieldTypeString</span>
+                case "int", "int8", "int16", "int32", "int64":<span class="cov0" title="0">
+                        return orm.FieldTypeInt</span>
+                case "uint", "uint8", "uint16", "uint32", "uint64":<span class="cov0" title="0">
+                        return orm.FieldTypeUint</span>
+                case "float32", "float64":<span class="cov0" title="0">
+                        return orm.FieldTypeFloat</span>
+                case "bool":<span class="cov0" title="0">
+                        return orm.FieldTypeBool</span>
+                case "byte":<span class="cov0" title="0">
+                        return orm.FieldTypeBytes</span>
+                default:<span class="cov0" title="0">
+                        return orm.FieldTypeStruct</span>
+                }
+        case *ast.SelectorExpr:<span class="cov0" title="0">
+                // Handle qualified types like time.Time
+                if ident, ok := t.X.(*ast.Ident); ok </span><span class="cov0" title="0">{
+                        if ident.Name == "time" &amp;&amp; t.Sel.Name == "Time" </span><span class="cov0" title="0">{
+                                return orm.FieldTypeTime
+                        }</span>
+                }
+                <span class="cov0" title="0">return orm.FieldTypeStruct</span>
+        case *ast.ArrayType:<span class="cov0" title="0">
+                return orm.FieldTypeSlice</span>
+        case *ast.StarExpr:<span class="cov0" title="0">
+                return orm.FieldTypePointer</span>
+        default:<span class="cov0" title="0">
+                return orm.FieldTypeUnknown</span>
+        }
+}
+
+// parseDICOMTag extracts DICOM tag from struct tag
+func (p *GoStructParser) parseDICOMTag(tagValue string) *orm.DICOMTag <span class="cov0" title="0">{
+        // Look for dicom:"(GGGG,EEEE)" pattern
+        parts := strings.Split(tagValue, " ")
+        for _, part := range parts </span><span class="cov0" title="0">{
+                if strings.HasPrefix(part, "dicom:") </span><span class="cov0" title="0">{
+                        // Extract the tag value
+                        tagStr := strings.TrimPrefix(part, "dicom:")
+                        tagStr = strings.Trim(tagStr, `"`)
+                        
+                        // Parse (GGGG,EEEE) format
+                        if strings.HasPrefix(tagStr, "(") &amp;&amp; strings.HasSuffix(tagStr, ")") </span><span class="cov0" title="0">{
+                                tagStr = strings.Trim(tagStr, "()")
+                                parts := strings.Split(tagStr, ",")
+                                if len(parts) == 2 </span><span class="cov0" title="0">{
+                                        group, err1 := strconv.ParseUint(parts[0], 16, 16)
+                                        element, err2 := strconv.ParseUint(parts[1], 16, 16)
+                                        if err1 == nil &amp;&amp; err2 == nil </span><span class="cov0" title="0">{
+                                                return &amp;orm.DICOMTag{
+                                                        Group:   uint16(group),
+                                                        Element: uint16(element),
+                                                }
+                                        }</span>
+                                }
+                        }
+                }
+        }
+        <span class="cov0" title="0">return nil</span>
+}
+
+// parseRequired checks if field is marked as required
+func (p *GoStructParser) parseRequired(tagValue string) bool <span class="cov0" title="0">{
+        return strings.Contains(tagValue, "required") || 
+                   strings.Contains(tagValue, "not null") ||
+                   strings.Contains(tagValue, "primaryKey")
+}</span>
+
+// parseDefaultValue extracts default value from struct tag
+func (p *GoStructParser) parseDefaultValue(tagValue string) string <span class="cov0" title="0">{
+        parts := strings.Split(tagValue, " ")
+        for _, part := range parts </span><span class="cov0" title="0">{
+                if strings.HasPrefix(part, "default:") </span><span class="cov0" title="0">{
+                        return strings.TrimPrefix(part, "default:")
+                }</span>
+        }
+        <span class="cov0" title="0">return ""</span>
+}
+
+// parseValidation extracts validation rules from struct tag
+func (p *GoStructParser) parseValidation(tagValue string) string <span class="cov0" title="0">{
+        parts := strings.Split(tagValue, " ")
+        for _, part := range parts </span><span class="cov0" title="0">{
+                if strings.HasPrefix(part, "validate:") </span><span class="cov0" title="0">{
+                        return strings.TrimPrefix(part, "validate:")
+                }</span>
+        }
+        <span class="cov0" title="0">return ""</span>
+}
+
+// parseTransform extracts transformation function from struct tag
+func (p *GoStructParser) parseTransform(tagValue string) string <span class="cov0" title="0">{
+        parts := strings.Split(tagValue, " ")
+        for _, part := range parts </span><span class="cov0" title="0">{
+                if strings.HasPrefix(part, "transform:") </span><span class="cov0" title="0">{
+                        return strings.TrimPrefix(part, "transform:")
+                }</span>
+        }
+        <span class="cov0" title="0">return ""</span>
+}
+
+// GetSupportedExtensions returns file extensions this parser supports
+func (p *GoStructParser) GetSupportedExtensions() []string <span class="cov0" title="0">{
+        return []string{".go"}
+}</span>
+
+// GetParserType returns the type of parser
+func (p *GoStructParser) GetParserType() string <span class="cov0" title="0">{
+        return "go"
+}</span>
+</pre>
+		
+		<pre class="file" id="file13" style="display: none">package parser
+
+import (
+        "fmt"
+        "strings"
+        "time"
+
+        "github.com/flatmapit/crgodicom/internal/orm"
+)
+
+// HL7ORMParser parses HL7 ORM (Order Management) messages to extract DICOM mappings
+type HL7ORMParser struct {
+        fieldSeparator        string
+        componentSeparator    string
+        repetitionSeparator   string
+        escapeCharacter       string
+        subComponentSeparator string
+}
+
+// NewHL7ORMParser creates a new HL7 ORM parser
+func NewHL7ORMParser() *HL7ORMParser <span class="cov8" title="1">{
+        return &amp;HL7ORMParser{
+                fieldSeparator:        "|",
+                componentSeparator:    "^",
+                repetitionSeparator:   "~",
+                escapeCharacter:       "\\",
+                subComponentSeparator: "&amp;",
+        }
+}</span>
+
+// HL7Message represents a parsed HL7 message
+type HL7Message struct {
+        MSH HL7MSH   // Message Header
+        PID HL7PID   // Patient Identification
+        PV1 HL7PV1   // Patient Visit
+        ORC HL7ORC   // Common Order
+        OBR HL7OBR   // Observation Request
+        OBX []HL7OBX // Observation/Result
+}
+
+// HL7MSH represents the Message Header segment
+type HL7MSH struct {
+        SendingApplication   string
+        SendingFacility      string
+        ReceivingApplication string
+        ReceivingFacility    string
+        DateTimeOfMessage    time.Time
+        MessageType          string
+        MessageControlID     string
+        ProcessingID         string
+        VersionID            string
+}
+
+// HL7PID represents the Patient Identification segment
+type HL7PID struct {
+        PatientID            []string
+        PatientName          string
+        DateOfBirth          time.Time
+        Sex                  string
+        PatientAddress       string
+        CountryCode          string
+        PhoneNumber          string
+        PrimaryLanguage      string
+        MaritalStatus        string
+        Religion             string
+        PatientAccountNumber string
+}
+
+// HL7PV1 represents the Patient Visit segment
+type HL7PV1 struct {
+        PatientClass            string
+        AssignedPatientLocation string
+        AttendingDoctor         string
+        ReferringDoctor         string
+        HospitalService         string
+        AdmissionType           string
+        FinancialClass          string
+}
+
+// HL7ORC represents the Common Order segment
+type HL7ORC struct {
+        OrderControl      string
+        PlacerOrderNumber string
+        FillerOrderNumber string
+        PlacerGroupNumber string
+        OrderStatus       string
+        OrderingProvider  string
+}
+
+// HL7OBR represents the Observation Request segment
+type HL7OBR struct {
+        SetID               string
+        PlacerOrderNumber   string
+        FillerOrderNumber   string
+        UniversalServiceID  string
+        Priority            string
+        RequestedDateTime   time.Time
+        ObservationDateTime time.Time
+        OrderingProvider    string
+        ResultCopiesTo      string
+        ReasonForStudy      string
+        ClinicalHistory     string
+        ProcedureCode       string
+}
+
+// HL7OBX represents the Observation/Result segment
+type HL7OBX struct {
+        SetID            string
+        ValueType        string
+        ObservationID    string
+        ObservationSubID string
+        ObservationValue string
+        Units            string
+        ResultStatus     string
+}
+
+// Parse parses HL7 ORM message and returns model definitions
+func (p *HL7ORMParser) Parse(input []byte) ([]orm.ModelDefinition, error) <span class="cov8" title="1">{
+        message, err := p.parseHL7Message(string(input))
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, fmt.Errorf("failed to parse HL7 message: %w", err)
+        }</span>
+
+        // Generate model definitions from HL7 segments
+        <span class="cov8" title="1">models := []orm.ModelDefinition{
+                p.generatePatientModel(message.PID),
+                p.generateStudyModel(message.OBR, message.MSH),
+                p.generateOrderModel(message.ORC),
+                p.generateVisitModel(message.PV1),
+        }
+
+        return models, nil</span>
+}
+
+// parseHL7Message parses the raw HL7 message into structured data
+func (p *HL7ORMParser) parseHL7Message(input string) (*HL7Message, error) <span class="cov8" title="1">{
+        lines := strings.Split(input, "\n")
+        message := &amp;HL7Message{}
+
+        for _, line := range lines </span><span class="cov8" title="1">{
+                line = strings.TrimSpace(line)
+                if len(line) == 0 </span><span class="cov8" title="1">{
+                        continue</span>
+                }
+
+                <span class="cov8" title="1">segments := strings.Split(line, p.fieldSeparator)
+                if len(segments) &lt; 2 </span><span class="cov8" title="1">{
+                        continue</span>
+                }
+
+                <span class="cov8" title="1">segmentType := segments[0]
+                switch segmentType </span>{
+                case "MSH":<span class="cov8" title="1">
+                        message.MSH = p.parseMSH(segments)</span>
+                case "PID":<span class="cov8" title="1">
+                        message.PID = p.parsePID(segments)</span>
+                case "PV1":<span class="cov8" title="1">
+                        message.PV1 = p.parsePV1(segments)</span>
+                case "ORC":<span class="cov8" title="1">
+                        message.ORC = p.parseORC(segments)</span>
+                case "OBR":<span class="cov8" title="1">
+                        message.OBR = p.parseOBR(segments)</span>
+                case "OBX":<span class="cov0" title="0">
+                        obx := p.parseOBX(segments)
+                        message.OBX = append(message.OBX, obx)</span>
+                }
+        }
+
+        <span class="cov8" title="1">return message, nil</span>
+}
+
+// generatePatientModel creates a patient model from PID segment
+func (p *HL7ORMParser) generatePatientModel(pid HL7PID) orm.ModelDefinition <span class="cov8" title="1">{
+        return orm.ModelDefinition{
+                Name:    "Patient",
+                Package: "models",
+                Fields: []orm.FieldMapping{
+                        {
+                                FieldName: "PatientID",
+                                FieldType: orm.FieldTypeString,
+                                DICOMTag:  orm.DICOMTag{Group: 0x0010, Element: 0x0020},
+                                Required:  true,
+                        },
+                        {
+                                FieldName: "PatientName",
+                                FieldType: orm.FieldTypeString,
+                                DICOMTag:  orm.DICOMTag{Group: 0x0010, Element: 0x0010},
+                                Required:  true,
+                        },
+                        {
+                                FieldName: "PatientBirthDate",
+                                FieldType: orm.FieldTypeTime,
+                                DICOMTag:  orm.DICOMTag{Group: 0x0010, Element: 0x0030},
+                                Transform: "date_format:20060102",
+                        },
+                        {
+                                FieldName:  "PatientSex",
+                                FieldType:  orm.FieldTypeString,
+                                DICOMTag:   orm.DICOMTag{Group: 0x0010, Element: 0x0040},
+                                Validation: "enum:M,F,O",
+                        },
+                        {
+                                FieldName: "PatientAddress",
+                                FieldType: orm.FieldTypeString,
+                                DICOMTag:  orm.DICOMTag{Group: 0x0010, Element: 0x1040},
+                        },
+                },
+                Metadata: map[string]interface{}{
+                        "source_segment": "PID",
+                        "hl7_version":    "2.4",
+                },
+        }
+}</span>
+
+// generateStudyModel creates a study model from OBR segment
+func (p *HL7ORMParser) generateStudyModel(obr HL7OBR, msh HL7MSH) orm.ModelDefinition <span class="cov8" title="1">{
+        return orm.ModelDefinition{
+                Name:    "Study",
+                Package: "models",
+                Fields: []orm.FieldMapping{
+                        {
+                                FieldName: "StudyInstanceUID",
+                                FieldType: orm.FieldTypeString,
+                                DICOMTag:  orm.DICOMTag{Group: 0x0020, Element: 0x000D},
+                                Required:  true,
+                        },
+                        {
+                                FieldName: "StudyDate",
+                                FieldType: orm.FieldTypeTime,
+                                DICOMTag:  orm.DICOMTag{Group: 0x0008, Element: 0x0020},
+                                Transform: "date_format:20060102",
+                        },
+                        {
+                                FieldName: "StudyTime",
+                                FieldType: orm.FieldTypeTime,
+                                DICOMTag:  orm.DICOMTag{Group: 0x0008, Element: 0x0030},
+                                Transform: "time_format:150405.000000",
+                        },
+                        {
+                                FieldName: "AccessionNumber",
+                                FieldType: orm.FieldTypeString,
+                                DICOMTag:  orm.DICOMTag{Group: 0x0008, Element: 0x0050},
+                                Required:  true,
+                        },
+                        {
+                                FieldName: "StudyDescription",
+                                FieldType: orm.FieldTypeString,
+                                DICOMTag:  orm.DICOMTag{Group: 0x0008, Element: 0x1030},
+                        },
+                        {
+                                FieldName: "ReferringPhysician",
+                                FieldType: orm.FieldTypeString,
+                                DICOMTag:  orm.DICOMTag{Group: 0x0008, Element: 0x0090},
+                        },
+                        {
+                                FieldName: "ProcedureCode",
+                                FieldType: orm.FieldTypeString,
+                                DICOMTag:  orm.DICOMTag{Group: 0x0008, Element: 0x1032},
+                        },
+                },
+                Metadata: map[string]interface{}{
+                        "source_segment": "OBR",
+                        "hl7_version":    "2.4",
+                        "modality":       "MR", // Extracted from procedure code
+                },
+        }
+}</span>
+
+// generateOrderModel creates an order model from ORC segment
+func (p *HL7ORMParser) generateOrderModel(orc HL7ORC) orm.ModelDefinition <span class="cov8" title="1">{
+        return orm.ModelDefinition{
+                Name:    "Order",
+                Package: "models",
+                Fields: []orm.FieldMapping{
+                        {
+                                FieldName: "OrderControl",
+                                FieldType: orm.FieldTypeString,
+                                DICOMTag:  orm.DICOMTag{Group: 0x0040, Element: 0x1001}, // Requested Procedure ID
+                        },
+                        {
+                                FieldName: "PlacerOrderNumber",
+                                FieldType: orm.FieldTypeString,
+                                DICOMTag:  orm.DICOMTag{Group: 0x0040, Element: 0x2016}, // Placer Order Number
+                        },
+                        {
+                                FieldName: "FillerOrderNumber",
+                                FieldType: orm.FieldTypeString,
+                                DICOMTag:  orm.DICOMTag{Group: 0x0040, Element: 0x2017}, // Filler Order Number
+                        },
+                        {
+                                FieldName: "OrderingProvider",
+                                FieldType: orm.FieldTypeString,
+                                DICOMTag:  orm.DICOMTag{Group: 0x0008, Element: 0x1050}, // Performing Physician Name
+                        },
+                },
+                Metadata: map[string]interface{}{
+                        "source_segment": "ORC",
+                },
+        }
+}</span>
+
+// generateVisitModel creates a visit model from PV1 segment
+func (p *HL7ORMParser) generateVisitModel(pv1 HL7PV1) orm.ModelDefinition <span class="cov8" title="1">{
+        return orm.ModelDefinition{
+                Name:    "Visit",
+                Package: "models",
+                Fields: []orm.FieldMapping{
+                        {
+                                FieldName: "PatientClass",
+                                FieldType: orm.FieldTypeString,
+                                DICOMTag:  orm.DICOMTag{Group: 0x0038, Element: 0x0300}, // Current Patient Location
+                        },
+                        {
+                                FieldName: "AssignedPatientLocation",
+                                FieldType: orm.FieldTypeString,
+                                DICOMTag:  orm.DICOMTag{Group: 0x0008, Element: 0x0080}, // Institution Name
+                        },
+                        {
+                                FieldName: "AttendingDoctor",
+                                FieldType: orm.FieldTypeString,
+                                DICOMTag:  orm.DICOMTag{Group: 0x0008, Element: 0x1048}, // Physician(s) of Record
+                        },
+                },
+                Metadata: map[string]interface{}{
+                        "source_segment": "PV1",
+                },
+        }
+}</span>
+
+// Helper parsing methods for HL7 segments
+func (p *HL7ORMParser) parseMSH(segments []string) HL7MSH <span class="cov8" title="1">{
+        msh := HL7MSH{}
+        if len(segments) &gt; 2 </span><span class="cov8" title="1">{
+                msh.SendingApplication = segments[2]
+        }</span>
+        <span class="cov8" title="1">if len(segments) &gt; 3 </span><span class="cov8" title="1">{
+                msh.SendingFacility = segments[3]
+        }</span>
+        <span class="cov8" title="1">if len(segments) &gt; 4 </span><span class="cov8" title="1">{
+                msh.ReceivingApplication = segments[4]
+        }</span>
+        <span class="cov8" title="1">if len(segments) &gt; 5 </span><span class="cov8" title="1">{
+                msh.ReceivingFacility = segments[5]
+        }</span>
+        <span class="cov8" title="1">if len(segments) &gt; 6 </span><span class="cov8" title="1">{
+                if dt, err := time.Parse("20060102150405-0700", segments[6]); err == nil </span><span class="cov8" title="1">{
+                        msh.DateTimeOfMessage = dt
+                }</span>
+        }
+        <span class="cov8" title="1">if len(segments) &gt; 8 </span><span class="cov8" title="1">{
+                msh.MessageType = segments[8]
+        }</span>
+        <span class="cov8" title="1">if len(segments) &gt; 9 </span><span class="cov8" title="1">{
+                msh.MessageControlID = segments[9]
+        }</span>
+        <span class="cov8" title="1">if len(segments) &gt; 10 </span><span class="cov8" title="1">{
+                msh.ProcessingID = segments[10]
+        }</span>
+        <span class="cov8" title="1">if len(segments) &gt; 11 </span><span class="cov8" title="1">{
+                msh.VersionID = segments[11]
+        }</span>
+        <span class="cov8" title="1">return msh</span>
+}
+
+func (p *HL7ORMParser) parsePID(segments []string) HL7PID <span class="cov8" title="1">{
+        pid := HL7PID{}
+        if len(segments) &gt; 3 </span><span class="cov8" title="1">{
+                // Parse patient ID list
+                idList := strings.Split(segments[3], p.repetitionSeparator)
+                for _, id := range idList </span><span class="cov8" title="1">{
+                        if id != "" </span><span class="cov8" title="1">{
+                                pid.PatientID = append(pid.PatientID, strings.Split(id, p.componentSeparator)[0])
+                        }</span>
+                }
+        }
+        <span class="cov8" title="1">if len(segments) &gt; 5 </span><span class="cov8" title="1">{
+                // Parse patient name (LAST^FIRST^MIDDLE^SUFFIX^PREFIX)
+                nameComponents := strings.Split(segments[5], p.componentSeparator)
+                if len(nameComponents) &gt;= 2 </span><span class="cov8" title="1">{
+                        pid.PatientName = nameComponents[0] + "^" + nameComponents[1]
+                        if len(nameComponents) &gt; 2 &amp;&amp; nameComponents[2] != "" </span><span class="cov8" title="1">{
+                                pid.PatientName += "^" + nameComponents[2]
+                        }</span>
+                }
+        }
+        <span class="cov8" title="1">if len(segments) &gt; 7 </span><span class="cov8" title="1">{
+                if dob, err := time.Parse("20060102", segments[7]); err == nil </span><span class="cov8" title="1">{
+                        pid.DateOfBirth = dob
+                }</span>
+        }
+        <span class="cov8" title="1">if len(segments) &gt; 8 </span><span class="cov8" title="1">{
+                pid.Sex = segments[8]
+        }</span>
+        <span class="cov8" title="1">if len(segments) &gt; 11 </span><span class="cov8" title="1">{
+                pid.PatientAddress = segments[11]
+        }</span>
+        <span class="cov8" title="1">return pid</span>
+}
+
+func (p *HL7ORMParser) parsePV1(segments []string) HL7PV1 <span class="cov8" title="1">{
+        pv1 := HL7PV1{}
+        if len(segments) &gt; 2 </span><span class="cov8" title="1">{
+                pv1.PatientClass = segments[2]
+        }</span>
+        <span class="cov8" title="1">if len(segments) &gt; 3 </span><span class="cov8" title="1">{
+                pv1.AssignedPatientLocation = segments[3]
+        }</span>
+        <span class="cov8" title="1">if len(segments) &gt; 7 </span><span class="cov8" title="1">{
+                pv1.AttendingDoctor = segments[7]
+        }</span>
+        <span class="cov8" title="1">if len(segments) &gt; 8 </span><span class="cov8" title="1">{
+                pv1.ReferringDoctor = segments[8]
+        }</span>
+        <span class="cov8" title="1">if len(segments) &gt; 10 </span><span class="cov8" title="1">{
+                pv1.HospitalService = segments[10]
+        }</span>
+        <span class="cov8" title="1">if len(segments) &gt; 18 </span><span class="cov8" title="1">{
+                pv1.AdmissionType = segments[18]
+        }</span>
+        <span class="cov8" title="1">if len(segments) &gt; 20 </span><span class="cov8" title="1">{
+                pv1.FinancialClass = segments[20]
+        }</span>
+        <span class="cov8" title="1">return pv1</span>
+}
+
+func (p *HL7ORMParser) parseORC(segments []string) HL7ORC <span class="cov8" title="1">{
+        orc := HL7ORC{}
+        if len(segments) &gt; 1 </span><span class="cov8" title="1">{
+                orc.OrderControl = segments[1]
+        }</span>
+        <span class="cov8" title="1">if len(segments) &gt; 2 </span><span class="cov8" title="1">{
+                orc.PlacerOrderNumber = segments[2]
+        }</span>
+        <span class="cov8" title="1">if len(segments) &gt; 3 </span><span class="cov8" title="1">{
+                orc.FillerOrderNumber = segments[3]
+        }</span>
+        <span class="cov8" title="1">if len(segments) &gt; 4 </span><span class="cov8" title="1">{
+                orc.PlacerGroupNumber = segments[4]
+        }</span>
+        <span class="cov8" title="1">if len(segments) &gt; 5 </span><span class="cov8" title="1">{
+                orc.OrderStatus = segments[5]
+        }</span>
+        <span class="cov8" title="1">if len(segments) &gt; 12 </span><span class="cov8" title="1">{
+                orc.OrderingProvider = segments[12]
+        }</span>
+        <span class="cov8" title="1">return orc</span>
+}
+
+func (p *HL7ORMParser) parseOBR(segments []string) HL7OBR <span class="cov8" title="1">{
+        obr := HL7OBR{}
+        if len(segments) &gt; 1 </span><span class="cov8" title="1">{
+                obr.SetID = segments[1]
+        }</span>
+        <span class="cov8" title="1">if len(segments) &gt; 2 </span><span class="cov8" title="1">{
+                obr.PlacerOrderNumber = segments[2]
+        }</span>
+        <span class="cov8" title="1">if len(segments) &gt; 3 </span><span class="cov8" title="1">{
+                obr.FillerOrderNumber = segments[3]
+        }</span>
+        <span class="cov8" title="1">if len(segments) &gt; 4 </span><span class="cov8" title="1">{
+                // Parse Universal Service ID (procedure code)
+                serviceComponents := strings.Split(segments[4], p.componentSeparator)
+                if len(serviceComponents) &gt; 0 </span><span class="cov8" title="1">{
+                        obr.UniversalServiceID = serviceComponents[0]
+                }</span>
+                <span class="cov8" title="1">if len(serviceComponents) &gt; 1 </span><span class="cov8" title="1">{
+                        obr.ProcedureCode = serviceComponents[1]
+                }</span>
+        }
+        <span class="cov8" title="1">if len(segments) &gt; 6 </span><span class="cov8" title="1">{
+                obr.Priority = segments[6]
+        }</span>
+        <span class="cov8" title="1">if len(segments) &gt; 16 </span><span class="cov8" title="1">{
+                obr.OrderingProvider = segments[16]
+        }</span>
+        <span class="cov8" title="1">if len(segments) &gt; 31 </span><span class="cov8" title="1">{
+                obr.ReasonForStudy = segments[31]
+        }</span>
+        <span class="cov8" title="1">return obr</span>
+}
+
+func (p *HL7ORMParser) parseOBX(segments []string) HL7OBX <span class="cov0" title="0">{
+        obx := HL7OBX{}
+        if len(segments) &gt; 1 </span><span class="cov0" title="0">{
+                obx.SetID = segments[1]
+        }</span>
+        <span class="cov0" title="0">if len(segments) &gt; 2 </span><span class="cov0" title="0">{
+                obx.ValueType = segments[2]
+        }</span>
+        <span class="cov0" title="0">if len(segments) &gt; 3 </span><span class="cov0" title="0">{
+                obx.ObservationID = segments[3]
+        }</span>
+        <span class="cov0" title="0">if len(segments) &gt; 4 </span><span class="cov0" title="0">{
+                obx.ObservationSubID = segments[4]
+        }</span>
+        <span class="cov0" title="0">if len(segments) &gt; 5 </span><span class="cov0" title="0">{
+                obx.ObservationValue = segments[5]
+        }</span>
+        <span class="cov0" title="0">if len(segments) &gt; 6 </span><span class="cov0" title="0">{
+                obx.Units = segments[6]
+        }</span>
+        <span class="cov0" title="0">if len(segments) &gt; 11 </span><span class="cov0" title="0">{
+                obx.ResultStatus = segments[11]
+        }</span>
+        <span class="cov0" title="0">return obx</span>
+}
+
+// GetSupportedExtensions returns file extensions this parser supports
+func (p *HL7ORMParser) GetSupportedExtensions() []string <span class="cov8" title="1">{
+        return []string{".hl7", ".txt"}
+}</span>
+
+// GetParserType returns the type of parser
+func (p *HL7ORMParser) GetParserType() string <span class="cov8" title="1">{
+        return "hl7"
+}</span>
+</pre>
+		
+		</div>
+	</body>
+	<script>
+	(function() {
+		var files = document.getElementById('files');
+		var visible;
+		files.addEventListener('change', onChange, false);
+		function select(part) {
+			if (visible)
+				visible.style.display = 'none';
+			visible = document.getElementById(part);
+			if (!visible)
+				return;
+			files.value = part;
+			visible.style.display = 'block';
+			location.hash = part;
+		}
+		function onChange() {
+			select(files.value);
+			window.scrollTo(0, 0);
+		}
+		if (location.hash != "") {
+			select(location.hash.substr(1));
+		}
+		if (!visible) {
+			select("file0");
+		}
+	})();
+	</script>
+</html>

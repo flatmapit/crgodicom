@@ -1,0 +1,20 @@
+MSH|^~\&|TESTRIS|TESTRIS|EXT_DEF||20241215143022+1100||ORM^O01^|abc123xyz-def|P|2.4
+PID|||200000001^^^2006630&&GUID^005~7777777^^^E335&&GUID^017^E335~6666666^^^E304&&GUID^017^
+E304~2001096^^^E329&&GUID^017^E329||JOHNSON^SARAH^MARIE^""^MS||19820623|F|||MAPLE STREET 789^""^MELBOURNE^VIC^30
+01^1201^home^""
+~CANADA^""^""^""^""^""^Birth^""|||||||4444444||||3|||||||""
+PV1||I|CNR^^^E304^^^^^Melbourne General Hospital|||||789012CD^ATTENDINGDR||||||||||||MC
+ORC|XO|4339239594|2024WS0000001|2024WS0000001|E|||||||789012CD^ATTENDINGDR^^^^Dr
+OBR|1|4444444444|2024WS0000001-1|MRIBRAINCON^MRI Brain with Contrast^WS-
+MGH.ORDERABLES|||||||||Research Acc: Y\X000d\\.br\Transport: AMB\X000d\\.br\Order Placer: Dr Jennifer
+Martinez\X000d\\.br\Contact Page / Phone: 5566\X000d\\.br\I have confirmed the Patient, Procedure:
+Y\X000d\\.br\COVID-19 Status: COVID-19 Not Suspected\X000d\\.br\||^^^Neurological, Brain, Head,
+Neck|||2024WS0000001-1|2024WS0000001-
+1|2024WS0000001||||MR|||^^^20241215140500+1100^^Routine||||^Clinical History: Progressive headaches with visual disturbances\X000d\\.br\- Rule out intracranial mass or vascular abnormality\X000d\\.br\- MRI Brain with contrast as requested by neurology\X000d\\.br\consultant\X000d\\.br\Order Note: Progressive headaches with visual disturbances\X000d\\.br\- Rule out intracranial mass or vascular abnormality\X000d\\.br\- MRI Brain with contrast as requested by neurology\X000d\\.br\consultant\X000d\\.br\|SRV-VICG-EXT-
+DEF@vichealth.net||||||||||||MRIBRAINCON^MRI Brain with Contrast^WS-MGH.PROCEDURES
+OBX|1|ED|DOCUMENTS^SCANNED_DOC||image/jpeg^Base64^/9j/4AAQSkZJRgABAQ
+OBX|2|CE|SND_REASON_CD^Send reason code||SRREP^Sent: Reporting
+OBX|3|TX|HISTORY^Clinical History||Clinical history: Research Acc: Y\X0D\\X0A\Transport: AMB\X0D\\X0A\Order
+Placer: Dr Jennifer Martinez\X0D\\X0A\Contact Page / Phone: 5566\X0D\\X0A\I have confirmed the Patient, Procedure:
+Y\X0D\\X0A\COVID-19 Status: COVID-19 Not Suspected\X0D\\X0A\
+OBX|4|TX|REASON^Reason For Examination||Reason for study: Clinical History: Progressive headaches with visual disturbances\X0D\\X0A\- Rule out intracranial mass or vascular abnormality\X0D\\X0A\- MRI Brain with contrast as requested by neurology\X0D\\X0A\consultant\X0D\\X0A\Order Note: Progressive headaches with visual disturbances\X0D\\X0A\- Rule out intracranial mass or vascular abnormality\X0D\\X0A\- MRI Brain with contrast as requested by neurology\X0D\\X0A\consultant\X0D\\X0A\

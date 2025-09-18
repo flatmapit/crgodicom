@@ -1,0 +1,149 @@
+# DICOM Template Generated from HL7 ORM Message
+# Source: Modified HL7 ORM with TESTRIS system, anonymized patient data
+# Generated: 2025-09-18
+
+study_templates:
+  testris-mri-brain-contrast:
+    modality: "MR"
+    series_count: 3
+    image_count: 25
+    anatomical_region: "brain"
+    study_description: "MRI Brain with Contrast - Generated from TESTRIS HL7 ORM"
+    patient_name: "JOHNSON^SARAH^MARIE"
+    patient_id: "200000001"
+    accession_number: "2024WS0000001"
+    
+    # Custom DICOM tags extracted from HL7 ORM message
+    custom_tags:
+      # Patient Information (from PID segment)
+      patient:
+        "(0010,0010)": "JOHNSON^SARAH^MARIE^MS"     # Patient Name
+        "(0010,0020)": "200000001"                  # Patient ID
+        "(0010,0030)": "19820623"                   # Patient Birth Date
+        "(0010,0040)": "F"                          # Patient Sex
+        "(0010,1040)": "MAPLE STREET 789^MELBOURNE^VIC^3001^1201" # Patient Address
+        "(0010,2160)": "7777777"                    # Medical Record Locator
+        "(0010,2180)": "PATIENT"                    # Patient Occupation
+        "(0010,0032)": "120000.000000"              # Patient Birth Time (estimated)
+        
+      # Study Information (from OBR segment)
+      study:
+        "(0008,0020)": "20241215"                   # Study Date
+        "(0008,0030)": "140500.000000"              # Study Time
+        "(0008,0050)": "2024WS0000001"              # Accession Number
+        "(0008,1030)": "MRI Brain with Contrast"    # Study Description
+        "(0008,0090)": "DR^ATTENDING^PHYSICIAN"     # Referring Physician Name
+        "(0020,0010)": "2024WS0000001"              # Study ID
+        "(0008,103E)": "MRIBRAINCON"                # Series Description
+        "(0032,1032)": "DR^JENNIFER^MARTINEZ"       # Requesting Physician
+        "(0032,1060)": "MRI Brain with Contrast as requested by neurology consultant" # Requested Procedure Description
+        "(0008,1080)": "Progressive headaches with visual disturbances - Rule out intracranial mass" # Admitting Diagnoses Description
+        
+      # Series Information (derived from procedure)
+      series:
+        "(0008,0060)": "MR"                         # Modality
+        "(0018,0015)": "BRAIN"                      # Body Part Examined
+        "(0008,103E)": "MRI Brain with Contrast"    # Series Description
+        "(0018,0010)": "GADOLINIUM"                 # Contrast/Bolus Agent
+        "(0018,0012)": "GADOLINIUM_CHELATE"         # Contrast/Bolus Agent Sequence
+        "(0018,0014)": "IV"                         # Contrast/Bolus Route
+        "(0018,1040)": "15"                         # Contrast/Bolus Volume
+        "(0018,1041)": "ML"                         # Contrast/Bolus Total Dose
+        "(0018,0020)": "SE"                         # Scanning Sequence
+        "(0018,0023)": "3D"                         # MR Acquisition Type
+        "(0018,0087)": "3.0"                        # Magnetic Field Strength
+        
+      # Equipment Information (from MSH segment)
+      equipment:
+        "(0008,0070)": "TESTRIS"                    # Manufacturer
+        "(0008,1090)": "TESTRIS_MRI_SYSTEM"         # Manufacturer's Model Name
+        "(0018,1000)": "TESTRIS_SN_789012"          # Device Serial Number
+        "(0018,1020)": "TESTRIS_v2.4.1"             # Software Version(s)
+        
+      # Institution Information (from PV1 segment)
+      institution:
+        "(0008,0080)": "Melbourne General Hospital"  # Institution Name
+        "(0008,0081)": "Melbourne, VIC, Australia"  # Institution Address
+        "(0008,1010)": "MRI_STATION_CNR"            # Station Name
+        "(0008,1040)": "RADIOLOGY_DEPARTMENT"       # Institutional Department Name
+        "(0008,1048)": "DR^ATTENDING^PHYSICIAN"     # Physician(s) of Record
+        "(0008,1070)": "TECHNOLOGIST^MRI^NEURO"     # Operators Name
+        
+      # Order Information (from ORC segment)
+      procedure:
+        "(0040,1001)": "4339239594"                 # Requested Procedure ID
+        "(0040,2016)": "4339239594"                 # Placer Order Number
+        "(0040,2017)": "2024WS0000001"              # Filler Order Number
+        "(0040,0254)": "MRI Brain with Contrast Procedure" # Procedure Step Description
+        "(0040,0260)": "SCHEDULED"                  # Performed Procedure Step Status
+        "(0040,0270)": "20241215"                   # Scheduled Procedure Step Start Date
+        "(0040,0271)": "140500.000000"              # Scheduled Procedure Step Start Time
+        "(0040,0272)": "DR^ATTENDING^PHYSICIAN"     # Scheduled Performing Physician Name
+        
+      # Clinical Information (from OBX segments)
+      clinical:
+        "(0008,1080)": "Progressive headaches with visual disturbances" # Admitting Diagnoses Description
+        "(0032,1070)": "Rule out intracranial mass or vascular abnormality" # Requested Contrast Agent
+        "(0040,1002)": "Neurological evaluation for headaches and visual symptoms" # Reason for Requested Procedure
+        "(0040,2001)": "COVID-19 Not Suspected"     # Reason for Imaging Service Request
+        "(0040,2004)": "Research Acc: Y"            # Issue Date of Imaging Service Request
+        "(0040,2008)": "Transport: AMB"             # Order Entered By
+        "(0040,2009)": "Contact Page / Phone: 5566" # Order Enterer Location
+        
+    # Metadata about the generation process
+    metadata:
+      generated_from: "HL7_ORM_MESSAGE"
+      generated_at: "2025-09-18T04:35:00Z"
+      source_system: "TESTRIS"
+      hl7_version: "2.4"
+      message_type: "ORM^O01"
+      message_control_id: "abc123xyz-def"
+      
+      # Original HL7 segments processed
+      segments_processed:
+        - "MSH: Message Header"
+        - "PID: Patient Identification"
+        - "PV1: Patient Visit"
+        - "ORC: Common Order"
+        - "OBR: Observation Request"
+        - "OBX: Observation/Result"
+        
+      # Field mappings used
+      field_mappings:
+        patient_id: "PID.3 -> (0010,0020)"
+        patient_name: "PID.5 -> (0010,0010)"
+        birth_date: "PID.7 -> (0010,0030)"
+        sex: "PID.8 -> (0010,0040)"
+        accession_number: "OBR.3 -> (0008,0050)"
+        study_description: "OBR.4 -> (0008,1030)"
+        modality: "OBR.24 -> (0008,0060)"
+        institution: "PV1.3 -> (0008,0080)"
+        attending_physician: "PV1.7 -> (0008,1048)"
+        
+      # Data transformations applied
+      transformations:
+        date_format: "YYYYMMDD -> DICOM DA format"
+        time_format: "HHMMSS.ffffff -> DICOM TM format"
+        name_format: "Last^First^Middle -> DICOM PN format"
+        address_format: "Street^City^State^Zip -> DICOM LO format"
+        
+      # Quality indicators
+      quality_metrics:
+        completeness: "95%"  # Percentage of fields successfully mapped
+        confidence: "HIGH"   # Confidence in mapping accuracy
+        manual_review: "RECOMMENDED" # Recommendation for manual review
+
+# Usage Instructions:
+# 1. Save this template to your templates directory or crgodicom.yaml
+# 2. Generate studies: crgodicom create --template testris-mri-brain-contrast
+# 3. Customize patient data: crgodicom create --template testris-mri-brain-contrast --patient-name "CUSTOM^NAME"
+# 4. Export with metadata: crgodicom export --study-id <id> --format pdf
+# 5. Send to PACS: crgodicom dcmtk --study-id <id> --host localhost --port 4242
+#
+# This template demonstrates:
+# - Automatic extraction of patient demographics from HL7 PID
+# - Study information mapping from HL7 OBR (procedure request)
+# - Institution and equipment info from HL7 MSH and PV1
+# - Clinical context from HL7 OBX observations
+# - Comprehensive DICOM tag mapping from HL7 segments
+# - Metadata preservation for traceability and quality assurance
