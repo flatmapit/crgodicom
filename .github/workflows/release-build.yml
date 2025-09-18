@@ -1,0 +1,207 @@
+name: Release Build and Installer
+
+on:
+  push:
+    tags:
+      - 'v*'  # Triggers on version tags like v1.0.0
+  workflow_dispatch:  # Allow manual triggering
+
+jobs:
+  build-and-package:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            platform: linux-amd64
+            installer_type: appimage
+          - os: ubuntu-latest
+            platform: linux-arm64
+            installer_type: appimage
+          - os: windows-latest
+            platform: windows-amd64
+            installer_type: msi
+          - os: windows-latest
+            platform: windows-arm64
+            installer_type: msi
+          - os: macos-latest
+            platform: darwin-amd64
+            installer_type: dmg
+          - os: macos-latest
+            platform: darwin-arm64
+            installer_type: dmg
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.21'
+
+      - name: Get version from tag
+        id: version
+        run: |
+          if [[ "${{ github.ref }}" == refs/tags/* ]]; then
+            echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+          else
+            echo "VERSION=dev-$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Build binary
+        run: |
+          GOOS=${{ matrix.platform == 'windows-amd64' && 'windows' || matrix.platform == 'windows-arm64' && 'windows' || matrix.platform == 'darwin-amd64' && 'darwin' || matrix.platform == 'darwin-arm64' && 'darwin' || 'linux' }} \
+          GOARCH=${{ matrix.platform == 'windows-amd64' && 'amd64' || matrix.platform == 'windows-arm64' && 'arm64' || matrix.platform == 'darwin-amd64' && 'amd64' || matrix.platform == 'darwin-arm64' && 'arm64' || matrix.platform == 'linux-amd64' && 'amd64' || 'arm64' }} \
+          go build -ldflags "-X main.Version=${{ steps.version.outputs.VERSION }} -s -w" \
+          -o bin/crgodicom-${{ matrix.platform }} cmd/crgodicom/main.go
+
+      # Windows MSI Installer
+      - name: Create Windows MSI Installer
+        if: matrix.os == 'windows-latest'
+        run: |
+          # Install WiX Toolset
+          choco install wixtoolset -y
+          
+          # Create MSI installer
+          echo "Creating MSI installer for Windows..."
+          # Note: This would require a proper WiX configuration file
+          # For now, we'll create a simple ZIP distribution
+          mkdir -p dist/crgodicom
+          cp bin/crgodicom-${{ matrix.platform }}.exe dist/crgodicom/crgodicom.exe
+          cp README.md dist/crgodicom/
+          cp crgodicom.yaml dist/crgodicom/
+          
+          # Create ZIP installer
+          cd dist
+          powershell Compress-Archive -Path crgodicom -DestinationPath crgodicom-${{ steps.version.outputs.VERSION }}-${{ matrix.platform }}.zip
+          cd ..
+
+      # macOS DMG Installer
+      - name: Create macOS DMG Installer
+        if: matrix.os == 'macos-latest'
+        run: |
+          echo "Creating DMG installer for macOS..."
+          
+          # Create app bundle structure
+          mkdir -p dist/crgodicom.app/Contents/MacOS
+          mkdir -p dist/crgodicom.app/Contents/Resources
+          
+          # Copy binary
+          cp bin/crgodicom-${{ matrix.platform }} dist/crgodicom.app/Contents/MacOS/crgodicom
+          chmod +x dist/crgodicom.app/Contents/MacOS/crgodicom
+          
+          # Create Info.plist
+          cat > dist/crgodicom.app/Contents/Info.plist << EOF
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+              <key>CFBundleExecutable</key>
+              <string>crgodicom</string>
+              <key>CFBundleIdentifier</key>
+              <string>com.flatmapit.crgodicom</string>
+              <key>CFBundleName</key>
+              <string>CRGoDICOM</string>
+              <key>CFBundleVersion</key>
+              <string>${{ steps.version.outputs.VERSION }}</string>
+              <key>CFBundleShortVersionString</key>
+              <string>${{ steps.version.outputs.VERSION }}</string>
+              <key>CFBundleInfoDictionaryVersion</key>
+              <string>6.0</string>
+              <key>CFBundlePackageType</key>
+              <string>APPL</string>
+          </dict>
+          </plist>
+          EOF
+          
+          # Copy additional files
+          cp README.md dist/crgodicom.app/Contents/Resources/
+          cp crgodicom.yaml dist/crgodicom.app/Contents/Resources/
+          
+          # Create DMG
+          hdiutil create -volname "CRGoDICOM ${{ steps.version.outputs.VERSION }}" \
+            -srcfolder dist/crgodicom.app \
+            -ov -format UDZO \
+            dist/crgodicom-${{ steps.version.outputs.VERSION }}-${{ matrix.platform }}.dmg
+
+      # Linux AppImage Installer
+      - name: Create Linux AppImage Installer
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          echo "Creating AppImage installer for Linux..."
+          
+          # Install AppImage creation tools
+          sudo apt-get update
+          sudo apt-get install -y fuse libfuse2
+          
+          # Download AppImageTool
+          wget https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
+          chmod +x appimagetool-x86_64.AppImage
+          
+          # Create AppImage structure
+          mkdir -p dist/AppDir/usr/bin
+          mkdir -p dist/AppDir/usr/share/applications
+          mkdir -p dist/AppDir/usr/share/icons/hicolor/256x256/apps
+          
+          # Copy binary
+          cp bin/crgodicom-${{ matrix.platform }} dist/AppDir/usr/bin/crgodicom
+          chmod +x dist/AppDir/usr/bin/crgodicom
+          
+          # Create desktop file
+          cat > dist/AppDir/usr/share/applications/crgodicom.desktop << EOF
+          [Desktop Entry]
+          Name=CRGoDICOM
+          Comment=DICOM Medical Imaging Utility
+          Exec=crgodicom
+          Icon=crgodicom
+          Type=Application
+          Categories=Graphics;Medical;
+          EOF
+          
+          # Copy additional files
+          mkdir -p dist/AppDir/usr/share/crgodicom
+          cp README.md dist/AppDir/usr/share/crgodicom/
+          cp crgodicom.yaml dist/AppDir/usr/share/crgodicom/
+          
+          # Create AppRun
+          cat > dist/AppDir/AppRun << 'EOF'
+          #!/bin/bash
+          HERE="$(dirname "$(readlink -f "${0}")")"
+          export PATH="${HERE}/usr/bin:${PATH}"
+          exec "${HERE}/usr/bin/crgodicom" "$@"
+          EOF
+          chmod +x dist/AppDir/AppRun
+          
+          # Create AppImage
+          ./appimagetool-x86_64.AppImage dist/AppDir dist/crgodicom-${{ steps.version.outputs.VERSION }}-${{ matrix.platform }}.AppImage
+
+      - name: Upload Release Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: installer-${{ matrix.platform }}
+          path: dist/
+          retention-days: 30
+
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            dist/*.zip
+            dist/*.dmg
+            dist/*.AppImage
+            dist/*.msi
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload to GitHub Packages
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          echo "Uploading installers to GitHub Packages..."
+          # This would require additional setup for GitHub Packages
+          # For now, artifacts are uploaded to the release

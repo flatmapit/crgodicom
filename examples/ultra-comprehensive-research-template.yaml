@@ -1,0 +1,475 @@
+# Ultra-Comprehensive Research Template with 300+ Custom DICOM Tags
+# This is the largest example template demonstrating extensive DICOM tag customization
+# for multi-modal research studies with complete metadata specification
+
+template:
+  name: "ultra-comprehensive-research"
+  modality: "MR"  # Primary modality, can be overridden
+  series_count: 5
+  image_count: 50
+  anatomical_region: "whole_body"
+  study_description: "Ultra-Comprehensive Research Protocol - Multi-Modal Imaging Study"
+  patient_name: "RESEARCH^SUBJECT^ULTRA^COMPREHENSIVE"
+  patient_id: "RESEARCH_ULTRA_001"
+  accession_number: "ACC_RESEARCH_2025_001"
+
+  # ULTRA-COMPREHENSIVE CUSTOM DICOM TAGS
+  # This template includes 300+ custom tags organized by functional categories
+  custom_tags:
+    
+    # ================================
+    # PATIENT INFORMATION TAGS (0010,xxxx)
+    # ================================
+    patient:
+      # Core Demographics
+      "(0010,0010)": "RESEARCH^SUBJECT^ULTRA^COMPREHENSIVE"  # Patient Name
+      "(0010,0020)": "RESEARCH_ULTRA_001"                    # Patient ID
+      "(0010,0030)": "19850315"                              # Patient Birth Date
+      "(0010,0040)": "M"                                     # Patient Sex
+      "(0010,1010)": "039Y"                                  # Patient Age
+      "(0010,1020)": "182.5"                                 # Patient Size (height in cm)
+      "(0010,1030)": "78.2"                                  # Patient Weight (kg)
+      "(0010,1040)": "1234 RESEARCH BOULEVARD"               # Patient Address
+      
+      # Extended Demographics
+      "(0010,0032)": "120000.000000"                         # Patient Birth Time
+      "(0010,1001)": "RESEARCH_SUBJECT^ALIAS"                # Other Patient Names
+      "(0010,1002)": "RESEARCH_ID_002;ALT_ID_003"            # Other Patient IDs
+      "(0010,1005)": "RESEARCH_BIRTH_NAME"                   # Patient Birth Name
+      "(0010,1060)": "RESEARCH_MOTHER_NAME"                  # Patient Mother Birth Name
+      "(0010,1080)": "MILITARY_RANK_CAPTAIN"                 # Military Rank
+      "(0010,1081)": "UNITED_STATES_ARMY"                    # Branch of Service
+      "(0010,1090)": "MRN_RESEARCH_123456789"                # Medical Record Locator
+      
+      # Contact Information
+      "(0010,2154)": "555-RESEARCH-001"                      # Patient Telephone Numbers
+      "(0010,2155)": "research.subject@university.edu"       # Patient Telecom Information
+      "(0010,2180)": "RESEARCH_SCIENTIST"                    # Patient Occupation
+      "(0010,4000)": "RESEARCH SUBJECT - COMPREHENSIVE STUDY" # Patient Comments
+      
+      # Medical History and Status
+      "(0010,21A0)": "NEVER_SMOKED"                          # Smoking Status
+      "(0010,21B0)": "NO_SIGNIFICANT_MEDICAL_HISTORY"        # Additional Patient History
+      "(0010,21C0)": "NOT_PREGNANT"                          # Pregnancy Status
+      "(0010,21D0)": "20241201"                              # Last Menstrual Date
+      "(0010,2203)": "INTACT"                                # Patient Sex Neutered
+      "(0010,2297)": "NO_ALLERGIES_KNOWN"                    # Responsible Person
+      "(0010,2298)": "EMERGENCY_CONTACT_NAME"                # Responsible Person Role
+      "(0010,2299)": "RESPONSIBLE_ORGANIZATION"              # Responsible Organization
+      
+      # Research-Specific Patient Tags
+      "(0010,0021)": "RESEARCH"                              # Issuer of Patient ID
+      "(0010,0022)": "LOCAL_RESEARCH_ID"                     # Type of Patient ID
+      "(0010,0024)": "RESEARCH_ISSUER_SEQUENCE"              # Issuer of Patient ID Qualifiers Sequence
+      "(0010,1002)": "RESEARCH_COHORT_A"                     # Other Patient IDs Sequence
+      
+      # Anthropometric Measurements
+      "(0010,9431)": "RESEARCH_PHENOTYPE_A"                  # Examined Body Thickness
+      
+    # ================================
+    # STUDY INFORMATION TAGS (0008,xxxx, 0020,xxxx, 0032,xxxx)
+    # ================================
+    study:
+      # Core Study Information
+      "(0008,0020)": "20250918"                              # Study Date
+      "(0008,0030)": "143000.000000"                         # Study Time
+      "(0008,0050)": "ACC_RESEARCH_2025_001"                 # Accession Number
+      "(0008,0090)": "REFERRING^PHYSICIAN^RESEARCH"          # Referring Physician Name
+      "(0008,1030)": "Ultra-Comprehensive Research Protocol" # Study Description
+      "(0020,0010)": "RESEARCH_STUDY_ULTRA_001"              # Study ID
+      "(0020,000D)": "1.2.840.10008.1.2.1.RESEARCH.ULTRA"   # Study Instance UID
+      
+      # Detailed Study Context
+      "(0008,0022)": "20250918"                              # Acquisition Date
+      "(0008,0032)": "143000.000000"                         # Acquisition Time
+      "(0008,0023)": "20250918"                              # Content Date
+      "(0008,0033)": "143000.000000"                         # Content Time
+      "(0008,0013)": "143000.000000"                         # Instance Creation Time
+      "(0008,0012)": "20250918"                              # Instance Creation Date
+      
+      # Clinical Information
+      "(0008,1048)": "ATTENDING^PHYSICIAN^RESEARCH"          # Physician(s) of Record
+      "(0008,1049)": "READING^PHYSICIAN^RESEARCH"            # Physician(s) Reading Study
+      "(0008,1050)": "PERFORMING^PHYSICIAN^RESEARCH"         # Performing Physician Name
+      "(0008,1060)": "READING^PHYSICIAN^RESEARCH"            # Name of Physician(s) Reading Study
+      "(0008,1070)": "TECHNOLOGIST^RESEARCH^MRI"             # Operators Name
+      "(0008,1080)": "RESEARCH_PROTOCOL_INDICATION"          # Admitting Diagnoses Description
+      "(0008,1084)": "RESEARCH_DIAGNOSIS_CODE"               # Admitting Diagnosis Code Sequence
+      
+      # Study Management
+      "(0008,1032)": "RESEARCH_PROCEDURE_CODE"               # Procedure Code Sequence
+      "(0008,1140)": "REFERENCED_IMAGE_SEQUENCE"             # Referenced Image Sequence
+      "(0008,1150)": "REFERENCED_SOP_CLASS_UID"              # Referenced SOP Class UID
+      "(0008,1155)": "REFERENCED_SOP_INSTANCE_UID"           # Referenced SOP Instance UID
+      "(0008,1199)": "REFERENCED_SOP_SEQUENCE"               # Referenced SOP Sequence
+      
+      # Research and Ethics
+      "(0012,0010)": "UNIVERSITY_RESEARCH_CENTER"            # Clinical Trial Sponsor Name
+      "(0012,0020)": "NCT05123456"                           # Clinical Trial Protocol ID
+      "(0012,0021)": "Ultra-Comprehensive Research Protocol v3.1" # Clinical Trial Protocol Name
+      "(0012,0030)": "SITE_RESEARCH_001"                     # Clinical Trial Site ID
+      "(0012,0031)": "University Research Medical Center"    # Clinical Trial Site Name
+      "(0012,0040)": "RESEARCH_SUBJECT_ULTRA_001"            # Clinical Trial Subject ID
+      "(0012,0042)": "RESEARCH_READING_ID_001"               # Clinical Trial Subject Reading ID
+      "(0012,0050)": "BASELINE_TIMEPOINT"                    # Clinical Trial Time Point ID
+      "(0012,0051)": "Baseline Assessment - Day 0"           # Clinical Trial Time Point Description
+      "(0012,0060)": "RESEARCH_PROTOCOL_DEVIATION_NONE"      # Clinical Trial Protocol Deviation
+      "(0012,0062)": "YES"                                   # Patient Identity Removed
+      "(0012,0063)": "DICONDE_ANONYMIZATION_TOOL"            # De-identification Method
+      "(0012,0064)": "LONGITUDINAL_TEMPORAL_INFORMATION_PRESERVED" # De-identification Method Code Sequence
+      
+      # Study Status and Quality
+      "(0008,0015)": "RESEARCH"                              # Instance Availability
+      "(0008,0016)": "APPLICATION_ENTITY_RESEARCH"           # SOP Class UID
+      "(0008,0018)": "SOP_INSTANCE_UID_RESEARCH"             # SOP Instance UID
+      "(0008,0005)": "ISO_IR 100"                            # Specific Character Set
+      "(0008,0001)": "4096"                                  # Length to End
+      
+      # Additional Study Descriptors
+      "(0032,1032)": "RESEARCH^REQUESTING^PHYSICIAN"         # Requesting Physician
+      "(0032,1033)": "RESEARCH_SERVICE"                      # Requesting Service
+      "(0032,1060)": "Ultra-comprehensive multi-modal research imaging" # Requested Procedure Description
+      "(0032,1070)": "RESEARCH_PROCEDURE_CODE_001"           # Requested Contrast Agent
+      
+    # ================================
+    # SERIES INFORMATION TAGS (0008,xxxx, 0018,xxxx, 0020,xxxx)
+    # ================================
+    series:
+      # Core Series Information
+      "(0008,103E)": "Research Series - Ultra Comprehensive" # Series Description
+      "(0020,000E)": "SERIES_INSTANCE_UID_RESEARCH"          # Series Instance UID
+      "(0020,0011)": "1"                                     # Series Number
+      "(0020,0060)": "B"                                     # Laterality (Both)
+      "(0008,0021)": "20250918"                              # Series Date
+      "(0008,0031)": "143000.000000"                         # Series Time
+      
+      # Modality-Specific Parameters
+      "(0018,0015)": "WHOLE_BODY"                            # Body Part Examined
+      "(0018,0020)": "GR\\SE\\IR"                            # Scanning Sequence
+      "(0018,0021)": "SK\\SP\\MP\\OSP"                       # Sequence Variant
+      "(0018,0022)": "PFF\\FS\\SAT1"                         # Scan Options
+      "(0018,0023)": "3D"                                    # MR Acquisition Type
+      "(0018,0024)": "ep2d_bold_moco"                        # Sequence Name
+      "(0018,0025)": "Y"                                     # Angio Flag
+      
+      # Contrast Information
+      "(0018,0010)": "GADOLINIUM_BASED_CONTRAST"             # Contrast/Bolus Agent
+      "(0018,0012)": "GADOVIST_1.0_MMOL"                     # Contrast/Bolus Agent Sequence
+      "(0018,0013)": "GADOLINIUM_CHELATE"                    # Contrast/Bolus T1 Relaxivity
+      "(0018,0014)": "INTRAVENOUS"                           # Contrast/Bolus Route
+      "(0018,0016)": "CENTRAL_VENOUS_ACCESS"                 # Contrast/Bolus Administration Route Sequence
+      "(0018,0017)": "POWER_INJECTOR"                        # Contrast/Bolus Volume
+      "(0018,0018)": "AUTOMATED_INJECTION"                   # Contrast/Bolus Total Dose
+      "(0018,1040)": "20.0"                                  # Contrast/Bolus Volume
+      "(0018,1041)": "ML"                                    # Contrast/Bolus Total Dose
+      "(0018,1042)": "GADOLINIUM_T1_AGENT"                   # Contrast/Bolus Ingredient
+      "(0018,1043)": "1.0"                                   # Contrast/Bolus Ingredient Concentration
+      "(0018,1044)": "MMOL/ML"                               # Contrast/Bolus Agent Number
+      "(0018,1045)": "GADOVIST"                              # Contrast/Bolus Ingredient Code Sequence
+      "(0018,1046)": "BAYER_HEALTHCARE"                      # Contrast/Bolus Agent Administration
+      "(0018,1047)": "BOLUS_INJECTION"                       # Contrast/Bolus Agent Sequence
+      "(0018,1048)": "3.0"                                   # Contrast/Bolus Flow Rate
+      "(0018,1049)": "ML/S"                                  # Contrast/Bolus Flow Rate Units
+      "(0018,1050)": "60"                                    # Contrast/Bolus Start Time
+      "(0018,1051)": "120"                                   # Contrast/Bolus Stop Time
+      "(0018,1052)": "180"                                   # Contrast/Bolus Total Time
+      
+      # Advanced MR Parameters
+      "(0018,0080)": "2000.0"                                # Repetition Time
+      "(0018,0081)": "30.0"                                  # Echo Time
+      "(0018,0082)": "900.0"                                 # Inversion Time
+      "(0018,0083)": "2"                                     # Number of Averages
+      "(0018,0084)": "123.456789"                            # Imaging Frequency
+      "(0018,0085)": "1H"                                    # Imaged Nucleus
+      "(0018,0086)": "1\\2\\3"                               # Echo Number(s)
+      "(0018,0087)": "3.0"                                   # Magnetic Field Strength
+      "(0018,0088)": "6.0"                                   # Spacing Between Slices
+      "(0018,0089)": "256"                                   # Number of Phase Encoding Steps
+      "(0018,0090)": "256"                                   # Data Collection Diameter
+      "(0018,0091)": "128"                                   # Echo Train Length
+      "(0018,0093)": "100"                                   # Percent Sampling
+      "(0018,0094)": "75"                                    # Percent Phase Field of View
+      "(0018,0095)": "260"                                   # Pixel Bandwidth
+      
+      # Geometry and Positioning
+      "(0018,1100)": "256\\0\\256"                           # Reconstruction Diameter
+      "(0018,1110)": "2.5"                                   # Distance Source to Detector
+      "(0018,1111)": "1000.0"                                # Distance Source to Patient
+      "(0018,1114)": "1.0"                                   # Estimated Radiographic Magnification Factor
+      "(0018,1120)": "256\\256"                              # Gantry/Detector Tilt
+      "(0018,1130)": "HFS"                                   # Table Height
+      "(0018,1131)": "SUPINE"                                # Table Traverse
+      "(0018,1134)": "RESEARCH_TABLE_001"                    # Table Motion
+      "(0018,1135)": "HEAD_FIRST"                            # Table Vertical Increment
+      "(0018,1136)": "SUPINE"                                # Table Lateral Increment
+      "(0018,1137)": "FEET_TOGETHER"                         # Table Longitudinal Increment
+      "(0018,1138)": "ARMS_DOWN"                             # Table Angle
+      "(0018,1140)": "AXIAL"                                 # Rotation Direction
+      "(0018,1141)": "CW"                                    # Angular Position
+      "(0018,1142)": "0"                                     # Radial Position
+      "(0018,1143)": "ISOCENTER"                             # Scan Arc
+      "(0018,1144)": "0"                                     # Angular Step
+      "(0018,1145)": "CONTINUOUS"                            # Center of Rotation Offset
+      "(0018,1146)": "RESEARCH_PROTOCOL"                     # Bin Length
+      "(0018,1147)": "RECTANGULAR"                           # Detector Binning
+      "(0018,1149)": "256\\256"                              # Field of View Shape
+      "(0018,1150)": "256.0"                                 # Field of View Dimension(s)
+      "(0018,1151)": "256.0"                                 # Field of View Dimension(s)
+      
+      # Acquisition Matrix and Resolution
+      "(0018,115E)": "256"                                   # Image and Fluoroscopy Area Dose Product
+      "(0018,1160)": "256"                                   # Filter Type
+      "(0018,1161)": "RESEARCH_FILTER"                       # Type of Filters
+      "(0018,1162)": "SOFT_TISSUE"                           # Intensifier Size
+      "(0018,1164)": "256\\256"                              # Imager Pixel Spacing
+      "(0018,1166)": "1.0\\1.0"                              # Grid
+      "(0018,1170)": "GENERATOR_POWER"                       # Generator Power
+      "(0018,1190)": "RESEARCH_FOCAL_SPOT"                   # Focal Spot(s)
+      "(0018,1191)": "ANODE_TARGET_MATERIAL"                 # Anode Target Material
+      
+      # Dosimetry and Safety
+      "(0018,1152)": "50"                                    # Exposure
+      "(0018,1153)": "100"                                   # Exposure in µAs
+      "(0018,1154)": "AUTO"                                  # Average Pulse Width
+      "(0018,1155)": "RESEARCH"                              # Radiation Setting
+      "(0018,1156)": "LOW_DOSE"                              # Rectification Type
+      "(0018,1160)": "RESEARCH_TECHNIQUE"                    # Filter Type
+      
+      # Advanced Imaging Parameters
+      "(0018,9004)": "RESEARCH"                              # Content Qualification
+      "(0018,9005)": "ep2d_bold_research_protocol"           # Pulse Sequence Name
+      "(0018,9006)": "RESEARCH_IMAGING_MODIFIERS"            # MR Imaging Modifier Sequence
+      "(0018,9008)": "VOLUME_ISOTROPIC"                      # MR Acquisition Type
+      "(0018,9014)": "SATURATION_RECOVERY"                   # MR Imaging Modifier Sequence
+      "(0018,9024)": "SPIN_ECHO_SINGLE_SHOT"                 # MR Imaging Modifier Sequence
+      "(0018,9025)": "GRADIENT_ECHO_MULTI_ECHO"              # MR Imaging Modifier Sequence
+      "(0018,9028)": "DIFFUSION_WEIGHTED"                    # MR Imaging Modifier Sequence
+      "(0018,9029)": "PERFUSION_WEIGHTED"                    # MR Imaging Modifier Sequence
+      "(0018,9030)": "MULTIPLE_SPIN_ECHO"                    # Multiple Spin Echo
+      "(0018,9032)": "MULTIPLANAR_EXCITATION"                # Multi-planar Excitation
+      "(0018,9033)": "PARTIAL_FOURIER"                       # Partial Fourier
+      "(0018,9034)": "15.5"                                  # Effective Echo Time
+      "(0018,9035)": "0.5"                                   # Chemical Shift In-phase Pixel
+      "(0018,9036)": "0.25"                                  # Chemical Shift Out-of-plane Pixel
+      
+      # Diffusion and Perfusion Parameters
+      "(0018,9087)": "1000"                                  # Diffusion b-value
+      "(0018,9089)": "0\\0\\1"                               # Diffusion Gradient Orientation
+      "(0018,9117)": "DIFFUSION_SEQUENCE_EPI"                # MR Diffusion Sequence
+      "(0018,9147)": "PERFUSION_CONTRAST_AGENT"              # Diffusion Anisotropy Type
+      "(0018,9151)": "20"                                    # Diffusion Gradient Direction Sequence
+      "(0018,9159)": "RESEARCH_PERFUSION_PROTOCOL"           # Applicable Safety Standard Agency
+      
+    # ================================
+    # EQUIPMENT INFORMATION TAGS (0008,xxxx, 0018,xxxx)
+    # ================================
+    equipment:
+      # Manufacturer and Model
+      "(0008,0070)": "SIEMENS"                               # Manufacturer
+      "(0008,1090)": "MAGNETOM_PRISMA_FIT"                   # Manufacturer's Model Name
+      "(0018,1000)": "67890"                                 # Device Serial Number
+      "(0018,1020)": "syngo_MR_VE11E_RESEARCH"               # Software Version(s)
+      "(0018,1022)": "RESEARCH_MODIFICATION_001"             # Video Image Format Acquired
+      "(0018,1023)": "RESEARCH_PROCESSING_PIPELINE"          # Acquisition Device Processing Description
+      "(0018,1024)": "RESEARCH_001"                          # Acquisition Device Processing Code
+      "(0018,1025)": "RESEARCH_STATION_PRISMA_01"            # Acquisition Device Processing Version Name
+      
+      # System Configuration
+      "(0018,1200)": "20250101"                              # Date of Last Calibration
+      "(0018,1201)": "060000.000000"                         # Time of Last Calibration
+      "(0018,1202)": "20250918"                              # Date of Last Detector Calibration
+      "(0018,1203)": "060000.000000"                         # Time of Last Detector Calibration
+      "(0018,1210)": "RESEARCH_CONVOLUTION_KERNEL"           # Convolution Kernel
+      "(0018,1250)": "HEAD_NECK_SPINE_64CH"                  # Receive Coil Name
+      "(0018,1251)": "BODY_TRANSMIT_COIL"                    # Transmit Coil Name
+      "(0018,1260)": "DIELECTRIC_PAD_RESEARCH"               # Plate Type
+      "(0018,1261)": "RESEARCH_PLATE_ID_001"                 # Plate ID
+      
+      # Magnet and RF Systems
+      "(0018,1312)": "SUPERCONDUCTING"                       # In-plane Phase Encoding Direction
+      "(0018,1314)": "FEET_TO_HEAD"                          # Flip Angle
+      "(0018,1315)": "15"                                    # Variable Flip Angle Flag
+      "(0018,1316)": "SAR_RESEARCH_PROTOCOL"                 # SAR
+      "(0018,1318)": "1.5"                                   # dB/dt
+      "(0018,1320)": "3.2"                                   # B1rms
+      
+      # Gradient Systems
+      "(0018,1330)": "GRADIENT_SYSTEM_PRISMA"                # Gradient Coil Name
+      "(0018,1340)": "40"                                    # Gradient Rise Time
+      "(0018,1341)": "200"                                   # Gradient Fall Time
+      "(0018,1342)": "GRADIENT_AMPLIFIER_RESEARCH"           # Gradient Amplifier Name
+      "(0018,1344)": "GRADIENT_MODE_RESEARCH"                # Gradient Mode
+      
+      # Shim and B0 Systems
+      "(0018,1400)": "AUTO_SHIM_RESEARCH"                    # Acquisition Termination Condition
+      "(0018,1401)": "SHIMMING_PERFORMED"                    # Acquisition Start Condition
+      "(0018,1402)": "SHIM_SETTING_RESEARCH"                 # Acquisition Start Condition Data
+      "(0018,1403)": "B0_FIELD_MAP_AVAILABLE"                # Acquisition Termination Condition Data
+      
+      # Quality Assurance
+      "(0018,9073)": "RESEARCH_QA_PROTOCOL_DAILY"            # Acquisition Protocol Name
+      "(0018,9074)": "Daily QA Protocol for Research Scanner" # Acquisition Protocol Description
+      "(0018,9076)": "QA_PASSED"                             # Diffusion Directionality
+      "(0018,9077)": "SNR_WITHIN_LIMITS"                     # Parallel Reduction Factor In-plane
+      "(0018,9078)": "UNIFORMITY_ACCEPTABLE"                 # Cardiac R-R Interval Specified
+      "(0018,9080)": "GEOMETRIC_ACCURACY_OK"                 # Acquisition Duration
+      "(0018,9081)": "DISTORTION_MINIMAL"                    # Frame Reference Time
+      "(0018,9087)": "FIELD_HOMOGENEITY_GOOD"                # Diffusion b-value
+      
+      # Research-Specific Equipment Tags
+      "(0018,9103)": "RESEARCH_MODIFICATION_APPROVED"        # Procedure Step Progress Information Sequence
+      "(0018,9104)": "RESEARCH_SOFTWARE_VERSION_R001"        # Procedure Step Communications URI Sequence
+      "(0018,9105)": "RESEARCH_PHANTOM_QA_DAILY"             # Interlock System
+      "(0018,9106)": "RESEARCH_CALIBRATION_CURRENT"          # MR Spatial Saturation Sequence
+      "(0018,9107)": "RESEARCH_SAFETY_SYSTEMS_OK"            # MR Timing and Related Parameters Sequence
+      
+    # ================================
+    # INSTITUTION INFORMATION TAGS (0008,xxxx)
+    # ================================
+    institution:
+      # Basic Institution Information
+      "(0008,0080)": "University Research Medical Center"     # Institution Name
+      "(0008,0081)": "1234 Research Boulevard, Research City, RC 12345" # Institution Address
+      "(0008,0082)": "RESEARCH_MEDICAL_CENTER_001"            # Institution Code Sequence
+      "(0008,1010)": "MRI_RESEARCH_SCANNER_PRISMA_01"         # Station Name
+      "(0008,1040)": "DEPARTMENT_OF_RADIOLOGY_RESEARCH"       # Institutional Department Name
+      "(0008,1041)": "RESEARCH_IMAGING_DIVISION"              # Institutional Department Type Code Sequence
+      
+      # Administrative Personnel
+      "(0008,1048)": "DR_RESEARCH_DIRECTOR^CHIEF"             # Physician(s) of Record
+      "(0008,1049)": "DR_PRINCIPAL_INVESTIGATOR^STUDY"        # Physician(s) Reading Study
+      "(0008,1050)": "DR_PERFORMING_PHYSICIAN^IMAGING"        # Performing Physician Name
+      "(0008,1052)": "RESEARCH_COORDINATOR^CLINICAL"          # Performing Physician Identification Sequence
+      "(0008,1060)": "DR_READING_PHYSICIAN^RADIOLOGY"         # Name of Physician(s) Reading Study
+      "(0008,1062)": "DR_READING_PHYSICIAN_ID_001"            # Physician(s) Reading Study Identification Sequence
+      "(0008,1070)": "TECHNOLOGIST^MRI^RESEARCH"              # Operators Name
+      "(0008,1072)": "TECH_ID_MRI_001"                        # Operator Identification Sequence
+      
+      # Contact Information
+      "(0008,1084)": "contact@research.university.edu"        # Admitting Diagnosis Code Sequence
+      "(0008,1110)": "555-RESEARCH-IMAGING"                   # Referenced Study Sequence
+      "(0008,1115)": "+1-555-123-RESEARCH"                    # Referenced Patient Alias Sequence
+      "(0008,1120)": "research.imaging@university.edu"        # Referenced Patient Sequence
+      "(0008,1125)": "imaging.admin@university.edu"           # Referenced Visit Sequence
+      "(0008,1130)": "data.management@university.edu"         # Referenced Overlay Sequence
+      "(0008,1140)": "safety.officer@university.edu"          # Referenced Image Sequence
+      
+      # Facility Information
+      "(0008,1150)": "RESEARCH_FACILITY_001"                  # Referenced SOP Class UID
+      "(0008,1155)": "IMAGING_SUITE_MRI_RESEARCH"             # Referenced SOP Instance UID
+      "(0008,1160)": "BUILDING_RESEARCH_TOWER_FLOOR_3"        # Referenced Frame Number
+      "(0008,1195)": "ROOM_MRI_001_RESEARCH"                  # Transaction UID
+      "(0008,1197)": "SCANNER_LOCATION_RESEARCH_MRI_1"        # Failure Reason
+      "(0008,1198)": "RESEARCH_MAGNET_ROOM_SHIELDED"          # Failed SOP Sequence
+      
+      # Research Ethics and Compliance
+      "(0008,1199)": "IRB_APPROVAL_RESEARCH_001"              # Referenced SOP Sequence
+      "(0008,3001)": "HIPAA_COMPLIANT_RESEARCH_PROTOCOL"      # Alternate Representation Sequence
+      "(0008,3010)": "RESEARCH_DATA_SHARING_AGREEMENT"        # Irradiation Event UID
+      
+    # ================================
+    # PROCEDURE AND PROTOCOL TAGS (0018,xxxx, 0040,xxxx)
+    # ================================
+    procedure:
+      # Procedure Identification
+      "(0018,1030)": "ULTRA_COMPREHENSIVE_RESEARCH_PROTOCOL" # Protocol Name
+      "(0040,0254)": "Ultra-Comprehensive Multi-Modal Research Imaging" # Procedure Step Description
+      "(0040,0255)": "RESEARCH_PROCEDURE_STEP_001"            # Procedure Step ID
+      "(0040,0260)": "IN_PROGRESS"                            # Performed Procedure Step Status
+      "(0040,0270)": "20250918"                               # Scheduled Procedure Step Start Date
+      "(0040,0271)": "143000.000000"                          # Scheduled Procedure Step Start Time
+      "(0040,0272)": "DR_PERFORMING_PHYSICIAN"                # Scheduled Performing Physician Name
+      "(0040,0275)": "RESEARCH_REQUEST_ATTRIBUTES"            # Request Attributes Sequence
+      
+      # Procedure Context
+      "(0040,1001)": "RESEARCH_PROCEDURE_CODE_001"            # Requested Procedure ID
+      "(0040,1002)": "RESEARCH_PROCEDURE_REASON"              # Reason for Requested Procedure
+      "(0040,1003)": "RESEARCH_PROCEDURE_PRIORITY"            # Requested Procedure Priority
+      "(0040,1004)": "RESEARCH_PATIENT_TRANSPORT"             # Patient Transport Arrangements
+      "(0040,1005)": "RESEARCH_PROCEDURE_LOCATION"            # Requested Procedure Location
+      "(0040,1008)": "RESEARCH_PROCEDURE_COMMENTS"            # Confidentiality Code
+      "(0040,1009)": "RESEARCH_REPORTING_PRIORITY"            # Reporting Priority
+      "(0040,1010)": "DR_REQUESTING_PHYSICIAN"                # Names of Intended Recipients of Results
+      "(0040,1011)": "RESEARCH_INTENDED_RECIPIENTS"           # Intended Recipients of Results Identification
+      
+      # Research Protocol Specifics
+      "(0018,9004)": "RESEARCH_CONTENT_QUALIFICATION"         # Content Qualification
+      "(0018,9005)": "RESEARCH_PULSE_SEQUENCE_NAME"           # Pulse Sequence Name
+      "(0018,9006)": "RESEARCH_IMAGING_MODIFIERS"             # MR Imaging Modifier Sequence
+      "(0018,9014)": "RESEARCH_SUPPRESSION_TECHNIQUE"         # Inversion Recovery
+      "(0018,9024)": "RESEARCH_ECHO_TECHNIQUE"                # Echo Pulse Sequence
+      "(0018,9025)": "RESEARCH_MULTIPLE_ECHO"                 # Multiple Spin Echo
+      "(0018,9026)": "RESEARCH_MULTIPLANAR_EXCITATION"        # Multi-planar Excitation
+      "(0018,9027)": "RESEARCH_PARTIAL_FOURIER"               # Partial Fourier
+      "(0018,9028)": "RESEARCH_EFFECTIVE_ECHO_TIME"           # Effective Echo Time
+      "(0018,9029)": "RESEARCH_CHEMICAL_SHIFT_INPLANE"        # Chemical Shift In-phase Pixel
+      "(0018,9030)": "RESEARCH_CHEMICAL_SHIFT_OUTPLANE"       # Chemical Shift Out-of-plane Pixel
+      
+      # Quality Control and Monitoring
+      "(0040,0302)": "QC_PERFORMED_DAILY"                     # Entrance Dose in mGy
+      "(0040,0306)": "QC_PHANTOM_SCAN_PASSED"                 # Comments on Radiation Dose
+      "(0040,0310)": "QC_SNR_WITHIN_LIMITS"                   # Comments on Scheduled Procedure Step
+      "(0040,0320)": "QC_UNIFORMITY_ACCEPTABLE"               # Comments on Performed Procedure Step
+      "(0040,0330)": "QC_GEOMETRIC_ACCURACY_OK"               # Comments on Performed Procedure Step
+      "(0040,0340)": "QC_DISTORTION_MINIMAL"                  # Comments on Performed Procedure Step
+      "(0040,0400)": "QC_FIELD_HOMOGENEITY_GOOD"              # Comments on Scheduled Procedure Step
+      
+      # Data Management and Storage
+      "(0040,4019)": "RESEARCH_DATA_RETENTION_POLICY"         # Specimen Preparation Sequence
+      "(0040,4021)": "RESEARCH_DATA_SHARING_AGREEMENT"        # Slide Preparation Sequence
+      "(0040,4022)": "RESEARCH_BACKUP_SCHEDULE_DAILY"         # Block Preparation Sequence
+      "(0040,4023)": "RESEARCH_ARCHIVE_LOCATION"              # Staining Sequence
+      "(0040,4025)": "RESEARCH_DATA_INTEGRITY_CHECK"          # Requested Image Comments
+      "(0040,4027)": "RESEARCH_QUALITY_METRICS"               # Acquisition Context Sequence
+      "(0040,4028)": "RESEARCH_ANALYSIS_PIPELINE"             # Acquisition Context Description
+      "(0040,4030)": "RESEARCH_RESULTS_REPOSITORY"            # Referenced Request Sequence
+      
+    # ================================
+    # ADVANCED RESEARCH TAGS (Custom Extensions)
+    # ================================
+    research_extensions:
+      # Multi-Modal Integration
+      "(7FE1,0001)": "MULTI_MODAL_INTEGRATION_ENABLED"        # Custom: Multi-Modal Integration Flag
+      "(7FE1,0002)": "PET_CT_MRI_FUSION_PROTOCOL"             # Custom: Multi-Modal Protocol
+      "(7FE1,0003)": "RESEARCH_BIOMARKER_ANALYSIS"            # Custom: Biomarker Analysis Protocol
+      "(7FE1,0004)": "LONGITUDINAL_STUDY_TIMEPOINT_1"         # Custom: Longitudinal Study Information
+      "(7FE1,0005)": "RESEARCH_PHENOTYPING_PROTOCOL"          # Custom: Phenotyping Protocol
+      
+      # AI and Machine Learning
+      "(7FE2,0001)": "AI_ANALYSIS_ENABLED"                    # Custom: AI Analysis Flag
+      "(7FE2,0002)": "ML_MODEL_VERSION_RESEARCH_V2.1"         # Custom: ML Model Version
+      "(7FE2,0003)": "AUTOMATED_SEGMENTATION_PROTOCOL"        # Custom: Automated Analysis Protocol
+      "(7FE2,0004)": "RADIOMICS_FEATURE_EXTRACTION"           # Custom: Radiomics Analysis
+      "(7FE2,0005)": "DEEP_LEARNING_RECONSTRUCTION"           # Custom: DL Reconstruction
+      
+      # Data Quality and Validation
+      "(7FE3,0001)": "DATA_QUALITY_SCORE_95.7"                # Custom: Data Quality Score
+      "(7FE3,0002)": "MOTION_ASSESSMENT_MINIMAL"              # Custom: Motion Assessment
+      "(7FE3,0003)": "ARTIFACT_DETECTION_NONE"                # Custom: Artifact Detection
+      "(7FE3,0004)": "SNR_MEASUREMENT_AUTOMATED"              # Custom: SNR Measurement
+      "(7FE3,0005)": "VALIDATION_STATUS_PASSED"               # Custom: Validation Status
+      
+      # Research Workflow
+      "(7FE4,0001)": "WORKFLOW_STATUS_ACTIVE"                 # Custom: Workflow Status
+      "(7FE4,0002)": "PROCESSING_PIPELINE_RESEARCH_V3"        # Custom: Processing Pipeline
+      "(7FE4,0003)": "ANALYSIS_QUEUE_PRIORITY_HIGH"           # Custom: Analysis Priority
+      "(7FE4,0004)": "RESULTS_NOTIFICATION_ENABLED"           # Custom: Results Notification
+      "(7FE4,0005)": "COLLABORATION_PORTAL_LINKED"            # Custom: Collaboration Tools
+
+# Usage Instructions:
+# 
+# 1. Save this template as a YAML file in your templates directory
+# 2. Use with: crgodicom create --template ultra-comprehensive-research
+# 3. Override specific values: crgodicom create --template ultra-comprehensive-research --patient-name "CUSTOM^NAME"
+# 4. Export with metadata: crgodicom export --study-id <id> --format pdf
+# 5. Send to PACS: crgodicom dcmtk --study-id <id> --host localhost --port 4242
+#
+# This template demonstrates:
+# - 300+ custom DICOM tags across all categories
+# - Research-specific extensions and protocols
+# - Multi-modal imaging support
+# - Advanced technical parameters
+# - Quality assurance and validation tags
+# - AI/ML integration capabilities
+# - Comprehensive institutional and procedural information
+# - Ethics and compliance tags for research studies

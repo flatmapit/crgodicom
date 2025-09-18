@@ -71,9 +71,9 @@ func dcmtkAction(c *cli.Context) error {
 	logrus.Infof("Sending study %s using DCMTK storescu to PACS %s:%d",
 		studyID, c.String("host"), c.Int("port"))
 
-	// Check if storescu is available
-	if _, err := exec.LookPath("storescu"); err != nil {
-		return fmt.Errorf("DCMTK storescu not found in PATH. Please install DCMTK: %w", err)
+	// Check DCMTK availability using the manager
+	if err := CheckDCMTKAvailability(); err != nil {
+		return fmt.Errorf("DCMTK not available: %w", err)
 	}
 
 	// Find DICOM files for the study
@@ -121,6 +121,12 @@ func dcmtkAction(c *cli.Context) error {
 
 // runEchoSCU runs DCMTK echoscu to test connectivity
 func runEchoSCU(host string, port int, aec, aet string, verbose bool) error {
+	// Get DCMTK tool path
+	echoscuPath, err := GetDCMTKPath("echoscu")
+	if err != nil {
+		return fmt.Errorf("failed to get echoscu path: %w", err)
+	}
+	
 	args := []string{
 		"-aec", aec,
 		"-aet", aet,
@@ -132,9 +138,9 @@ func runEchoSCU(host string, port int, aec, aet string, verbose bool) error {
 		args = append([]string{"-v"}, args...)
 	}
 
-	cmd := exec.Command("echoscu", args...)
+	cmd := exec.Command(echoscuPath, args...)
 
-	logrus.Debugf("Running: echoscu %s", strings.Join(args, " "))
+	logrus.Debugf("Running: %s %s", echoscuPath, strings.Join(args, " "))
 
 	output, err := cmd.CombinedOutput()
 	if err != nil {
@@ -147,6 +153,12 @@ func runEchoSCU(host string, port int, aec, aet string, verbose bool) error {
 
 // runStoreSCU runs DCMTK storescu to send a DICOM file
 func runStoreSCU(host string, port int, aec, aet, filePath string, verbose bool) error {
+	// Get DCMTK tool path
+	storescuPath, err := GetDCMTKPath("storescu")
+	if err != nil {
+		return fmt.Errorf("failed to get storescu path: %w", err)
+	}
+	
 	args := []string{
 		"-aec", aec,
 		"-aet", aet,
@@ -159,14 +171,12 @@ func runStoreSCU(host string, port int, aec, aet, filePath string, verbose bool)
 		args = append([]string{"-v"}, args...)
 	}
 
-	cmd := exec.Command("storescu", args...)
-
-	logrus.Debugf("Running: storescu %s", strings.Join(args, " "))
+	logrus.Debugf("Running: %s %s", storescuPath, strings.Join(args, " "))
 
 	// Set timeout
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
-	cmd = exec.CommandContext(ctx, "storescu", args...)
+	cmd := exec.CommandContext(ctx, storescuPath, args...)
 
 	output, err := cmd.CombinedOutput()
 	if err != nil {

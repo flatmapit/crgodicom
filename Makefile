@@ -71,17 +71,92 @@ dev-setup: deps
 	@echo "Development setup complete"
 	@echo "Run 'make docker-test-setup' to start test PACS servers"
 
+# Create installers for all platforms
+installer-all:
+	@echo "Creating installers for all platforms..."
+	@mkdir -p dist
+	@$(MAKE) installer-windows
+	@$(MAKE) installer-macos
+	@$(MAKE) installer-linux
+
+# Create Windows installer
+installer-windows:
+	@echo "Creating Windows installer..."
+	@mkdir -p dist/windows
+	@$(MAKE) build-all
+	@cp bin/${BINARY_NAME}-windows-*.exe dist/windows/
+	@cp README.md CHANGELOG.md LICENSE crgodicom.yaml dist/windows/
+	@cp -r examples dist/windows/
+	@echo "Windows installer files prepared in dist/windows/"
+
+# Create macOS installer
+installer-macos:
+	@echo "Creating macOS installer..."
+	@mkdir -p dist/macos
+	@$(MAKE) build-all
+	@cp bin/${BINARY_NAME}-darwin-* dist/macos/
+	@cp README.md CHANGELOG.md LICENSE crgodicom.yaml dist/macos/
+	@cp -r examples dist/macos/
+	@echo "macOS installer files prepared in dist/macos/"
+
+# Create Linux installer
+installer-linux:
+	@echo "Creating Linux installer..."
+	@mkdir -p dist/linux
+	@$(MAKE) build-all
+	@cp bin/${BINARY_NAME}-linux-* dist/linux/
+	@cp README.md CHANGELOG.md LICENSE crgodicom.yaml dist/linux/
+	@cp -r examples dist/linux/
+	@echo "Linux installer files prepared in dist/linux/"
+
+# Create AppImage for Linux
+appimage:
+	@echo "Creating Linux AppImage..."
+	@mkdir -p dist/appimage
+	@$(MAKE) build-all
+	@scripts/create-appimage.sh
+	@echo "AppImage created in dist/appimage/"
+
+# Create DMG for macOS
+dmg:
+	@echo "Creating macOS DMG..."
+	@mkdir -p dist/dmg
+	@$(MAKE) build-all
+	@scripts/create-dmg.sh
+	@echo "DMG created in dist/dmg/"
+
+# Create MSI for Windows
+msi:
+	@echo "Creating Windows MSI..."
+	@mkdir -p dist/msi
+	@$(MAKE) build-all
+	@scripts/create-msi.sh
+	@echo "MSI created in dist/msi/"
+
+# Clean installer artifacts
+clean-installers:
+	@echo "Cleaning installer artifacts..."
+	rm -rf dist/
+
 # Show help
 help:
 	@echo "Available targets:"
-	@echo "  build          - Build for current platform"
-	@echo "  build-all      - Build for all target platforms"
-	@echo "  test           - Run tests"
-	@echo "  test-coverage  - Run tests with coverage report"
-	@echo "  deps           - Install dependencies"
-	@echo "  clean          - Clean build artifacts"
-	@echo "  install        - Install binary to GOPATH/bin"
-	@echo "  docker-test-setup - Start Docker test PACS servers"
-	@echo "  docker-test-stop - Stop Docker test PACS servers"
-	@echo "  dev-setup      - Setup development environment"
-	@echo "  help           - Show this help message"
+	@echo "  build              - Build for current platform"
+	@echo "  build-all          - Build for all target platforms"
+	@echo "  test               - Run tests"
+	@echo "  test-coverage      - Run tests with coverage report"
+	@echo "  deps               - Install dependencies"
+	@echo "  clean              - Clean build artifacts"
+	@echo "  clean-installers   - Clean installer artifacts"
+	@echo "  install            - Install binary to GOPATH/bin"
+	@echo "  installer-all      - Create installers for all platforms"
+	@echo "  installer-windows  - Create Windows installer"
+	@echo "  installer-macos    - Create macOS installer"
+	@echo "  installer-linux    - Create Linux installer"
+	@echo "  appimage           - Create Linux AppImage"
+	@echo "  dmg                - Create macOS DMG"
+	@echo "  msi                - Create Windows MSI"
+	@echo "  docker-test-setup  - Start Docker test PACS servers"
+	@echo "  docker-test-stop   - Stop Docker test PACS servers"
+	@echo "  dev-setup          - Setup development environment"
+	@echo "  help               - Show this help message"

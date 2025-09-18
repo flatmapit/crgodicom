@@ -1,0 +1,82 @@
+# CRGoDICOM Configuration File
+# CLI flags override configuration file values
+
+dicom:
+  org_root: "1.2.840.10008.5.1.4.1.1"  # Configurable UID organization root
+
+default_pacs:
+  host: "localhost"
+  port: 11112
+  aec: "CRGODICOM"
+  aet: "PACS_SERVER"
+  timeout: 30
+
+study_templates:
+  # Built-in templates (always available)
+  chest-xray:
+    modality: "CR"
+    series_count: 1
+    image_count: 2
+    anatomical_region: "chest"
+    study_description: "Chest X-Ray"
+  
+  ct-chest:
+    modality: "CT"
+    series_count: 2
+    image_count: 50
+    anatomical_region: "chest"
+    study_description: "CT Chest"
+  
+  ultrasound-abdomen:
+    modality: "US"
+    series_count: 1
+    image_count: 10
+    anatomical_region: "abdomen"
+    study_description: "Ultrasound Abdomen"
+
+  mammography:
+    modality: "MG"
+    series_count: 1
+    image_count: 4
+    anatomical_region: "breast"
+    study_description: "Mammography"
+
+  digital-xray:
+    modality: "DX"
+    series_count: 1
+    image_count: 1
+    anatomical_region: "chest"
+    study_description: "Digital X-Ray"
+
+  mri-brain:
+    modality: "MR"
+    series_count: 3
+    image_count: 30
+    anatomical_region: "brain"
+    study_description: "MRI Brain"
+
+logging:
+  level: "INFO"
+  file: "crgodicom.log"
+  format: "json"
+
+storage:
+  base_dir: "studies"
+  compression: false
+  index_cache: true
+
+# Test PACS configuration for development/testing
+test_pacs:
+  orthanc_1:
+    host: "localhost"
+    port: 4900
+    aec: "CRGODICOM"
+    aet: "ORTHANC1"
+    timeout: 30
+  
+  orthanc_2:
+    host: "localhost"
+    port: 4901
+    aec: "CRGODICOM"
+    aet: "ORTHANC2"
+    timeout: 30
