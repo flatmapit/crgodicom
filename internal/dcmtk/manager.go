@@ -180,7 +180,7 @@ func (m *Manager) getBundledVersion() string {
 // getAvailableTools returns a map of available DCMTK tools
 func (m *Manager) getAvailableTools(dir string) map[string]string {
 	tools := make(map[string]string)
-	requiredTools := []string{"storescu", "echoscu", "dcmdump", "dcmodify"}
+	requiredTools := []string{"storescu", "echoscu", "dcmdump", "dcmodify", "findscu"}
 	
 	for _, tool := range requiredTools {
 		toolPath := filepath.Join(dir, tool)

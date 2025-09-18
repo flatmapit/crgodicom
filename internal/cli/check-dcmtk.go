@@ -81,7 +81,7 @@ func checkDCMTKAction(c *cli.Context) error {
 		fmt.Println()
 		fmt.Println("🧪 Testing Key Tools:")
 		
-		keyTools := []string{"storescu", "echoscu"}
+		keyTools := []string{"storescu", "echoscu", "findscu"}
 		for _, tool := range keyTools {
 			if path, err := manager.GetDCMTKPath(tool); err == nil {
 				fmt.Printf("   ✅ %s: Available at %s\n", tool, path)

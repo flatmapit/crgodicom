@@ -1,0 +1,36 @@
+[
+  {
+    "study_instance_uid": "1.2.840.113619.2.5.1762583153.215519.978957063.78",
+    "study_date": "20241215",
+    "study_time": "143022.000000",
+    "study_description": "CT Chest with Contrast",
+    "accession_number": "2025TY0000001",
+    "patient_name": "SMITH^JOHN^MICHAEL",
+    "patient_id": "P123456789",
+    "patient_birth_date": "19800315",
+    "patient_sex": "M",
+    "modality": "CT",
+    "institution_name": "Melbourne General Hospital",
+    "referring_physician": "DR^JANE^SMITH",
+    "study_id": "ST20241215001",
+    "number_of_study_related_instances": "125",
+    "number_of_series_related_instances": "3"
+  },
+  {
+    "study_instance_uid": "1.2.840.113619.2.5.1762583153.215519.978957063.79",
+    "study_date": "20241215",
+    "study_time": "154530.000000",
+    "study_description": "MRI Brain without Contrast",
+    "accession_number": "2025TY0000002",
+    "patient_name": "JOHNSON^SARAH^MARIE",
+    "patient_id": "P987654321",
+    "patient_birth_date": "19750620",
+    "patient_sex": "F",
+    "modality": "MR",
+    "institution_name": "Melbourne General Hospital",
+    "referring_physician": "DR^MICHAEL^BROWN",
+    "study_id": "ST20241215002",
+    "number_of_study_related_instances": "89",
+    "number_of_series_related_instances": "4"
+  }
+]
