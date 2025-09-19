@@ -1,0 +1,34 @@
+# DICOM Studies - Generated test studies should not be tracked
+studies/
+*.dcm
+
+# Build artifacts
+bin/
+dist/
+
+# Coverage reports
+coverage.html
+coverage.out
+
+# Logs
+*.log
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Temporary files
+*.tmp
+*.temp
