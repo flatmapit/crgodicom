@@ -85,23 +85,8 @@ func (w *Writer) writeImage(study *types.Study, series *types.Series, image *typ
 		Elements: make([]*dicom.Element, 0),
 	}
 
-	// Add mandatory DICOM metadata elements first
-	w.addMandatoryElements(&dataset, image)
-
-	// Add patient information
-	w.addPatientElements(&dataset, study)
-
-	// Add study information
-	w.addStudyElements(&dataset, study)
-
-	// Add series information
-	w.addSeriesElements(&dataset, series)
-
-	// Add image information
-	w.addImageElements(&dataset, image)
-
-	// TEMPORARILY SKIP PIXEL DATA TO TEST
-	// w.addPixelDataElements(&dataset, image)
+	// Add elements in correct ascending tag order
+	w.addElementsInOrder(&dataset, study, series, image)
 
 	// Create DICOM file
 	file, err := os.Create(filePath)
@@ -115,13 +100,142 @@ func (w *Writer) writeImage(study *types.Study, series *types.Series, image *typ
 	for i, elem := range dataset.Elements {
 		logrus.Infof("Element %d: Tag=%s", i, elem.Tag)
 	}
-	
+
 	if err := dicom.Write(file, dataset); err != nil {
 		logrus.Errorf("DICOM write failed: %v", err)
 		return fmt.Errorf("failed to write DICOM file: %w", err)
 	}
 
 	return nil
+}
+
+// addElementsInOrder adds DICOM elements in correct ascending tag order
+func (w *Writer) addElementsInOrder(dataset *dicom.Dataset, study *types.Study, series *types.Series, image *types.Image) {
+	// File Meta Information Group (0002,xxxx)
+	w.addMandatoryElements(dataset, image)
+
+	// Image Presentation Group (0008,xxxx)
+	w.addImagePresentationElements(dataset, study, series, image)
+
+	// Patient Group (0010,xxxx)
+	w.addPatientElements(dataset, study)
+
+	// Study Group (0020,xxxx) - Study Instance UID
+	if elem, err := dicom.NewElement(tag.StudyInstanceUID, []string{study.StudyInstanceUID}); err == nil {
+		dataset.Elements = append(dataset.Elements, elem)
+	}
+
+	// Series Group (0020,xxxx) - Series Instance UID
+	if elem, err := dicom.NewElement(tag.SeriesInstanceUID, []string{series.SeriesInstanceUID}); err == nil {
+		dataset.Elements = append(dataset.Elements, elem)
+	}
+
+	// Series Number (0020,0011) - TEMPORARILY COMMENTED OUT TO TEST
+	// if elem, err := dicom.NewElement(tag.SeriesNumber, []int{series.SeriesNumber}); err == nil {
+	//	dataset.Elements = append(dataset.Elements, elem)
+	// }
+
+	// Instance Number (0020,0013) - TEMPORARILY COMMENTED OUT TO TEST
+	// if elem, err := dicom.NewElement(tag.InstanceNumber, []int{image.InstanceNumber}); err == nil {
+	//	dataset.Elements = append(dataset.Elements, elem)
+	// }
+
+	// Image Pixel Group (0028,xxxx)
+	w.addImagePixelElements(dataset, image)
+
+	// Pixel Data (7FE0,0010) - TEMPORARILY COMMENTED OUT TO TEST
+	// w.addPixelDataElements(dataset, image)
+}
+
+// addImagePresentationElements adds 0008 group elements in order
+func (w *Writer) addImagePresentationElements(dataset *dicom.Dataset, study *types.Study, series *types.Series, image *types.Image) {
+	// SOP Class UID (0008,0016)
+	if elem, err := dicom.NewElement(tag.SOPClassUID, []string{image.SOPClassUID}); err == nil {
+		dataset.Elements = append(dataset.Elements, elem)
+	}
+
+	// SOP Instance UID (0008,0018)
+	if elem, err := dicom.NewElement(tag.SOPInstanceUID, []string{image.SOPInstanceUID}); err == nil {
+		dataset.Elements = append(dataset.Elements, elem)
+	}
+
+	// Study Date (0008,0020)
+	if elem, err := dicom.NewElement(tag.StudyDate, []string{study.StudyDate}); err == nil {
+		dataset.Elements = append(dataset.Elements, elem)
+	}
+
+	// Study Time (0008,0030)
+	if elem, err := dicom.NewElement(tag.StudyTime, []string{study.StudyTime}); err == nil {
+		dataset.Elements = append(dataset.Elements, elem)
+	}
+
+	// Accession Number (0008,0050)
+	if elem, err := dicom.NewElement(tag.AccessionNumber, []string{study.AccessionNumber}); err == nil {
+		dataset.Elements = append(dataset.Elements, elem)
+	}
+
+	// Modality (0008,0060)
+	if elem, err := dicom.NewElement(tag.Modality, []string{series.Modality}); err == nil {
+		dataset.Elements = append(dataset.Elements, elem)
+	}
+
+	// Study Description (0008,1030)
+	if elem, err := dicom.NewElement(tag.StudyDescription, []string{study.StudyDescription}); err == nil {
+		dataset.Elements = append(dataset.Elements, elem)
+	}
+
+	// Series Description (0008,103E)
+	if elem, err := dicom.NewElement(tag.SeriesDescription, []string{series.SeriesDescription}); err == nil {
+		dataset.Elements = append(dataset.Elements, elem)
+	}
+}
+
+// addImagePixelElements adds 0028 group elements in order
+func (w *Writer) addImagePixelElements(dataset *dicom.Dataset, image *types.Image) {
+	// Samples per Pixel (0028,0002) - TEMPORARILY COMMENTED OUT TO TEST
+	// if elem, err := dicom.NewElement(tag.SamplesPerPixel, []int{1}); err == nil {
+	//	dataset.Elements = append(dataset.Elements, elem)
+	// }
+
+	// Photometric Interpretation (0028,0004) - TEMPORARILY COMMENTED OUT TO TEST
+	// if elem, err := dicom.NewElement(tag.PhotometricInterpretation, []string{"MONOCHROME2"}); err == nil {
+	//	dataset.Elements = append(dataset.Elements, elem)
+	// }
+
+	// Planar Configuration (0028,0006) - TEMPORARILY COMMENTED OUT TO TEST
+	// if elem, err := dicom.NewElement(tag.PlanarConfiguration, []int{0}); err == nil {
+	//	dataset.Elements = append(dataset.Elements, elem)
+	// }
+
+	// Rows (0028,0010) - TEMPORARILY COMMENTED OUT TO TEST
+	// if elem, err := dicom.NewElement(tag.Rows, []int{int(image.Height)}); err == nil {
+	//	dataset.Elements = append(dataset.Elements, elem)
+	// }
+
+	// Columns (0028,0011) - TEMPORARILY COMMENTED OUT TO TEST
+	// if elem, err := dicom.NewElement(tag.Columns, []int{int(image.Width)}); err == nil {
+	//	dataset.Elements = append(dataset.Elements, elem)
+	// }
+
+	// Bits Allocated (0028,0100) - TEMPORARILY COMMENTED OUT TO TEST
+	// if elem, err := dicom.NewElement(tag.BitsAllocated, []int{int(image.BitsPerPixel)}); err == nil {
+	//	dataset.Elements = append(dataset.Elements, elem)
+	// }
+
+	// Bits Stored (0028,0101) - TEMPORARILY COMMENTED OUT TO TEST
+	// if elem, err := dicom.NewElement(tag.BitsStored, []int{int(image.BitsPerPixel)}); err == nil {
+	//	dataset.Elements = append(dataset.Elements, elem)
+	// }
+
+	// High Bit (0028,0102) - TEMPORARILY COMMENTED OUT TO TEST
+	// if elem, err := dicom.NewElement(tag.HighBit, []int{int(image.BitsPerPixel - 1)}); err == nil {
+	//	dataset.Elements = append(dataset.Elements, elem)
+	// }
+
+	// Pixel Representation (0028,0103) - TEMPORARILY COMMENTED OUT TO TEST
+	// if elem, err := dicom.NewElement(tag.PixelRepresentation, []int{0}); err == nil {
+	//	dataset.Elements = append(dataset.Elements, elem)
+	// }
 }
 
 // addPatientElements adds patient-related DICOM elements
@@ -200,15 +314,15 @@ func (w *Writer) addSeriesElements(dataset *dicom.Dataset, series *types.Series)
 
 // addImageElements adds image-related DICOM elements
 func (w *Writer) addImageElements(dataset *dicom.Dataset, image *types.Image) {
-	// SOP Instance UID (0008,0018) - TEMPORARILY COMMENTED OUT
-	// if elem, err := dicom.NewElement(tag.SOPInstanceUID, []string{image.SOPInstanceUID}); err == nil {
-	//	dataset.Elements = append(dataset.Elements, elem)
-	// }
+	// SOP Instance UID (0008,0018)
+	if elem, err := dicom.NewElement(tag.SOPInstanceUID, []string{image.SOPInstanceUID}); err == nil {
+		dataset.Elements = append(dataset.Elements, elem)
+	}
 
-	// SOP Class UID (0008,0016) - TEMPORARILY COMMENTED OUT
-	// if elem, err := dicom.NewElement(tag.SOPClassUID, []string{image.SOPClassUID}); err == nil {
-	//	dataset.Elements = append(dataset.Elements, elem)
-	// }
+	// SOP Class UID (0008,0016)
+	if elem, err := dicom.NewElement(tag.SOPClassUID, []string{image.SOPClassUID}); err == nil {
+		dataset.Elements = append(dataset.Elements, elem)
+	}
 
 	// Instance Number (0020,0013) - TEMPORARILY COMMENTED OUT
 	// if elem, err := dicom.NewElement(tag.InstanceNumber, []int{image.InstanceNumber}); err == nil {

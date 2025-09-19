@@ -1160,3 +1160,546 @@
 {"level":"info","msg":"Element 13: Tag=(0020,000e)","time":"2025-09-19T09:02:36.363+10:00"}
 {"level":"info","msg":"Successfully wrote study with 1 series","time":"2025-09-19T09:02:36.363+10:00"}
 {"level":"info","msg":"Successfully created study 1: 1.2.840.10008.5.1.4.1.1.1758236556.4219716894081729165","time":"2025-09-19T09:02:36.363+10:00"}
+{"level":"info","msg":"Creating 1 study(ies) with 1 series each and 1 images per series","time":"2025-09-19T09:49:21.577+10:00"}
+{"level":"info","msg":"Modality: DX, Region: chest, Output: smith-agent-xray","time":"2025-09-19T09:49:21.577+10:00"}
+{"level":"info","msg":"Writing study 1.2.840.10008.5.1.4.1.1.1758239361.1543878156997054216 to smith-agent-xray/1.2.840.10008.5.1.4.1.1.1758239361.1543878156997054216","time":"2025-09-19T09:49:21.593+10:00"}
+{"level":"info","msg":"Study metadata: UID=1.2.840.10008.5.1.4.1.1.1758239361.1543878156997054216, Patient=SMITH^AGENT (SMITH001), Description=Chest X-Ray","time":"2025-09-19T09:49:21.593+10:00"}
+{"level":"info","msg":"Writing series 1.2.840.10008.5.1.4.1.1.1758239361.3576000946867914696 with 1 images","time":"2025-09-19T09:49:21.593+10:00"}
+{"level":"info","msg":"Writing DICOM file with 14 elements","time":"2025-09-19T09:49:21.593+10:00"}
+{"level":"info","msg":"Element 0: Tag=(0002,0000)","time":"2025-09-19T09:49:21.594+10:00"}
+{"level":"info","msg":"Element 1: Tag=(0002,0002)","time":"2025-09-19T09:49:21.594+10:00"}
+{"level":"info","msg":"Element 2: Tag=(0002,0003)","time":"2025-09-19T09:49:21.594+10:00"}
+{"level":"info","msg":"Element 3: Tag=(0002,0010)","time":"2025-09-19T09:49:21.594+10:00"}
+{"level":"info","msg":"Element 4: Tag=(0010,0010)","time":"2025-09-19T09:49:21.594+10:00"}
+{"level":"info","msg":"Element 5: Tag=(0010,0020)","time":"2025-09-19T09:49:21.594+10:00"}
+{"level":"info","msg":"Element 6: Tag=(0010,0030)","time":"2025-09-19T09:49:21.594+10:00"}
+{"level":"info","msg":"Element 7: Tag=(0010,0040)","time":"2025-09-19T09:49:21.594+10:00"}
+{"level":"info","msg":"Element 8: Tag=(0020,000d)","time":"2025-09-19T09:49:21.594+10:00"}
+{"level":"info","msg":"Element 9: Tag=(0008,0020)","time":"2025-09-19T09:49:21.594+10:00"}
+{"level":"info","msg":"Element 10: Tag=(0008,0030)","time":"2025-09-19T09:49:21.594+10:00"}
+{"level":"info","msg":"Element 11: Tag=(0008,1030)","time":"2025-09-19T09:49:21.594+10:00"}
+{"level":"info","msg":"Element 12: Tag=(0008,0050)","time":"2025-09-19T09:49:21.594+10:00"}
+{"level":"info","msg":"Element 13: Tag=(0020,000e)","time":"2025-09-19T09:49:21.594+10:00"}
+{"level":"info","msg":"Successfully wrote study with 1 series","time":"2025-09-19T09:49:21.594+10:00"}
+{"level":"info","msg":"Successfully created study 1: 1.2.840.10008.5.1.4.1.1.1758239361.1543878156997054216","time":"2025-09-19T09:49:21.594+10:00"}
+{"level":"info","msg":"Sending study 1.2.840.10008.5.1.4.1.1.1758239361.1543878156997054216 using DCMTK storescu to PACS localhost:4242","time":"2025-09-19T09:49:41.344+10:00"}
+{"level":"info","msg":"Using system DCMTK installation","time":"2025-09-19T09:49:41.401+10:00"}
+{"level":"info","msg":"Found 1 DICOM files to send via DCMTK","time":"2025-09-19T09:49:41.402+10:00"}
+{"level":"info","msg":"Testing PACS connectivity with DCMTK echoscu...","time":"2025-09-19T09:49:41.402+10:00"}
+{"level":"info","msg":"✅ PACS connectivity confirmed with DCMTK echoscu","time":"2025-09-19T09:49:41.424+10:00"}
+{"level":"info","msg":"Sending file 1/1 via DCMTK storescu: image_001.dcm","time":"2025-09-19T09:49:41.424+10:00"}
+{"level":"error","msg":"Failed to send image_001.dcm via DCMTK: storescu failed: exit status 1\nOutput: W: DcmItem: Dataset not in ascending tag order, at element (0008,0020)\nW: DcmItem: Dataset not in ascending tag order, at element (0008,0030)\nW: DcmItem: Dataset not in ascending tag order, at element (0008,1030)\nW: DcmItem: Dataset not in ascending tag order, at element (0008,0050)\nE: No SOP Class or Instance UID in file: smith-agent-xray/1.2.840.10008.5.1.4.1.1.1758239361.1543878156997054216/series_001/image_001.dcm\nE: Store SCU Failed: 0006:0202 DIMSE Inappropriate data for message\n","time":"2025-09-19T09:49:41.445+10:00"}
+{"level":"fatal","msg":"Application error: failed to send any DICOM files via DCMTK","time":"2025-09-19T09:49:41.445+10:00"}
+{"level":"info","msg":"Creating 1 study(ies) with 1 series each and 1 images per series","time":"2025-09-19T09:50:15.413+10:00"}
+{"level":"info","msg":"Modality: DX, Region: chest, Output: smith-agent-xray-fixed","time":"2025-09-19T09:50:15.413+10:00"}
+{"level":"info","msg":"Writing study 1.2.840.10008.5.1.4.1.1.1758239415.207581649013859995 to smith-agent-xray-fixed/1.2.840.10008.5.1.4.1.1.1758239415.207581649013859995","time":"2025-09-19T09:50:15.433+10:00"}
+{"level":"info","msg":"Study metadata: UID=1.2.840.10008.5.1.4.1.1.1758239415.207581649013859995, Patient=SMITH^AGENT (SMITH001), Description=Chest X-Ray","time":"2025-09-19T09:50:15.433+10:00"}
+{"level":"info","msg":"Writing series 1.2.840.10008.5.1.4.1.1.1758239415.6644999858075012156 with 1 images","time":"2025-09-19T09:50:15.433+10:00"}
+{"level":"info","msg":"Writing DICOM file with 16 elements","time":"2025-09-19T09:50:15.433+10:00"}
+{"level":"info","msg":"Element 0: Tag=(0002,0000)","time":"2025-09-19T09:50:15.433+10:00"}
+{"level":"info","msg":"Element 1: Tag=(0002,0002)","time":"2025-09-19T09:50:15.433+10:00"}
+{"level":"info","msg":"Element 2: Tag=(0002,0003)","time":"2025-09-19T09:50:15.433+10:00"}
+{"level":"info","msg":"Element 3: Tag=(0002,0010)","time":"2025-09-19T09:50:15.433+10:00"}
+{"level":"info","msg":"Element 4: Tag=(0010,0010)","time":"2025-09-19T09:50:15.433+10:00"}
+{"level":"info","msg":"Element 5: Tag=(0010,0020)","time":"2025-09-19T09:50:15.433+10:00"}
+{"level":"info","msg":"Element 6: Tag=(0010,0030)","time":"2025-09-19T09:50:15.433+10:00"}
+{"level":"info","msg":"Element 7: Tag=(0010,0040)","time":"2025-09-19T09:50:15.433+10:00"}
+{"level":"info","msg":"Element 8: Tag=(0020,000d)","time":"2025-09-19T09:50:15.434+10:00"}
+{"level":"info","msg":"Element 9: Tag=(0008,0020)","time":"2025-09-19T09:50:15.434+10:00"}
+{"level":"info","msg":"Element 10: Tag=(0008,0030)","time":"2025-09-19T09:50:15.434+10:00"}
+{"level":"info","msg":"Element 11: Tag=(0008,1030)","time":"2025-09-19T09:50:15.434+10:00"}
+{"level":"info","msg":"Element 12: Tag=(0008,0050)","time":"2025-09-19T09:50:15.434+10:00"}
+{"level":"info","msg":"Element 13: Tag=(0020,000e)","time":"2025-09-19T09:50:15.434+10:00"}
+{"level":"info","msg":"Element 14: Tag=(0008,0018)","time":"2025-09-19T09:50:15.434+10:00"}
+{"level":"info","msg":"Element 15: Tag=(0008,0016)","time":"2025-09-19T09:50:15.434+10:00"}
+{"level":"info","msg":"Successfully wrote study with 1 series","time":"2025-09-19T09:50:15.434+10:00"}
+{"level":"info","msg":"Successfully created study 1: 1.2.840.10008.5.1.4.1.1.1758239415.207581649013859995","time":"2025-09-19T09:50:15.434+10:00"}
+{"level":"info","msg":"Sending study 1.2.840.10008.5.1.4.1.1.1758239415.207581649013859995 using DCMTK storescu to PACS localhost:4242","time":"2025-09-19T09:50:22.370+10:00"}
+{"level":"info","msg":"Using system DCMTK installation","time":"2025-09-19T09:50:22.379+10:00"}
+{"level":"info","msg":"Found 1 DICOM files to send via DCMTK","time":"2025-09-19T09:50:22.379+10:00"}
+{"level":"info","msg":"Testing PACS connectivity with DCMTK echoscu...","time":"2025-09-19T09:50:22.379+10:00"}
+{"level":"info","msg":"✅ PACS connectivity confirmed with DCMTK echoscu","time":"2025-09-19T09:50:22.397+10:00"}
+{"level":"info","msg":"Sending file 1/1 via DCMTK storescu: image_001.dcm","time":"2025-09-19T09:50:22.397+10:00"}
+{"level":"error","msg":"Failed to send image_001.dcm via DCMTK: storescu status unclear: W: DcmItem: Dataset not in ascending tag order, at element (0008,0020)\nW: DcmItem: Dataset not in ascending tag order, at element (0008,0030)\nW: DcmItem: Dataset not in ascending tag order, at element (0008,1030)\nW: DcmItem: Dataset not in ascending tag order, at element (0008,0050)\nW: DcmItem: Dataset not in ascending tag order, at element (0008,0018)\nW: DcmItem: Dataset not in ascending tag order, at element (0008,0016)\n","time":"2025-09-19T09:50:22.423+10:00"}
+{"level":"fatal","msg":"Application error: failed to send any DICOM files via DCMTK","time":"2025-09-19T09:50:22.423+10:00"}
+{"level":"info","msg":"Sending study 1.2.840.10008.5.1.4.1.1.1758084608.4462841482011563283 using DCMTK storescu to PACS localhost:4242","time":"2025-09-19T09:50:43.183+10:00"}
+{"level":"info","msg":"Using system DCMTK installation","time":"2025-09-19T09:50:43.190+10:00"}
+{"level":"info","msg":"Found 3 DICOM files to send via DCMTK","time":"2025-09-19T09:50:43.191+10:00"}
+{"level":"info","msg":"Testing PACS connectivity with DCMTK echoscu...","time":"2025-09-19T09:50:43.191+10:00"}
+{"level":"info","msg":"✅ PACS connectivity confirmed with DCMTK echoscu","time":"2025-09-19T09:50:43.207+10:00"}
+{"level":"info","msg":"Sending file 1/3 via DCMTK storescu: image_001.dcm","time":"2025-09-19T09:50:43.207+10:00"}
+{"level":"error","msg":"Failed to send image_001.dcm via DCMTK: storescu status unclear: ","time":"2025-09-19T09:50:43.231+10:00"}
+{"level":"info","msg":"Sending file 2/3 via DCMTK storescu: image_001.dcm","time":"2025-09-19T09:50:43.231+10:00"}
+{"level":"error","msg":"Failed to send image_001.dcm via DCMTK: storescu status unclear: ","time":"2025-09-19T09:50:43.250+10:00"}
+{"level":"info","msg":"Sending file 3/3 via DCMTK storescu: image_001.dcm","time":"2025-09-19T09:50:43.250+10:00"}
+{"level":"error","msg":"Failed to send image_001.dcm via DCMTK: storescu status unclear: ","time":"2025-09-19T09:50:43.273+10:00"}
+{"level":"fatal","msg":"Application error: failed to send any DICOM files via DCMTK","time":"2025-09-19T09:50:43.273+10:00"}
+{"level":"info","msg":"Creating 1 study(ies) with 1 series each and 1 images per series","time":"2025-09-19T10:02:54.864+10:00"}
+{"level":"info","msg":"Modality: US, Region: chest, Output: smith-agent-us","time":"2025-09-19T10:02:54.864+10:00"}
+{"level":"info","msg":"Writing study 1.2.840.10008.5.1.4.1.1.1758240174.2782630976116159881 to smith-agent-us/1.2.840.10008.5.1.4.1.1.1758240174.2782630976116159881","time":"2025-09-19T10:02:54.866+10:00"}
+{"level":"info","msg":"Study metadata: UID=1.2.840.10008.5.1.4.1.1.1758240174.2782630976116159881, Patient=SMITH^AGENT (SMITH001), Description=Abdominal Ultrasound","time":"2025-09-19T10:02:54.866+10:00"}
+{"level":"info","msg":"Writing series 1.2.840.10008.5.1.4.1.1.1758240174.7183322478452124703 with 1 images","time":"2025-09-19T10:02:54.866+10:00"}
+{"level":"info","msg":"Writing DICOM file with 16 elements","time":"2025-09-19T10:02:54.866+10:00"}
+{"level":"info","msg":"Element 0: Tag=(0002,0000)","time":"2025-09-19T10:02:54.866+10:00"}
+{"level":"info","msg":"Element 1: Tag=(0002,0002)","time":"2025-09-19T10:02:54.866+10:00"}
+{"level":"info","msg":"Element 2: Tag=(0002,0003)","time":"2025-09-19T10:02:54.866+10:00"}
+{"level":"info","msg":"Element 3: Tag=(0002,0010)","time":"2025-09-19T10:02:54.866+10:00"}
+{"level":"info","msg":"Element 4: Tag=(0010,0010)","time":"2025-09-19T10:02:54.866+10:00"}
+{"level":"info","msg":"Element 5: Tag=(0010,0020)","time":"2025-09-19T10:02:54.866+10:00"}
+{"level":"info","msg":"Element 6: Tag=(0010,0030)","time":"2025-09-19T10:02:54.866+10:00"}
+{"level":"info","msg":"Element 7: Tag=(0010,0040)","time":"2025-09-19T10:02:54.866+10:00"}
+{"level":"info","msg":"Element 8: Tag=(0020,000d)","time":"2025-09-19T10:02:54.866+10:00"}
+{"level":"info","msg":"Element 9: Tag=(0008,0020)","time":"2025-09-19T10:02:54.866+10:00"}
+{"level":"info","msg":"Element 10: Tag=(0008,0030)","time":"2025-09-19T10:02:54.866+10:00"}
+{"level":"info","msg":"Element 11: Tag=(0008,1030)","time":"2025-09-19T10:02:54.866+10:00"}
+{"level":"info","msg":"Element 12: Tag=(0008,0050)","time":"2025-09-19T10:02:54.866+10:00"}
+{"level":"info","msg":"Element 13: Tag=(0020,000e)","time":"2025-09-19T10:02:54.866+10:00"}
+{"level":"info","msg":"Element 14: Tag=(0008,0018)","time":"2025-09-19T10:02:54.866+10:00"}
+{"level":"info","msg":"Element 15: Tag=(0008,0016)","time":"2025-09-19T10:02:54.866+10:00"}
+{"level":"info","msg":"Successfully wrote study with 1 series","time":"2025-09-19T10:02:54.866+10:00"}
+{"level":"info","msg":"Successfully created study 1: 1.2.840.10008.5.1.4.1.1.1758240174.2782630976116159881","time":"2025-09-19T10:02:54.866+10:00"}
+{"level":"info","msg":"Sending study 1.2.840.10008.5.1.4.1.1.1758240174.2782630976116159881 using DCMTK storescu to PACS localhost:4243","time":"2025-09-19T10:03:08.532+10:00"}
+{"level":"info","msg":"Using system DCMTK installation","time":"2025-09-19T10:03:08.568+10:00"}
+{"level":"info","msg":"Found 1 DICOM files to send via DCMTK","time":"2025-09-19T10:03:08.568+10:00"}
+{"level":"info","msg":"Testing PACS connectivity with DCMTK echoscu...","time":"2025-09-19T10:03:08.568+10:00"}
+{"level":"info","msg":"✅ PACS connectivity confirmed with DCMTK echoscu","time":"2025-09-19T10:03:08.588+10:00"}
+{"level":"info","msg":"Sending file 1/1 via DCMTK storescu: image_001.dcm","time":"2025-09-19T10:03:08.588+10:00"}
+{"level":"error","msg":"Failed to send image_001.dcm via DCMTK: storescu status unclear: W: DcmItem: Dataset not in ascending tag order, at element (0008,0020)\nW: DcmItem: Dataset not in ascending tag order, at element (0008,0030)\nW: DcmItem: Dataset not in ascending tag order, at element (0008,1030)\nW: DcmItem: Dataset not in ascending tag order, at element (0008,0050)\nW: DcmItem: Dataset not in ascending tag order, at element (0008,0018)\nW: DcmItem: Dataset not in ascending tag order, at element (0008,0016)\n","time":"2025-09-19T10:03:08.615+10:00"}
+{"level":"fatal","msg":"Application error: failed to send any DICOM files via DCMTK","time":"2025-09-19T10:03:08.615+10:00"}
+{"level":"info","msg":"Sending study 1.2.840.10008.5.1.4.1.1.1758084608.4462841482011563283 using DCMTK storescu to PACS localhost:4243","time":"2025-09-19T10:03:36.948+10:00"}
+{"level":"info","msg":"Using system DCMTK installation","time":"2025-09-19T10:03:36.958+10:00"}
+{"level":"info","msg":"Found 3 DICOM files to send via DCMTK","time":"2025-09-19T10:03:36.958+10:00"}
+{"level":"info","msg":"Testing PACS connectivity with DCMTK echoscu...","time":"2025-09-19T10:03:36.958+10:00"}
+{"level":"info","msg":"✅ PACS connectivity confirmed with DCMTK echoscu","time":"2025-09-19T10:03:36.977+10:00"}
+{"level":"info","msg":"Sending file 1/3 via DCMTK storescu: image_001.dcm","time":"2025-09-19T10:03:36.977+10:00"}
+{"level":"error","msg":"Failed to send image_001.dcm via DCMTK: storescu status unclear: ","time":"2025-09-19T10:03:37.005+10:00"}
+{"level":"info","msg":"Sending file 2/3 via DCMTK storescu: image_001.dcm","time":"2025-09-19T10:03:37.005+10:00"}
+{"level":"error","msg":"Failed to send image_001.dcm via DCMTK: storescu status unclear: ","time":"2025-09-19T10:03:37.026+10:00"}
+{"level":"info","msg":"Sending file 3/3 via DCMTK storescu: image_001.dcm","time":"2025-09-19T10:03:37.026+10:00"}
+{"level":"error","msg":"Failed to send image_001.dcm via DCMTK: storescu status unclear: ","time":"2025-09-19T10:03:37.047+10:00"}
+{"level":"fatal","msg":"Application error: failed to send any DICOM files via DCMTK","time":"2025-09-19T10:03:37.047+10:00"}
+{"level":"info","msg":"Creating 1 study(ies) with 1 series each and 1 images per series","time":"2025-09-19T10:05:02.098+10:00"}
+{"level":"info","msg":"Modality: CT, Region: chest, Output: test-tag-order-fix","time":"2025-09-19T10:05:02.099+10:00"}
+{"level":"info","msg":"Writing study 1.2.840.10008.5.1.4.1.1.1758240302.4092383172851171649 to test-tag-order-fix/1.2.840.10008.5.1.4.1.1.1758240302.4092383172851171649","time":"2025-09-19T10:05:02.100+10:00"}
+{"level":"info","msg":"Study metadata: UID=1.2.840.10008.5.1.4.1.1.1758240302.4092383172851171649, Patient=TEST^PATIENT (TEST001), Description=Generated Study","time":"2025-09-19T10:05:02.100+10:00"}
+{"level":"info","msg":"Writing series 1.2.840.10008.5.1.4.1.1.1758240302.2161644389534109647 with 1 images","time":"2025-09-19T10:05:02.100+10:00"}
+{"level":"info","msg":"Creating Pixel Data element with 524288 bytes","time":"2025-09-19T10:05:02.100+10:00"}
+{"level":"info","msg":"✅ Pixel Data element created successfully","time":"2025-09-19T10:05:02.100+10:00"}
+{"level":"info","msg":"Writing DICOM file with 30 elements","time":"2025-09-19T10:05:02.100+10:00"}
+{"level":"info","msg":"Element 0: Tag=(0002,0000)","time":"2025-09-19T10:05:02.100+10:00"}
+{"level":"info","msg":"Element 1: Tag=(0002,0002)","time":"2025-09-19T10:05:02.100+10:00"}
+{"level":"info","msg":"Element 2: Tag=(0002,0003)","time":"2025-09-19T10:05:02.100+10:00"}
+{"level":"info","msg":"Element 3: Tag=(0002,0010)","time":"2025-09-19T10:05:02.100+10:00"}
+{"level":"info","msg":"Element 4: Tag=(0008,0020)","time":"2025-09-19T10:05:02.100+10:00"}
+{"level":"info","msg":"Element 5: Tag=(0008,0030)","time":"2025-09-19T10:05:02.100+10:00"}
+{"level":"info","msg":"Element 6: Tag=(0008,0050)","time":"2025-09-19T10:05:02.100+10:00"}
+{"level":"info","msg":"Element 7: Tag=(0008,0016)","time":"2025-09-19T10:05:02.100+10:00"}
+{"level":"info","msg":"Element 8: Tag=(0008,0018)","time":"2025-09-19T10:05:02.100+10:00"}
+{"level":"info","msg":"Element 9: Tag=(0008,1030)","time":"2025-09-19T10:05:02.100+10:00"}
+{"level":"info","msg":"Element 10: Tag=(0008,103e)","time":"2025-09-19T10:05:02.100+10:00"}
+{"level":"info","msg":"Element 11: Tag=(0008,0060)","time":"2025-09-19T10:05:02.100+10:00"}
+{"level":"info","msg":"Element 12: Tag=(0010,0010)","time":"2025-09-19T10:05:02.100+10:00"}
+{"level":"info","msg":"Element 13: Tag=(0010,0020)","time":"2025-09-19T10:05:02.100+10:00"}
+{"level":"info","msg":"Element 14: Tag=(0010,0030)","time":"2025-09-19T10:05:02.100+10:00"}
+{"level":"info","msg":"Element 15: Tag=(0010,0040)","time":"2025-09-19T10:05:02.100+10:00"}
+{"level":"info","msg":"Element 16: Tag=(0020,000d)","time":"2025-09-19T10:05:02.100+10:00"}
+{"level":"info","msg":"Element 17: Tag=(0020,000e)","time":"2025-09-19T10:05:02.100+10:00"}
+{"level":"info","msg":"Element 18: Tag=(0020,0011)","time":"2025-09-19T10:05:02.100+10:00"}
+{"level":"info","msg":"Element 19: Tag=(0020,0013)","time":"2025-09-19T10:05:02.100+10:00"}
+{"level":"info","msg":"Element 20: Tag=(0028,0002)","time":"2025-09-19T10:05:02.100+10:00"}
+{"level":"info","msg":"Element 21: Tag=(0028,0004)","time":"2025-09-19T10:05:02.100+10:00"}
+{"level":"info","msg":"Element 22: Tag=(0028,0006)","time":"2025-09-19T10:05:02.100+10:00"}
+{"level":"info","msg":"Element 23: Tag=(0028,0010)","time":"2025-09-19T10:05:02.100+10:00"}
+{"level":"info","msg":"Element 24: Tag=(0028,0011)","time":"2025-09-19T10:05:02.100+10:00"}
+{"level":"info","msg":"Element 25: Tag=(0028,0100)","time":"2025-09-19T10:05:02.100+10:00"}
+{"level":"info","msg":"Element 26: Tag=(0028,0101)","time":"2025-09-19T10:05:02.100+10:00"}
+{"level":"info","msg":"Element 27: Tag=(0028,0102)","time":"2025-09-19T10:05:02.100+10:00"}
+{"level":"info","msg":"Element 28: Tag=(0028,0103)","time":"2025-09-19T10:05:02.100+10:00"}
+{"level":"info","msg":"Element 29: Tag=(7fe0,0010)","time":"2025-09-19T10:05:02.100+10:00"}
+{"level":"error","msg":"DICOM write failed: ValueType does not match the specified type in the VR","time":"2025-09-19T10:05:02.100+10:00"}
+{"level":"fatal","msg":"Application error: failed to write study 1: failed to write series 1: failed to write image 1: failed to write DICOM file: ValueType does not match the specified type in the VR","time":"2025-09-19T10:05:02.100+10:00"}
+{"level":"info","msg":"Creating 1 study(ies) with 1 series each and 1 images per series","time":"2025-09-19T10:05:16.651+10:00"}
+{"level":"info","msg":"Modality: CT, Region: chest, Output: test-no-pixel-data","time":"2025-09-19T10:05:16.651+10:00"}
+{"level":"info","msg":"Writing study 1.2.840.10008.5.1.4.1.1.1758240316.3594424063495107953 to test-no-pixel-data/1.2.840.10008.5.1.4.1.1.1758240316.3594424063495107953","time":"2025-09-19T10:05:16.653+10:00"}
+{"level":"info","msg":"Study metadata: UID=1.2.840.10008.5.1.4.1.1.1758240316.3594424063495107953, Patient=TEST^PATIENT (TEST001), Description=Generated Study","time":"2025-09-19T10:05:16.653+10:00"}
+{"level":"info","msg":"Writing series 1.2.840.10008.5.1.4.1.1.1758240316.9105619988224876547 with 1 images","time":"2025-09-19T10:05:16.653+10:00"}
+{"level":"info","msg":"Writing DICOM file with 29 elements","time":"2025-09-19T10:05:16.653+10:00"}
+{"level":"info","msg":"Element 0: Tag=(0002,0000)","time":"2025-09-19T10:05:16.653+10:00"}
+{"level":"info","msg":"Element 1: Tag=(0002,0002)","time":"2025-09-19T10:05:16.653+10:00"}
+{"level":"info","msg":"Element 2: Tag=(0002,0003)","time":"2025-09-19T10:05:16.653+10:00"}
+{"level":"info","msg":"Element 3: Tag=(0002,0010)","time":"2025-09-19T10:05:16.653+10:00"}
+{"level":"info","msg":"Element 4: Tag=(0008,0020)","time":"2025-09-19T10:05:16.653+10:00"}
+{"level":"info","msg":"Element 5: Tag=(0008,0030)","time":"2025-09-19T10:05:16.653+10:00"}
+{"level":"info","msg":"Element 6: Tag=(0008,0050)","time":"2025-09-19T10:05:16.653+10:00"}
+{"level":"info","msg":"Element 7: Tag=(0008,0016)","time":"2025-09-19T10:05:16.653+10:00"}
+{"level":"info","msg":"Element 8: Tag=(0008,0018)","time":"2025-09-19T10:05:16.653+10:00"}
+{"level":"info","msg":"Element 9: Tag=(0008,1030)","time":"2025-09-19T10:05:16.653+10:00"}
+{"level":"info","msg":"Element 10: Tag=(0008,103e)","time":"2025-09-19T10:05:16.653+10:00"}
+{"level":"info","msg":"Element 11: Tag=(0008,0060)","time":"2025-09-19T10:05:16.653+10:00"}
+{"level":"info","msg":"Element 12: Tag=(0010,0010)","time":"2025-09-19T10:05:16.653+10:00"}
+{"level":"info","msg":"Element 13: Tag=(0010,0020)","time":"2025-09-19T10:05:16.653+10:00"}
+{"level":"info","msg":"Element 14: Tag=(0010,0030)","time":"2025-09-19T10:05:16.653+10:00"}
+{"level":"info","msg":"Element 15: Tag=(0010,0040)","time":"2025-09-19T10:05:16.653+10:00"}
+{"level":"info","msg":"Element 16: Tag=(0020,000d)","time":"2025-09-19T10:05:16.653+10:00"}
+{"level":"info","msg":"Element 17: Tag=(0020,000e)","time":"2025-09-19T10:05:16.653+10:00"}
+{"level":"info","msg":"Element 18: Tag=(0020,0011)","time":"2025-09-19T10:05:16.653+10:00"}
+{"level":"info","msg":"Element 19: Tag=(0020,0013)","time":"2025-09-19T10:05:16.653+10:00"}
+{"level":"info","msg":"Element 20: Tag=(0028,0002)","time":"2025-09-19T10:05:16.653+10:00"}
+{"level":"info","msg":"Element 21: Tag=(0028,0004)","time":"2025-09-19T10:05:16.653+10:00"}
+{"level":"info","msg":"Element 22: Tag=(0028,0006)","time":"2025-09-19T10:05:16.653+10:00"}
+{"level":"info","msg":"Element 23: Tag=(0028,0010)","time":"2025-09-19T10:05:16.653+10:00"}
+{"level":"info","msg":"Element 24: Tag=(0028,0011)","time":"2025-09-19T10:05:16.653+10:00"}
+{"level":"info","msg":"Element 25: Tag=(0028,0100)","time":"2025-09-19T10:05:16.653+10:00"}
+{"level":"info","msg":"Element 26: Tag=(0028,0101)","time":"2025-09-19T10:05:16.653+10:00"}
+{"level":"info","msg":"Element 27: Tag=(0028,0102)","time":"2025-09-19T10:05:16.653+10:00"}
+{"level":"info","msg":"Element 28: Tag=(0028,0103)","time":"2025-09-19T10:05:16.653+10:00"}
+{"level":"error","msg":"DICOM write failed: ValueType does not match the specified type in the VR","time":"2025-09-19T10:05:16.653+10:00"}
+{"level":"fatal","msg":"Application error: failed to write study 1: failed to write series 1: failed to write image 1: failed to write DICOM file: ValueType does not match the specified type in the VR","time":"2025-09-19T10:05:16.653+10:00"}
+{"level":"info","msg":"Creating 1 study(ies) with 1 series each and 1 images per series","time":"2025-09-19T10:18:09.868+10:00"}
+{"level":"info","msg":"Modality: CT, Region: chest, Output: test-no-pixel-rep","time":"2025-09-19T10:18:09.869+10:00"}
+{"level":"info","msg":"Writing study 1.2.840.10008.5.1.4.1.1.1758241089.459343294275357485 to test-no-pixel-rep/1.2.840.10008.5.1.4.1.1.1758241089.459343294275357485","time":"2025-09-19T10:18:09.870+10:00"}
+{"level":"info","msg":"Study metadata: UID=1.2.840.10008.5.1.4.1.1.1758241089.459343294275357485, Patient=TEST^PATIENT (TEST001), Description=Generated Study","time":"2025-09-19T10:18:09.870+10:00"}
+{"level":"info","msg":"Writing series 1.2.840.10008.5.1.4.1.1.1758241089.423558977552686580 with 1 images","time":"2025-09-19T10:18:09.870+10:00"}
+{"level":"info","msg":"Writing DICOM file with 28 elements","time":"2025-09-19T10:18:09.870+10:00"}
+{"level":"info","msg":"Element 0: Tag=(0002,0000)","time":"2025-09-19T10:18:09.870+10:00"}
+{"level":"info","msg":"Element 1: Tag=(0002,0002)","time":"2025-09-19T10:18:09.870+10:00"}
+{"level":"info","msg":"Element 2: Tag=(0002,0003)","time":"2025-09-19T10:18:09.870+10:00"}
+{"level":"info","msg":"Element 3: Tag=(0002,0010)","time":"2025-09-19T10:18:09.870+10:00"}
+{"level":"info","msg":"Element 4: Tag=(0008,0020)","time":"2025-09-19T10:18:09.870+10:00"}
+{"level":"info","msg":"Element 5: Tag=(0008,0030)","time":"2025-09-19T10:18:09.870+10:00"}
+{"level":"info","msg":"Element 6: Tag=(0008,0050)","time":"2025-09-19T10:18:09.870+10:00"}
+{"level":"info","msg":"Element 7: Tag=(0008,0016)","time":"2025-09-19T10:18:09.870+10:00"}
+{"level":"info","msg":"Element 8: Tag=(0008,0018)","time":"2025-09-19T10:18:09.870+10:00"}
+{"level":"info","msg":"Element 9: Tag=(0008,1030)","time":"2025-09-19T10:18:09.870+10:00"}
+{"level":"info","msg":"Element 10: Tag=(0008,103e)","time":"2025-09-19T10:18:09.870+10:00"}
+{"level":"info","msg":"Element 11: Tag=(0008,0060)","time":"2025-09-19T10:18:09.870+10:00"}
+{"level":"info","msg":"Element 12: Tag=(0010,0010)","time":"2025-09-19T10:18:09.870+10:00"}
+{"level":"info","msg":"Element 13: Tag=(0010,0020)","time":"2025-09-19T10:18:09.870+10:00"}
+{"level":"info","msg":"Element 14: Tag=(0010,0030)","time":"2025-09-19T10:18:09.870+10:00"}
+{"level":"info","msg":"Element 15: Tag=(0010,0040)","time":"2025-09-19T10:18:09.870+10:00"}
+{"level":"info","msg":"Element 16: Tag=(0020,000d)","time":"2025-09-19T10:18:09.870+10:00"}
+{"level":"info","msg":"Element 17: Tag=(0020,000e)","time":"2025-09-19T10:18:09.870+10:00"}
+{"level":"info","msg":"Element 18: Tag=(0020,0011)","time":"2025-09-19T10:18:09.870+10:00"}
+{"level":"info","msg":"Element 19: Tag=(0020,0013)","time":"2025-09-19T10:18:09.870+10:00"}
+{"level":"info","msg":"Element 20: Tag=(0028,0002)","time":"2025-09-19T10:18:09.870+10:00"}
+{"level":"info","msg":"Element 21: Tag=(0028,0004)","time":"2025-09-19T10:18:09.870+10:00"}
+{"level":"info","msg":"Element 22: Tag=(0028,0006)","time":"2025-09-19T10:18:09.870+10:00"}
+{"level":"info","msg":"Element 23: Tag=(0028,0010)","time":"2025-09-19T10:18:09.871+10:00"}
+{"level":"info","msg":"Element 24: Tag=(0028,0011)","time":"2025-09-19T10:18:09.871+10:00"}
+{"level":"info","msg":"Element 25: Tag=(0028,0100)","time":"2025-09-19T10:18:09.871+10:00"}
+{"level":"info","msg":"Element 26: Tag=(0028,0101)","time":"2025-09-19T10:18:09.871+10:00"}
+{"level":"info","msg":"Element 27: Tag=(0028,0102)","time":"2025-09-19T10:18:09.871+10:00"}
+{"level":"error","msg":"DICOM write failed: ValueType does not match the specified type in the VR","time":"2025-09-19T10:18:09.871+10:00"}
+{"level":"fatal","msg":"Application error: failed to write study 1: failed to write series 1: failed to write image 1: failed to write DICOM file: ValueType does not match the specified type in the VR","time":"2025-09-19T10:18:09.871+10:00"}
+{"level":"info","msg":"Creating 1 study(ies) with 1 series each and 1 images per series","time":"2025-09-19T10:18:33.875+10:00"}
+{"level":"info","msg":"Modality: CT, Region: chest, Output: test-no-bits-stored","time":"2025-09-19T10:18:33.875+10:00"}
+{"level":"info","msg":"Writing study 1.2.840.10008.5.1.4.1.1.1758241113.7442240800618845834 to test-no-bits-stored/1.2.840.10008.5.1.4.1.1.1758241113.7442240800618845834","time":"2025-09-19T10:18:33.876+10:00"}
+{"level":"info","msg":"Study metadata: UID=1.2.840.10008.5.1.4.1.1.1758241113.7442240800618845834, Patient=TEST^PATIENT (TEST001), Description=Generated Study","time":"2025-09-19T10:18:33.876+10:00"}
+{"level":"info","msg":"Writing series 1.2.840.10008.5.1.4.1.1.1758241113.5638725970849256160 with 1 images","time":"2025-09-19T10:18:33.876+10:00"}
+{"level":"info","msg":"Writing DICOM file with 26 elements","time":"2025-09-19T10:18:33.876+10:00"}
+{"level":"info","msg":"Element 0: Tag=(0002,0000)","time":"2025-09-19T10:18:33.876+10:00"}
+{"level":"info","msg":"Element 1: Tag=(0002,0002)","time":"2025-09-19T10:18:33.876+10:00"}
+{"level":"info","msg":"Element 2: Tag=(0002,0003)","time":"2025-09-19T10:18:33.876+10:00"}
+{"level":"info","msg":"Element 3: Tag=(0002,0010)","time":"2025-09-19T10:18:33.876+10:00"}
+{"level":"info","msg":"Element 4: Tag=(0008,0020)","time":"2025-09-19T10:18:33.876+10:00"}
+{"level":"info","msg":"Element 5: Tag=(0008,0030)","time":"2025-09-19T10:18:33.876+10:00"}
+{"level":"info","msg":"Element 6: Tag=(0008,0050)","time":"2025-09-19T10:18:33.876+10:00"}
+{"level":"info","msg":"Element 7: Tag=(0008,0016)","time":"2025-09-19T10:18:33.876+10:00"}
+{"level":"info","msg":"Element 8: Tag=(0008,0018)","time":"2025-09-19T10:18:33.876+10:00"}
+{"level":"info","msg":"Element 9: Tag=(0008,1030)","time":"2025-09-19T10:18:33.876+10:00"}
+{"level":"info","msg":"Element 10: Tag=(0008,103e)","time":"2025-09-19T10:18:33.876+10:00"}
+{"level":"info","msg":"Element 11: Tag=(0008,0060)","time":"2025-09-19T10:18:33.876+10:00"}
+{"level":"info","msg":"Element 12: Tag=(0010,0010)","time":"2025-09-19T10:18:33.876+10:00"}
+{"level":"info","msg":"Element 13: Tag=(0010,0020)","time":"2025-09-19T10:18:33.876+10:00"}
+{"level":"info","msg":"Element 14: Tag=(0010,0030)","time":"2025-09-19T10:18:33.876+10:00"}
+{"level":"info","msg":"Element 15: Tag=(0010,0040)","time":"2025-09-19T10:18:33.876+10:00"}
+{"level":"info","msg":"Element 16: Tag=(0020,000d)","time":"2025-09-19T10:18:33.876+10:00"}
+{"level":"info","msg":"Element 17: Tag=(0020,000e)","time":"2025-09-19T10:18:33.876+10:00"}
+{"level":"info","msg":"Element 18: Tag=(0020,0011)","time":"2025-09-19T10:18:33.876+10:00"}
+{"level":"info","msg":"Element 19: Tag=(0020,0013)","time":"2025-09-19T10:18:33.876+10:00"}
+{"level":"info","msg":"Element 20: Tag=(0028,0002)","time":"2025-09-19T10:18:33.876+10:00"}
+{"level":"info","msg":"Element 21: Tag=(0028,0004)","time":"2025-09-19T10:18:33.876+10:00"}
+{"level":"info","msg":"Element 22: Tag=(0028,0006)","time":"2025-09-19T10:18:33.876+10:00"}
+{"level":"info","msg":"Element 23: Tag=(0028,0010)","time":"2025-09-19T10:18:33.876+10:00"}
+{"level":"info","msg":"Element 24: Tag=(0028,0011)","time":"2025-09-19T10:18:33.876+10:00"}
+{"level":"info","msg":"Element 25: Tag=(0028,0100)","time":"2025-09-19T10:18:33.877+10:00"}
+{"level":"error","msg":"DICOM write failed: ValueType does not match the specified type in the VR","time":"2025-09-19T10:18:33.877+10:00"}
+{"level":"fatal","msg":"Application error: failed to write study 1: failed to write series 1: failed to write image 1: failed to write DICOM file: ValueType does not match the specified type in the VR","time":"2025-09-19T10:18:33.877+10:00"}
+{"level":"info","msg":"Creating 1 study(ies) with 1 series each and 1 images per series","time":"2025-09-19T10:18:52.052+10:00"}
+{"level":"info","msg":"Modality: CT, Region: chest, Output: test-no-bits-allocated","time":"2025-09-19T10:18:52.052+10:00"}
+{"level":"info","msg":"Writing study 1.2.840.10008.5.1.4.1.1.1758241132.1684896815083698286 to test-no-bits-allocated/1.2.840.10008.5.1.4.1.1.1758241132.1684896815083698286","time":"2025-09-19T10:18:52.053+10:00"}
+{"level":"info","msg":"Study metadata: UID=1.2.840.10008.5.1.4.1.1.1758241132.1684896815083698286, Patient=TEST^PATIENT (TEST001), Description=Generated Study","time":"2025-09-19T10:18:52.053+10:00"}
+{"level":"info","msg":"Writing series 1.2.840.10008.5.1.4.1.1.1758241132.7506353837623191020 with 1 images","time":"2025-09-19T10:18:52.054+10:00"}
+{"level":"info","msg":"Writing DICOM file with 25 elements","time":"2025-09-19T10:18:52.054+10:00"}
+{"level":"info","msg":"Element 0: Tag=(0002,0000)","time":"2025-09-19T10:18:52.054+10:00"}
+{"level":"info","msg":"Element 1: Tag=(0002,0002)","time":"2025-09-19T10:18:52.054+10:00"}
+{"level":"info","msg":"Element 2: Tag=(0002,0003)","time":"2025-09-19T10:18:52.054+10:00"}
+{"level":"info","msg":"Element 3: Tag=(0002,0010)","time":"2025-09-19T10:18:52.054+10:00"}
+{"level":"info","msg":"Element 4: Tag=(0008,0020)","time":"2025-09-19T10:18:52.054+10:00"}
+{"level":"info","msg":"Element 5: Tag=(0008,0030)","time":"2025-09-19T10:18:52.054+10:00"}
+{"level":"info","msg":"Element 6: Tag=(0008,0050)","time":"2025-09-19T10:18:52.054+10:00"}
+{"level":"info","msg":"Element 7: Tag=(0008,0016)","time":"2025-09-19T10:18:52.054+10:00"}
+{"level":"info","msg":"Element 8: Tag=(0008,0018)","time":"2025-09-19T10:18:52.054+10:00"}
+{"level":"info","msg":"Element 9: Tag=(0008,1030)","time":"2025-09-19T10:18:52.054+10:00"}
+{"level":"info","msg":"Element 10: Tag=(0008,103e)","time":"2025-09-19T10:18:52.054+10:00"}
+{"level":"info","msg":"Element 11: Tag=(0008,0060)","time":"2025-09-19T10:18:52.054+10:00"}
+{"level":"info","msg":"Element 12: Tag=(0010,0010)","time":"2025-09-19T10:18:52.054+10:00"}
+{"level":"info","msg":"Element 13: Tag=(0010,0020)","time":"2025-09-19T10:18:52.054+10:00"}
+{"level":"info","msg":"Element 14: Tag=(0010,0030)","time":"2025-09-19T10:18:52.054+10:00"}
+{"level":"info","msg":"Element 15: Tag=(0010,0040)","time":"2025-09-19T10:18:52.054+10:00"}
+{"level":"info","msg":"Element 16: Tag=(0020,000d)","time":"2025-09-19T10:18:52.054+10:00"}
+{"level":"info","msg":"Element 17: Tag=(0020,000e)","time":"2025-09-19T10:18:52.054+10:00"}
+{"level":"info","msg":"Element 18: Tag=(0020,0011)","time":"2025-09-19T10:18:52.054+10:00"}
+{"level":"info","msg":"Element 19: Tag=(0020,0013)","time":"2025-09-19T10:18:52.054+10:00"}
+{"level":"info","msg":"Element 20: Tag=(0028,0002)","time":"2025-09-19T10:18:52.054+10:00"}
+{"level":"info","msg":"Element 21: Tag=(0028,0004)","time":"2025-09-19T10:18:52.054+10:00"}
+{"level":"info","msg":"Element 22: Tag=(0028,0006)","time":"2025-09-19T10:18:52.054+10:00"}
+{"level":"info","msg":"Element 23: Tag=(0028,0010)","time":"2025-09-19T10:18:52.054+10:00"}
+{"level":"info","msg":"Element 24: Tag=(0028,0011)","time":"2025-09-19T10:18:52.054+10:00"}
+{"level":"error","msg":"DICOM write failed: ValueType does not match the specified type in the VR","time":"2025-09-19T10:18:52.054+10:00"}
+{"level":"fatal","msg":"Application error: failed to write study 1: failed to write series 1: failed to write image 1: failed to write DICOM file: ValueType does not match the specified type in the VR","time":"2025-09-19T10:18:52.054+10:00"}
+{"level":"info","msg":"Creating 1 study(ies) with 1 series each and 1 images per series","time":"2025-09-19T10:19:07.048+10:00"}
+{"level":"info","msg":"Modality: CT, Region: chest, Output: test-no-columns","time":"2025-09-19T10:19:07.048+10:00"}
+{"level":"info","msg":"Writing study 1.2.840.10008.5.1.4.1.1.1758241147.4303094874392229636 to test-no-columns/1.2.840.10008.5.1.4.1.1.1758241147.4303094874392229636","time":"2025-09-19T10:19:07.050+10:00"}
+{"level":"info","msg":"Study metadata: UID=1.2.840.10008.5.1.4.1.1.1758241147.4303094874392229636, Patient=TEST^PATIENT (TEST001), Description=Generated Study","time":"2025-09-19T10:19:07.050+10:00"}
+{"level":"info","msg":"Writing series 1.2.840.10008.5.1.4.1.1.1758241147.8052011296385377332 with 1 images","time":"2025-09-19T10:19:07.050+10:00"}
+{"level":"info","msg":"Writing DICOM file with 24 elements","time":"2025-09-19T10:19:07.050+10:00"}
+{"level":"info","msg":"Element 0: Tag=(0002,0000)","time":"2025-09-19T10:19:07.050+10:00"}
+{"level":"info","msg":"Element 1: Tag=(0002,0002)","time":"2025-09-19T10:19:07.050+10:00"}
+{"level":"info","msg":"Element 2: Tag=(0002,0003)","time":"2025-09-19T10:19:07.050+10:00"}
+{"level":"info","msg":"Element 3: Tag=(0002,0010)","time":"2025-09-19T10:19:07.050+10:00"}
+{"level":"info","msg":"Element 4: Tag=(0008,0020)","time":"2025-09-19T10:19:07.050+10:00"}
+{"level":"info","msg":"Element 5: Tag=(0008,0030)","time":"2025-09-19T10:19:07.050+10:00"}
+{"level":"info","msg":"Element 6: Tag=(0008,0050)","time":"2025-09-19T10:19:07.050+10:00"}
+{"level":"info","msg":"Element 7: Tag=(0008,0016)","time":"2025-09-19T10:19:07.050+10:00"}
+{"level":"info","msg":"Element 8: Tag=(0008,0018)","time":"2025-09-19T10:19:07.050+10:00"}
+{"level":"info","msg":"Element 9: Tag=(0008,1030)","time":"2025-09-19T10:19:07.050+10:00"}
+{"level":"info","msg":"Element 10: Tag=(0008,103e)","time":"2025-09-19T10:19:07.050+10:00"}
+{"level":"info","msg":"Element 11: Tag=(0008,0060)","time":"2025-09-19T10:19:07.050+10:00"}
+{"level":"info","msg":"Element 12: Tag=(0010,0010)","time":"2025-09-19T10:19:07.050+10:00"}
+{"level":"info","msg":"Element 13: Tag=(0010,0020)","time":"2025-09-19T10:19:07.050+10:00"}
+{"level":"info","msg":"Element 14: Tag=(0010,0030)","time":"2025-09-19T10:19:07.050+10:00"}
+{"level":"info","msg":"Element 15: Tag=(0010,0040)","time":"2025-09-19T10:19:07.050+10:00"}
+{"level":"info","msg":"Element 16: Tag=(0020,000d)","time":"2025-09-19T10:19:07.050+10:00"}
+{"level":"info","msg":"Element 17: Tag=(0020,000e)","time":"2025-09-19T10:19:07.050+10:00"}
+{"level":"info","msg":"Element 18: Tag=(0020,0011)","time":"2025-09-19T10:19:07.050+10:00"}
+{"level":"info","msg":"Element 19: Tag=(0020,0013)","time":"2025-09-19T10:19:07.050+10:00"}
+{"level":"info","msg":"Element 20: Tag=(0028,0002)","time":"2025-09-19T10:19:07.050+10:00"}
+{"level":"info","msg":"Element 21: Tag=(0028,0004)","time":"2025-09-19T10:19:07.050+10:00"}
+{"level":"info","msg":"Element 22: Tag=(0028,0006)","time":"2025-09-19T10:19:07.050+10:00"}
+{"level":"info","msg":"Element 23: Tag=(0028,0010)","time":"2025-09-19T10:19:07.050+10:00"}
+{"level":"error","msg":"DICOM write failed: ValueType does not match the specified type in the VR","time":"2025-09-19T10:19:07.050+10:00"}
+{"level":"fatal","msg":"Application error: failed to write study 1: failed to write series 1: failed to write image 1: failed to write DICOM file: ValueType does not match the specified type in the VR","time":"2025-09-19T10:19:07.050+10:00"}
+{"level":"info","msg":"Creating 1 study(ies) with 1 series each and 1 images per series","time":"2025-09-19T10:19:21.857+10:00"}
+{"level":"info","msg":"Modality: CT, Region: chest, Output: test-no-rows","time":"2025-09-19T10:19:21.858+10:00"}
+{"level":"info","msg":"Writing study 1.2.840.10008.5.1.4.1.1.1758241161.5168723437762716823 to test-no-rows/1.2.840.10008.5.1.4.1.1.1758241161.5168723437762716823","time":"2025-09-19T10:19:21.859+10:00"}
+{"level":"info","msg":"Study metadata: UID=1.2.840.10008.5.1.4.1.1.1758241161.5168723437762716823, Patient=TEST^PATIENT (TEST001), Description=Generated Study","time":"2025-09-19T10:19:21.859+10:00"}
+{"level":"info","msg":"Writing series 1.2.840.10008.5.1.4.1.1.1758241161.7605176258089591728 with 1 images","time":"2025-09-19T10:19:21.860+10:00"}
+{"level":"info","msg":"Writing DICOM file with 23 elements","time":"2025-09-19T10:19:21.860+10:00"}
+{"level":"info","msg":"Element 0: Tag=(0002,0000)","time":"2025-09-19T10:19:21.860+10:00"}
+{"level":"info","msg":"Element 1: Tag=(0002,0002)","time":"2025-09-19T10:19:21.860+10:00"}
+{"level":"info","msg":"Element 2: Tag=(0002,0003)","time":"2025-09-19T10:19:21.860+10:00"}
+{"level":"info","msg":"Element 3: Tag=(0002,0010)","time":"2025-09-19T10:19:21.860+10:00"}
+{"level":"info","msg":"Element 4: Tag=(0008,0020)","time":"2025-09-19T10:19:21.860+10:00"}
+{"level":"info","msg":"Element 5: Tag=(0008,0030)","time":"2025-09-19T10:19:21.860+10:00"}
+{"level":"info","msg":"Element 6: Tag=(0008,0050)","time":"2025-09-19T10:19:21.860+10:00"}
+{"level":"info","msg":"Element 7: Tag=(0008,0016)","time":"2025-09-19T10:19:21.860+10:00"}
+{"level":"info","msg":"Element 8: Tag=(0008,0018)","time":"2025-09-19T10:19:21.860+10:00"}
+{"level":"info","msg":"Element 9: Tag=(0008,1030)","time":"2025-09-19T10:19:21.860+10:00"}
+{"level":"info","msg":"Element 10: Tag=(0008,103e)","time":"2025-09-19T10:19:21.860+10:00"}
+{"level":"info","msg":"Element 11: Tag=(0008,0060)","time":"2025-09-19T10:19:21.860+10:00"}
+{"level":"info","msg":"Element 12: Tag=(0010,0010)","time":"2025-09-19T10:19:21.860+10:00"}
+{"level":"info","msg":"Element 13: Tag=(0010,0020)","time":"2025-09-19T10:19:21.860+10:00"}
+{"level":"info","msg":"Element 14: Tag=(0010,0030)","time":"2025-09-19T10:19:21.860+10:00"}
+{"level":"info","msg":"Element 15: Tag=(0010,0040)","time":"2025-09-19T10:19:21.860+10:00"}
+{"level":"info","msg":"Element 16: Tag=(0020,000d)","time":"2025-09-19T10:19:21.860+10:00"}
+{"level":"info","msg":"Element 17: Tag=(0020,000e)","time":"2025-09-19T10:19:21.860+10:00"}
+{"level":"info","msg":"Element 18: Tag=(0020,0011)","time":"2025-09-19T10:19:21.860+10:00"}
+{"level":"info","msg":"Element 19: Tag=(0020,0013)","time":"2025-09-19T10:19:21.860+10:00"}
+{"level":"info","msg":"Element 20: Tag=(0028,0002)","time":"2025-09-19T10:19:21.860+10:00"}
+{"level":"info","msg":"Element 21: Tag=(0028,0004)","time":"2025-09-19T10:19:21.860+10:00"}
+{"level":"info","msg":"Element 22: Tag=(0028,0006)","time":"2025-09-19T10:19:21.860+10:00"}
+{"level":"error","msg":"DICOM write failed: ValueType does not match the specified type in the VR","time":"2025-09-19T10:19:21.860+10:00"}
+{"level":"fatal","msg":"Application error: failed to write study 1: failed to write series 1: failed to write image 1: failed to write DICOM file: ValueType does not match the specified type in the VR","time":"2025-09-19T10:19:21.860+10:00"}
+{"level":"info","msg":"Creating 1 study(ies) with 1 series each and 1 images per series","time":"2025-09-19T10:19:39.854+10:00"}
+{"level":"info","msg":"Modality: CT, Region: chest, Output: test-no-planar-config","time":"2025-09-19T10:19:39.854+10:00"}
+{"level":"info","msg":"Writing study 1.2.840.10008.5.1.4.1.1.1758241179.7636297735120823993 to test-no-planar-config/1.2.840.10008.5.1.4.1.1.1758241179.7636297735120823993","time":"2025-09-19T10:19:39.855+10:00"}
+{"level":"info","msg":"Study metadata: UID=1.2.840.10008.5.1.4.1.1.1758241179.7636297735120823993, Patient=TEST^PATIENT (TEST001), Description=Generated Study","time":"2025-09-19T10:19:39.855+10:00"}
+{"level":"info","msg":"Writing series 1.2.840.10008.5.1.4.1.1.1758241179.6062103505292340491 with 1 images","time":"2025-09-19T10:19:39.855+10:00"}
+{"level":"info","msg":"Writing DICOM file with 22 elements","time":"2025-09-19T10:19:39.856+10:00"}
+{"level":"info","msg":"Element 0: Tag=(0002,0000)","time":"2025-09-19T10:19:39.856+10:00"}
+{"level":"info","msg":"Element 1: Tag=(0002,0002)","time":"2025-09-19T10:19:39.856+10:00"}
+{"level":"info","msg":"Element 2: Tag=(0002,0003)","time":"2025-09-19T10:19:39.856+10:00"}
+{"level":"info","msg":"Element 3: Tag=(0002,0010)","time":"2025-09-19T10:19:39.856+10:00"}
+{"level":"info","msg":"Element 4: Tag=(0008,0020)","time":"2025-09-19T10:19:39.856+10:00"}
+{"level":"info","msg":"Element 5: Tag=(0008,0030)","time":"2025-09-19T10:19:39.856+10:00"}
+{"level":"info","msg":"Element 6: Tag=(0008,0050)","time":"2025-09-19T10:19:39.856+10:00"}
+{"level":"info","msg":"Element 7: Tag=(0008,0016)","time":"2025-09-19T10:19:39.856+10:00"}
+{"level":"info","msg":"Element 8: Tag=(0008,0018)","time":"2025-09-19T10:19:39.856+10:00"}
+{"level":"info","msg":"Element 9: Tag=(0008,1030)","time":"2025-09-19T10:19:39.856+10:00"}
+{"level":"info","msg":"Element 10: Tag=(0008,103e)","time":"2025-09-19T10:19:39.856+10:00"}
+{"level":"info","msg":"Element 11: Tag=(0008,0060)","time":"2025-09-19T10:19:39.856+10:00"}
+{"level":"info","msg":"Element 12: Tag=(0010,0010)","time":"2025-09-19T10:19:39.856+10:00"}
+{"level":"info","msg":"Element 13: Tag=(0010,0020)","time":"2025-09-19T10:19:39.856+10:00"}
+{"level":"info","msg":"Element 14: Tag=(0010,0030)","time":"2025-09-19T10:19:39.856+10:00"}
+{"level":"info","msg":"Element 15: Tag=(0010,0040)","time":"2025-09-19T10:19:39.856+10:00"}
+{"level":"info","msg":"Element 16: Tag=(0020,000d)","time":"2025-09-19T10:19:39.856+10:00"}
+{"level":"info","msg":"Element 17: Tag=(0020,000e)","time":"2025-09-19T10:19:39.856+10:00"}
+{"level":"info","msg":"Element 18: Tag=(0020,0011)","time":"2025-09-19T10:19:39.856+10:00"}
+{"level":"info","msg":"Element 19: Tag=(0020,0013)","time":"2025-09-19T10:19:39.856+10:00"}
+{"level":"info","msg":"Element 20: Tag=(0028,0002)","time":"2025-09-19T10:19:39.856+10:00"}
+{"level":"info","msg":"Element 21: Tag=(0028,0004)","time":"2025-09-19T10:19:39.856+10:00"}
+{"level":"error","msg":"DICOM write failed: ValueType does not match the specified type in the VR","time":"2025-09-19T10:19:39.856+10:00"}
+{"level":"fatal","msg":"Application error: failed to write study 1: failed to write series 1: failed to write image 1: failed to write DICOM file: ValueType does not match the specified type in the VR","time":"2025-09-19T10:19:39.856+10:00"}
+{"level":"info","msg":"Creating 1 study(ies) with 1 series each and 1 images per series","time":"2025-09-19T10:19:57.115+10:00"}
+{"level":"info","msg":"Modality: CT, Region: chest, Output: test-no-photometric","time":"2025-09-19T10:19:57.115+10:00"}
+{"level":"info","msg":"Writing study 1.2.840.10008.5.1.4.1.1.1758241197.3670093192745079042 to test-no-photometric/1.2.840.10008.5.1.4.1.1.1758241197.3670093192745079042","time":"2025-09-19T10:19:57.116+10:00"}
+{"level":"info","msg":"Study metadata: UID=1.2.840.10008.5.1.4.1.1.1758241197.3670093192745079042, Patient=TEST^PATIENT (TEST001), Description=Generated Study","time":"2025-09-19T10:19:57.116+10:00"}
+{"level":"info","msg":"Writing series 1.2.840.10008.5.1.4.1.1.1758241197.724184045069132774 with 1 images","time":"2025-09-19T10:19:57.116+10:00"}
+{"level":"info","msg":"Writing DICOM file with 21 elements","time":"2025-09-19T10:19:57.116+10:00"}
+{"level":"info","msg":"Element 0: Tag=(0002,0000)","time":"2025-09-19T10:19:57.116+10:00"}
+{"level":"info","msg":"Element 1: Tag=(0002,0002)","time":"2025-09-19T10:19:57.116+10:00"}
+{"level":"info","msg":"Element 2: Tag=(0002,0003)","time":"2025-09-19T10:19:57.116+10:00"}
+{"level":"info","msg":"Element 3: Tag=(0002,0010)","time":"2025-09-19T10:19:57.116+10:00"}
+{"level":"info","msg":"Element 4: Tag=(0008,0020)","time":"2025-09-19T10:19:57.116+10:00"}
+{"level":"info","msg":"Element 5: Tag=(0008,0030)","time":"2025-09-19T10:19:57.116+10:00"}
+{"level":"info","msg":"Element 6: Tag=(0008,0050)","time":"2025-09-19T10:19:57.116+10:00"}
+{"level":"info","msg":"Element 7: Tag=(0008,0016)","time":"2025-09-19T10:19:57.116+10:00"}
+{"level":"info","msg":"Element 8: Tag=(0008,0018)","time":"2025-09-19T10:19:57.116+10:00"}
+{"level":"info","msg":"Element 9: Tag=(0008,1030)","time":"2025-09-19T10:19:57.116+10:00"}
+{"level":"info","msg":"Element 10: Tag=(0008,103e)","time":"2025-09-19T10:19:57.116+10:00"}
+{"level":"info","msg":"Element 11: Tag=(0008,0060)","time":"2025-09-19T10:19:57.116+10:00"}
+{"level":"info","msg":"Element 12: Tag=(0010,0010)","time":"2025-09-19T10:19:57.116+10:00"}
+{"level":"info","msg":"Element 13: Tag=(0010,0020)","time":"2025-09-19T10:19:57.116+10:00"}
+{"level":"info","msg":"Element 14: Tag=(0010,0030)","time":"2025-09-19T10:19:57.116+10:00"}
+{"level":"info","msg":"Element 15: Tag=(0010,0040)","time":"2025-09-19T10:19:57.116+10:00"}
+{"level":"info","msg":"Element 16: Tag=(0020,000d)","time":"2025-09-19T10:19:57.116+10:00"}
+{"level":"info","msg":"Element 17: Tag=(0020,000e)","time":"2025-09-19T10:19:57.116+10:00"}
+{"level":"info","msg":"Element 18: Tag=(0020,0011)","time":"2025-09-19T10:19:57.116+10:00"}
+{"level":"info","msg":"Element 19: Tag=(0020,0013)","time":"2025-09-19T10:19:57.116+10:00"}
+{"level":"info","msg":"Element 20: Tag=(0028,0002)","time":"2025-09-19T10:19:57.116+10:00"}
+{"level":"error","msg":"DICOM write failed: ValueType does not match the specified type in the VR","time":"2025-09-19T10:19:57.117+10:00"}
+{"level":"fatal","msg":"Application error: failed to write study 1: failed to write series 1: failed to write image 1: failed to write DICOM file: ValueType does not match the specified type in the VR","time":"2025-09-19T10:19:57.117+10:00"}
+{"level":"info","msg":"Creating 1 study(ies) with 1 series each and 1 images per series","time":"2025-09-19T10:20:11.682+10:00"}
+{"level":"info","msg":"Modality: CT, Region: chest, Output: test-no-samples-per-pixel","time":"2025-09-19T10:20:11.682+10:00"}
+{"level":"info","msg":"Writing study 1.2.840.10008.5.1.4.1.1.1758241211.1387972273359632307 to test-no-samples-per-pixel/1.2.840.10008.5.1.4.1.1.1758241211.1387972273359632307","time":"2025-09-19T10:20:11.684+10:00"}
+{"level":"info","msg":"Study metadata: UID=1.2.840.10008.5.1.4.1.1.1758241211.1387972273359632307, Patient=TEST^PATIENT (TEST001), Description=Generated Study","time":"2025-09-19T10:20:11.684+10:00"}
+{"level":"info","msg":"Writing series 1.2.840.10008.5.1.4.1.1.1758241211.143715988904831308 with 1 images","time":"2025-09-19T10:20:11.684+10:00"}
+{"level":"info","msg":"Writing DICOM file with 20 elements","time":"2025-09-19T10:20:11.684+10:00"}
+{"level":"info","msg":"Element 0: Tag=(0002,0000)","time":"2025-09-19T10:20:11.684+10:00"}
+{"level":"info","msg":"Element 1: Tag=(0002,0002)","time":"2025-09-19T10:20:11.684+10:00"}
+{"level":"info","msg":"Element 2: Tag=(0002,0003)","time":"2025-09-19T10:20:11.684+10:00"}
+{"level":"info","msg":"Element 3: Tag=(0002,0010)","time":"2025-09-19T10:20:11.684+10:00"}
+{"level":"info","msg":"Element 4: Tag=(0008,0020)","time":"2025-09-19T10:20:11.684+10:00"}
+{"level":"info","msg":"Element 5: Tag=(0008,0030)","time":"2025-09-19T10:20:11.684+10:00"}
+{"level":"info","msg":"Element 6: Tag=(0008,0050)","time":"2025-09-19T10:20:11.684+10:00"}
+{"level":"info","msg":"Element 7: Tag=(0008,0016)","time":"2025-09-19T10:20:11.684+10:00"}
+{"level":"info","msg":"Element 8: Tag=(0008,0018)","time":"2025-09-19T10:20:11.684+10:00"}
+{"level":"info","msg":"Element 9: Tag=(0008,1030)","time":"2025-09-19T10:20:11.684+10:00"}
+{"level":"info","msg":"Element 10: Tag=(0008,103e)","time":"2025-09-19T10:20:11.684+10:00"}
+{"level":"info","msg":"Element 11: Tag=(0008,0060)","time":"2025-09-19T10:20:11.684+10:00"}
+{"level":"info","msg":"Element 12: Tag=(0010,0010)","time":"2025-09-19T10:20:11.684+10:00"}
+{"level":"info","msg":"Element 13: Tag=(0010,0020)","time":"2025-09-19T10:20:11.684+10:00"}
+{"level":"info","msg":"Element 14: Tag=(0010,0030)","time":"2025-09-19T10:20:11.684+10:00"}
+{"level":"info","msg":"Element 15: Tag=(0010,0040)","time":"2025-09-19T10:20:11.684+10:00"}
+{"level":"info","msg":"Element 16: Tag=(0020,000d)","time":"2025-09-19T10:20:11.684+10:00"}
+{"level":"info","msg":"Element 17: Tag=(0020,000e)","time":"2025-09-19T10:20:11.684+10:00"}
+{"level":"info","msg":"Element 18: Tag=(0020,0011)","time":"2025-09-19T10:20:11.684+10:00"}
+{"level":"info","msg":"Element 19: Tag=(0020,0013)","time":"2025-09-19T10:20:11.684+10:00"}
+{"level":"error","msg":"DICOM write failed: ValueType does not match the specified type in the VR","time":"2025-09-19T10:20:11.685+10:00"}
+{"level":"fatal","msg":"Application error: failed to write study 1: failed to write series 1: failed to write image 1: failed to write DICOM file: ValueType does not match the specified type in the VR","time":"2025-09-19T10:20:11.685+10:00"}
+{"level":"info","msg":"Creating 1 study(ies) with 1 series each and 1 images per series","time":"2025-09-19T10:20:25.451+10:00"}
+{"level":"info","msg":"Modality: CT, Region: chest, Output: test-no-instance-number","time":"2025-09-19T10:20:25.451+10:00"}
+{"level":"info","msg":"Writing study 1.2.840.10008.5.1.4.1.1.1758241225.7508195660325357682 to test-no-instance-number/1.2.840.10008.5.1.4.1.1.1758241225.7508195660325357682","time":"2025-09-19T10:20:25.452+10:00"}
+{"level":"info","msg":"Study metadata: UID=1.2.840.10008.5.1.4.1.1.1758241225.7508195660325357682, Patient=TEST^PATIENT (TEST001), Description=Generated Study","time":"2025-09-19T10:20:25.453+10:00"}
+{"level":"info","msg":"Writing series 1.2.840.10008.5.1.4.1.1.1758241225.7185683173711660361 with 1 images","time":"2025-09-19T10:20:25.453+10:00"}
+{"level":"info","msg":"Writing DICOM file with 19 elements","time":"2025-09-19T10:20:25.453+10:00"}
+{"level":"info","msg":"Element 0: Tag=(0002,0000)","time":"2025-09-19T10:20:25.453+10:00"}
+{"level":"info","msg":"Element 1: Tag=(0002,0002)","time":"2025-09-19T10:20:25.453+10:00"}
+{"level":"info","msg":"Element 2: Tag=(0002,0003)","time":"2025-09-19T10:20:25.453+10:00"}
+{"level":"info","msg":"Element 3: Tag=(0002,0010)","time":"2025-09-19T10:20:25.453+10:00"}
+{"level":"info","msg":"Element 4: Tag=(0008,0020)","time":"2025-09-19T10:20:25.453+10:00"}
+{"level":"info","msg":"Element 5: Tag=(0008,0030)","time":"2025-09-19T10:20:25.453+10:00"}
+{"level":"info","msg":"Element 6: Tag=(0008,0050)","time":"2025-09-19T10:20:25.453+10:00"}
+{"level":"info","msg":"Element 7: Tag=(0008,0016)","time":"2025-09-19T10:20:25.453+10:00"}
+{"level":"info","msg":"Element 8: Tag=(0008,0018)","time":"2025-09-19T10:20:25.453+10:00"}
+{"level":"info","msg":"Element 9: Tag=(0008,1030)","time":"2025-09-19T10:20:25.453+10:00"}
+{"level":"info","msg":"Element 10: Tag=(0008,103e)","time":"2025-09-19T10:20:25.453+10:00"}
+{"level":"info","msg":"Element 11: Tag=(0008,0060)","time":"2025-09-19T10:20:25.453+10:00"}
+{"level":"info","msg":"Element 12: Tag=(0010,0010)","time":"2025-09-19T10:20:25.453+10:00"}
+{"level":"info","msg":"Element 13: Tag=(0010,0020)","time":"2025-09-19T10:20:25.453+10:00"}
+{"level":"info","msg":"Element 14: Tag=(0010,0030)","time":"2025-09-19T10:20:25.453+10:00"}
+{"level":"info","msg":"Element 15: Tag=(0010,0040)","time":"2025-09-19T10:20:25.453+10:00"}
+{"level":"info","msg":"Element 16: Tag=(0020,000d)","time":"2025-09-19T10:20:25.453+10:00"}
+{"level":"info","msg":"Element 17: Tag=(0020,000e)","time":"2025-09-19T10:20:25.453+10:00"}
+{"level":"info","msg":"Element 18: Tag=(0020,0011)","time":"2025-09-19T10:20:25.453+10:00"}
+{"level":"error","msg":"DICOM write failed: ValueType does not match the specified type in the VR","time":"2025-09-19T10:20:25.453+10:00"}
+{"level":"fatal","msg":"Application error: failed to write study 1: failed to write series 1: failed to write image 1: failed to write DICOM file: ValueType does not match the specified type in the VR","time":"2025-09-19T10:20:25.453+10:00"}
+{"level":"info","msg":"Creating 1 study(ies) with 1 series each and 1 images per series","time":"2025-09-19T10:20:40.783+10:00"}
+{"level":"info","msg":"Modality: CT, Region: chest, Output: test-no-series-number","time":"2025-09-19T10:20:40.783+10:00"}
+{"level":"info","msg":"Writing study 1.2.840.10008.5.1.4.1.1.1758241240.4458990105497089631 to test-no-series-number/1.2.840.10008.5.1.4.1.1.1758241240.4458990105497089631","time":"2025-09-19T10:20:40.785+10:00"}
+{"level":"info","msg":"Study metadata: UID=1.2.840.10008.5.1.4.1.1.1758241240.4458990105497089631, Patient=TEST^PATIENT (TEST001), Description=Generated Study","time":"2025-09-19T10:20:40.785+10:00"}
+{"level":"info","msg":"Writing series 1.2.840.10008.5.1.4.1.1.1758241240.4483538219842575131 with 1 images","time":"2025-09-19T10:20:40.785+10:00"}
+{"level":"info","msg":"Writing DICOM file with 18 elements","time":"2025-09-19T10:20:40.785+10:00"}
+{"level":"info","msg":"Element 0: Tag=(0002,0000)","time":"2025-09-19T10:20:40.786+10:00"}
+{"level":"info","msg":"Element 1: Tag=(0002,0002)","time":"2025-09-19T10:20:40.786+10:00"}
+{"level":"info","msg":"Element 2: Tag=(0002,0003)","time":"2025-09-19T10:20:40.786+10:00"}
+{"level":"info","msg":"Element 3: Tag=(0002,0010)","time":"2025-09-19T10:20:40.786+10:00"}
+{"level":"info","msg":"Element 4: Tag=(0008,0020)","time":"2025-09-19T10:20:40.786+10:00"}
+{"level":"info","msg":"Element 5: Tag=(0008,0030)","time":"2025-09-19T10:20:40.786+10:00"}
+{"level":"info","msg":"Element 6: Tag=(0008,0050)","time":"2025-09-19T10:20:40.786+10:00"}
+{"level":"info","msg":"Element 7: Tag=(0008,0016)","time":"2025-09-19T10:20:40.786+10:00"}
+{"level":"info","msg":"Element 8: Tag=(0008,0018)","time":"2025-09-19T10:20:40.786+10:00"}
+{"level":"info","msg":"Element 9: Tag=(0008,1030)","time":"2025-09-19T10:20:40.786+10:00"}
+{"level":"info","msg":"Element 10: Tag=(0008,103e)","time":"2025-09-19T10:20:40.786+10:00"}
+{"level":"info","msg":"Element 11: Tag=(0008,0060)","time":"2025-09-19T10:20:40.786+10:00"}
+{"level":"info","msg":"Element 12: Tag=(0010,0010)","time":"2025-09-19T10:20:40.786+10:00"}
+{"level":"info","msg":"Element 13: Tag=(0010,0020)","time":"2025-09-19T10:20:40.786+10:00"}
+{"level":"info","msg":"Element 14: Tag=(0010,0030)","time":"2025-09-19T10:20:40.786+10:00"}
+{"level":"info","msg":"Element 15: Tag=(0010,0040)","time":"2025-09-19T10:20:40.786+10:00"}
+{"level":"info","msg":"Element 16: Tag=(0020,000d)","time":"2025-09-19T10:20:40.786+10:00"}
+{"level":"info","msg":"Element 17: Tag=(0020,000e)","time":"2025-09-19T10:20:40.786+10:00"}
+{"level":"info","msg":"Successfully wrote study with 1 series","time":"2025-09-19T10:20:40.786+10:00"}
+{"level":"info","msg":"Successfully created study 1: 1.2.840.10008.5.1.4.1.1.1758241240.4458990105497089631","time":"2025-09-19T10:20:40.786+10:00"}
+{"level":"info","msg":"Sending study 1.2.840.10008.5.1.4.1.1.1758241240.4458990105497089631 using DCMTK storescu to PACS localhost:4242","time":"2025-09-19T10:20:49.942+10:00"}
+{"level":"info","msg":"Using system DCMTK installation","time":"2025-09-19T10:20:49.975+10:00"}
+{"level":"info","msg":"Found 1 DICOM files to send via DCMTK","time":"2025-09-19T10:20:49.975+10:00"}
+{"level":"info","msg":"Testing PACS connectivity with DCMTK echoscu...","time":"2025-09-19T10:20:49.975+10:00"}
+{"level":"info","msg":"✅ PACS connectivity confirmed with DCMTK echoscu","time":"2025-09-19T10:20:49.995+10:00"}
+{"level":"info","msg":"Sending file 1/1 via DCMTK storescu: image_001.dcm","time":"2025-09-19T10:20:49.995+10:00"}
+{"level":"error","msg":"Failed to send image_001.dcm via DCMTK: storescu status unclear: W: DcmItem: Dataset not in ascending tag order, at element (0008,0016)\nW: DcmItem: Dataset not in ascending tag order, at element (0008,0018)\nW: DcmItem: Dataset not in ascending tag order, at element (0008,0060)\n","time":"2025-09-19T10:20:50.017+10:00"}
+{"level":"fatal","msg":"Application error: failed to send any DICOM files via DCMTK","time":"2025-09-19T10:20:50.017+10:00"}
+{"level":"info","msg":"Creating 1 study(ies) with 1 series each and 1 images per series","time":"2025-09-19T10:21:16.070+10:00"}
+{"level":"info","msg":"Modality: CT, Region: chest, Output: test-corrected-tag-order","time":"2025-09-19T10:21:16.070+10:00"}
+{"level":"info","msg":"Writing study 1.2.840.10008.5.1.4.1.1.1758241276.7355124592868816760 to test-corrected-tag-order/1.2.840.10008.5.1.4.1.1.1758241276.7355124592868816760","time":"2025-09-19T10:21:16.072+10:00"}
+{"level":"info","msg":"Study metadata: UID=1.2.840.10008.5.1.4.1.1.1758241276.7355124592868816760, Patient=TEST^PATIENT (TEST001), Description=Generated Study","time":"2025-09-19T10:21:16.072+10:00"}
+{"level":"info","msg":"Writing series 1.2.840.10008.5.1.4.1.1.1758241276.1172941436467415686 with 1 images","time":"2025-09-19T10:21:16.072+10:00"}
+{"level":"info","msg":"Writing DICOM file with 18 elements","time":"2025-09-19T10:21:16.072+10:00"}
+{"level":"info","msg":"Element 0: Tag=(0002,0000)","time":"2025-09-19T10:21:16.072+10:00"}
+{"level":"info","msg":"Element 1: Tag=(0002,0002)","time":"2025-09-19T10:21:16.072+10:00"}
+{"level":"info","msg":"Element 2: Tag=(0002,0003)","time":"2025-09-19T10:21:16.072+10:00"}
+{"level":"info","msg":"Element 3: Tag=(0002,0010)","time":"2025-09-19T10:21:16.072+10:00"}
+{"level":"info","msg":"Element 4: Tag=(0008,0016)","time":"2025-09-19T10:21:16.072+10:00"}
+{"level":"info","msg":"Element 5: Tag=(0008,0018)","time":"2025-09-19T10:21:16.072+10:00"}
+{"level":"info","msg":"Element 6: Tag=(0008,0020)","time":"2025-09-19T10:21:16.072+10:00"}
+{"level":"info","msg":"Element 7: Tag=(0008,0030)","time":"2025-09-19T10:21:16.072+10:00"}
+{"level":"info","msg":"Element 8: Tag=(0008,0050)","time":"2025-09-19T10:21:16.072+10:00"}
+{"level":"info","msg":"Element 9: Tag=(0008,0060)","time":"2025-09-19T10:21:16.072+10:00"}
+{"level":"info","msg":"Element 10: Tag=(0008,1030)","time":"2025-09-19T10:21:16.072+10:00"}
+{"level":"info","msg":"Element 11: Tag=(0008,103e)","time":"2025-09-19T10:21:16.072+10:00"}
+{"level":"info","msg":"Element 12: Tag=(0010,0010)","time":"2025-09-19T10:21:16.072+10:00"}
+{"level":"info","msg":"Element 13: Tag=(0010,0020)","time":"2025-09-19T10:21:16.072+10:00"}
+{"level":"info","msg":"Element 14: Tag=(0010,0030)","time":"2025-09-19T10:21:16.072+10:00"}
+{"level":"info","msg":"Element 15: Tag=(0010,0040)","time":"2025-09-19T10:21:16.072+10:00"}
+{"level":"info","msg":"Element 16: Tag=(0020,000d)","time":"2025-09-19T10:21:16.072+10:00"}
+{"level":"info","msg":"Element 17: Tag=(0020,000e)","time":"2025-09-19T10:21:16.072+10:00"}
+{"level":"info","msg":"Successfully wrote study with 1 series","time":"2025-09-19T10:21:16.073+10:00"}
+{"level":"info","msg":"Successfully created study 1: 1.2.840.10008.5.1.4.1.1.1758241276.7355124592868816760","time":"2025-09-19T10:21:16.073+10:00"}
+{"level":"info","msg":"Sending study 1.2.840.10008.5.1.4.1.1.1758241276.7355124592868816760 using DCMTK storescu to PACS localhost:4242","time":"2025-09-19T10:21:22.552+10:00"}
+{"level":"info","msg":"Using system DCMTK installation","time":"2025-09-19T10:21:22.560+10:00"}
+{"level":"info","msg":"Found 1 DICOM files to send via DCMTK","time":"2025-09-19T10:21:22.561+10:00"}
+{"level":"info","msg":"Testing PACS connectivity with DCMTK echoscu...","time":"2025-09-19T10:21:22.561+10:00"}
+{"level":"info","msg":"✅ PACS connectivity confirmed with DCMTK echoscu","time":"2025-09-19T10:21:22.581+10:00"}
+{"level":"info","msg":"Sending file 1/1 via DCMTK storescu: image_001.dcm","time":"2025-09-19T10:21:22.581+10:00"}
+{"level":"error","msg":"Failed to send image_001.dcm via DCMTK: storescu status unclear: ","time":"2025-09-19T10:21:22.607+10:00"}
+{"level":"fatal","msg":"Application error: failed to send any DICOM files via DCMTK","time":"2025-09-19T10:21:22.607+10:00"}
