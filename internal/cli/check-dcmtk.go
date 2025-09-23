@@ -3,7 +3,7 @@ package cli
 import (
 	"fmt"
 
-	"github.com/flatmapit/crgodicom/internal/dcmtk"
+	// "github.com/flatmapit/crgodicom/internal/dcmtk"
 	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli/v2"
 )

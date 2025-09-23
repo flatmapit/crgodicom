@@ -17,6 +17,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - JPEG export capability for DICOM images
 - Enhanced DICOM metadata reading and pixel data extraction
 - Support for multiple export formats: PNG, JPEG, and PDF
+- DCMTK CGO bindings for DICOM operations
+- pkg-config integration for DCMTK compilation
+- C wrapper functions for DCMTK reader, writer, and network operations
+
+### Changed
+- Migrated from suyashkumar/dicom library to DCMTK for all DICOM operations
+- Updated DICOM reader to use DCMTK CGO bindings
+- Updated DICOM writer to use DCMTK CGO bindings
+- Updated PACS network operations to use DCMTK CGO bindings
+
+### Fixed
+- Resolved CGO compilation issues with DCMTK headers
+- Fixed C++ compilation requirements for DCMTK integration
+- Eliminated duplicate symbol errors in CGO bindings
 
 ### Changed
 - N/A

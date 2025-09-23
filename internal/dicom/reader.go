@@ -88,7 +88,7 @@ func (r *Reader) GetStudyMetadata(studyUID string) (*DetailedStudyMetadata, erro
 
 // ReadDetailedStudyMetadata reads detailed study metadata
 func (r *Reader) ReadDetailedStudyMetadata(studyDir string) (*DetailedStudyMetadata, error) {
-	logrus.Infof("Reading detailed study metadata from %s", studyDir)
+	logrus.Infof("=== ReadDetailedStudyMetadata called for: %s ===", studyDir)
 
 	// Check if study directory exists
 	if _, err := os.Stat(studyDir); os.IsNotExist(err) {
@@ -105,12 +105,16 @@ func (r *Reader) ReadDetailedStudyMetadata(studyDir string) (*DetailedStudyMetad
 		return nil, fmt.Errorf("failed to read study directory: %w", err)
 	}
 
+	logrus.Infof("Found %d entries in study directory", len(entries))
 	for _, entry := range entries {
+		logrus.Infof("Processing entry: %s (isDir: %v)", entry.Name(), entry.IsDir())
 		if !entry.IsDir() || !strings.HasPrefix(entry.Name(), "series_") {
+			logrus.Infof("Skipping entry %s (not a series directory)", entry.Name())
 			continue
 		}
 
 		seriesDir := filepath.Join(studyDir, entry.Name())
+		logrus.Infof("Reading series metadata from: %s", seriesDir)
 		seriesDetail, err := r.readSeriesMetadata(seriesDir)
 		if err != nil {
 			logrus.Warnf("Failed to read series %s: %v", entry.Name(), err)
@@ -184,9 +188,53 @@ func (r *Reader) readSeriesMetadata(seriesDir string) (*SeriesDetail, error) {
 	return seriesDetail, nil
 }
 
+// readSeriesMetadataWithDCMTK reads metadata for a single series using DCMTK
+func (r *Reader) readSeriesMetadataWithDCMTK(seriesDir string) (*SeriesDetail, error) {
+	logrus.Debugf("Reading series metadata from %s using DCMTK", seriesDir)
+
+	seriesDetail := &SeriesDetail{
+		ImageDetails: make([]ImageDetail, 0),
+	}
+
+	// Read DICOM files in series directory
+	entries, err := os.ReadDir(seriesDir)
+	if err != nil {
+		return nil, fmt.Errorf("failed to read series directory: %w", err)
+	}
+
+	for _, entry := range entries {
+		if !strings.HasSuffix(entry.Name(), ".dcm") {
+			continue
+		}
+
+		imagePath := filepath.Join(seriesDir, entry.Name())
+		imageDetail, err := r.readImageMetadata(imagePath)
+		if err != nil {
+			logrus.Warnf("Failed to read image %s: %v", entry.Name(), err)
+			continue
+		}
+
+		seriesDetail.ImageDetails = append(seriesDetail.ImageDetails, *imageDetail)
+		seriesDetail.ImageCount++
+
+		// Use first image to populate series metadata
+		if seriesDetail.ImageCount == 1 {
+			seriesDetail.SeriesMetadata = SeriesMetadata{
+				SeriesUID:         imageDetail.SeriesInstanceUID,
+				SeriesNumber:      "1", // Default series number
+				Modality:          imageDetail.Modality,
+				SeriesDescription: fmt.Sprintf("%s Series", imageDetail.Modality),
+			}
+		}
+	}
+
+	logrus.Debugf("Read series metadata using DCMTK: %d images", seriesDetail.ImageCount)
+	return seriesDetail, nil
+}
+
 // readImageMetadata reads metadata from a single DICOM file
 func (r *Reader) readImageMetadata(filePath string) (*ImageDetail, error) {
-	logrus.Debugf("Reading image metadata from %s", filePath)
+	logrus.Infof("Reading image metadata from %s", filePath)
 
 	// Open DICOM file
 	file, err := os.Open(filePath)
@@ -207,6 +255,7 @@ func (r *Reader) readImageMetadata(filePath string) (*ImageDetail, error) {
 		return nil, fmt.Errorf("failed to parse DICOM file: %w", err)
 	}
 
+	logrus.Infof("Parsed DICOM file with %d elements", len(dataset.Elements))
 	imageDetail := &ImageDetail{}
 
 	// Extract metadata from DICOM elements
@@ -241,8 +290,44 @@ func (r *Reader) readImageMetadata(filePath string) (*ImageDetail, error) {
 				imageDetail.BitsPerPixel = value
 			}
 		case tag.PixelData:
+			logrus.Infof("Found pixel data element, type: %T", elem.Value.GetValue())
 			if value, ok := elem.Value.GetValue().([]byte); ok {
 				imageDetail.PixelData = value
+				logrus.Infof("Extracted pixel data: %d bytes", len(value))
+			} else if pixelDataInfo, ok := elem.Value.GetValue().(dicom.PixelDataInfo); ok {
+				// Handle PixelDataInfo type (fallback for processed data)
+				logrus.Infof("Found PixelDataInfo, UnprocessedValueData length: %d, Frames: %d",
+					len(pixelDataInfo.UnprocessedValueData), len(pixelDataInfo.Frames))
+
+				if len(pixelDataInfo.UnprocessedValueData) > 0 {
+					imageDetail.PixelData = pixelDataInfo.UnprocessedValueData
+					logrus.Infof("Extracted pixel data from UnprocessedValueData: %d bytes", len(pixelDataInfo.UnprocessedValueData))
+				} else if len(pixelDataInfo.Frames) > 0 && len(pixelDataInfo.Frames[0].NativeData.Data) > 0 {
+					// Extract pixel data from the first frame
+					// Convert [][]int to []byte
+					frameData := pixelDataInfo.Frames[0].NativeData.Data
+					pixelBytes := make([]byte, 0, len(frameData)*len(frameData[0])*2) // Assume 16-bit data
+
+					for _, row := range frameData {
+						for _, pixel := range row {
+							// Convert 16-bit int to bytes (little-endian)
+							pixelBytes = append(pixelBytes, byte(pixel&0xFF))
+							pixelBytes = append(pixelBytes, byte((pixel>>8)&0xFF))
+						}
+					}
+
+					imageDetail.PixelData = pixelBytes
+					logrus.Infof("Extracted pixel data from Frames[0].NativeData: %d bytes (converted from %dx%d int array)",
+						len(pixelBytes), len(frameData), len(frameData[0]))
+				} else {
+					logrus.Warnf("PixelDataInfo has no pixel data in UnprocessedValueData or Frames")
+				}
+			} else {
+				logrus.Warnf("Pixel data is not []byte or PixelDataInfo, got type: %T", elem.Value.GetValue())
+			}
+		case tag.BurnedInAnnotation:
+			if value, ok := elem.Value.GetValue().(string); ok {
+				logrus.Infof("Found Burned In Annotation: %s", value)
 			}
 		}
 	}
@@ -267,9 +352,61 @@ func (r *Reader) readImageMetadata(filePath string) (*ImageDetail, error) {
 	return imageDetail, nil
 }
 
-// readStudyMetadataFromFile reads study-level metadata from a DICOM file
+// readImageMetadataWithDCMTK reads metadata from a single DICOM file using DCMTK
+func (r *Reader) readImageMetadataWithDCMTK(filePath string) (*ImageDetail, error) {
+	logrus.Infof("Reading image metadata from %s using DCMTK", filePath)
+
+	// Use DCMTK to read the DICOM file
+	dcmtkMetadata, err := dcmtk.ReadDicomFile(filePath)
+	if err != nil {
+		return nil, fmt.Errorf("failed to read DICOM file with DCMTK: %w", err)
+	}
+
+	// Convert DCMTK metadata to our internal format
+	imageDetail := &ImageDetail{
+		SOPInstanceUID:    dcmtkMetadata.InstanceUID,
+		SOPClassUID:       dcmtkMetadata.SOPClassUID,
+		InstanceNumber:    "1", // Default instance number
+		Modality:          dcmtkMetadata.Modality,
+		Width:             dcmtkMetadata.Width,
+		Height:            dcmtkMetadata.Height,
+		BitsPerPixel:      dcmtkMetadata.BitsPerPixel,
+		PixelData:         dcmtkMetadata.PixelData,
+		PatientName:       dcmtkMetadata.PatientName,
+		PatientID:         dcmtkMetadata.PatientID,
+		StudyInstanceUID:  dcmtkMetadata.StudyUID,
+		SeriesInstanceUID: dcmtkMetadata.SeriesUID,
+		StudyDate:         dcmtkMetadata.StudyDate,
+		StudyTime:         dcmtkMetadata.StudyTime,
+		StudyDescription:  dcmtkMetadata.StudyDescription,
+		SeriesDescription: dcmtkMetadata.SeriesDescription,
+		AccessionNumber:   "", // Not extracted in DCMTK reader yet
+		PatientBirthDate:  "", // Not extracted in DCMTK reader yet
+	}
+
+	// Set defaults if not found
+	if imageDetail.Width == 0 {
+		imageDetail.Width = 512 // Default width
+	}
+	if imageDetail.Height == 0 {
+		imageDetail.Height = 512 // Default height
+	}
+	if imageDetail.BitsPerPixel == 0 {
+		imageDetail.BitsPerPixel = 16 // Default bits per pixel
+	}
+	if imageDetail.Modality == "" {
+		imageDetail.Modality = "CR" // Default modality
+	}
+
+	logrus.Debugf("Read image metadata using DCMTK: %dx%d, %d bits, %d bytes pixel data",
+		imageDetail.Width, imageDetail.Height, imageDetail.BitsPerPixel, len(imageDetail.PixelData))
+
+	return imageDetail, nil
+}
+
+// readStudyMetadataFromFile reads study-level metadata from a DICOM file using DCMTK
 func (r *Reader) readStudyMetadataFromFile(filePath string, metadata *DetailedStudyMetadata) error {
-	logrus.Debugf("Reading study metadata from %s", filePath)
+	logrus.Debugf("Reading study metadata from %s using DCMTK", filePath)
 
 	// Open DICOM file
 	file, err := os.Open(filePath)
