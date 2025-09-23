@@ -102,7 +102,7 @@ func (e *Exporter) exportSeries(study *types.Study, series *types.Series, export
 // exportImageToJPEG exports a DICOM image to JPEG format with burnt-in metadata
 func (e *Exporter) exportImageToJPEG(study *types.Study, series *types.Series, img *types.Image, instanceNum, totalInstances int, outputPath string) error {
 	logrus.Debugf("Starting JPEG export for image %dx%d, %d bits per pixel, %d bytes pixel data", img.Width, img.Height, img.BitsPerPixel, len(img.PixelData))
-	
+
 	// Create grayscale image from pixel data
 	grayImage := image.NewGray(image.Rect(0, 0, img.Width, img.Height))
 
