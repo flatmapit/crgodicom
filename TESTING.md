@@ -1,272 +1,199 @@
-# Testing Guide for CRGoDICOM
+# Testing Guide
 
-This document describes how to run and maintain the automated test suite for CRGoDICOM.
+This document describes how to run automated tests for CRGoDICOM features.
 
-## 🧪 Test Suite Overview
+## Running Tests
 
-CRGoDICOM includes comprehensive unit tests covering:
-- **CLI Commands**: All command-line interface functionality
-- **ORM Parsers**: HL7 and Go struct parsing capabilities
-- **Template Generation**: DICOM template creation from various sources
-- **Core Functionality**: DICOM generation, export, and PACS integration
-
-## 🚀 Running Tests
-
-### Quick Test Run
+### Unit Tests
 ```bash
-# Run all tests
+# Run all unit tests
 go test ./...
 
 # Run tests with verbose output
 go test -v ./...
 
-# Run specific package tests
-go test -v ./internal/cli
-go test -v ./internal/orm/parser
+# Run tests for a specific package
+go test ./internal/export/...
 ```
 
-### Test Coverage
+### Integration Tests
 ```bash
-# Generate coverage report
-go test -coverprofile=coverage.out ./...
-go tool cover -html=coverage.out -o coverage.html
+# Run integration tests
+go test -tags=integration ./test/integration/...
 
-# View coverage summary
-go tool cover -func=coverage.out
-
-# View coverage in browser
-open coverage.html  # macOS
-xdg-open coverage.html  # Linux
-start coverage.html  # Windows
+# Run tests with coverage
+go test -cover ./...
 ```
 
-### Race Condition Detection
+### Export Functionality Tests
+
+#### Test PNG Export
 ```bash
-# Run tests with race detection
-go test -race ./...
+# Create a test study
+./bin/crgodicom create --study-count 1 --series-count 1 --image-count 2
 
-# Run with race detection and coverage
-go test -race -coverprofile=coverage.out ./...
+# Get the study ID from the output, then export to PNG
+./bin/crgodicom export --study-id <study-uid> --format png --output-dir test-exports
 ```
 
-## 📋 Test Categories
-
-### 1. CLI Command Tests (`internal/cli/*_test.go`)
-
-#### Create Command Tests
-- ✅ **Flag validation**: Test all command flags and defaults
-- ✅ **Parameter validation**: Test invalid modalities, counts, etc.
-- ⚠️ **Study generation**: Tests DICOM generation (currently failing due to VR issues)
-- ✅ **Template usage**: Test template-based study creation
-
-#### Export Command Tests
-- ✅ **Required parameters**: Test missing study-id and format
-- ✅ **Format validation**: Test valid/invalid export formats
-- ✅ **PDF requirements**: Test PDF-specific parameter validation
-- ⚠️ **Export functionality**: Tests actual export (fails without existing studies)
-
-#### List Command Tests
-- ✅ **Directory handling**: Test empty and non-existent directories
-- ✅ **Format options**: Test table, JSON, CSV output formats
-- ✅ **Verbose output**: Test detailed listing functionality
-- ✅ **Study discovery**: Test study directory enumeration
-
-#### ORM Command Tests
-- ✅ **Input validation**: Test required parameters and file existence
-- ✅ **Type detection**: Test automatic input type detection
-- ✅ **Template generation**: Test HL7 and Go struct parsing
-- ✅ **Output creation**: Test YAML template file generation
-
-### 2. ORM Parser Tests (`internal/orm/parser/*_test.go`)
-
-#### HL7 Parser Tests
-- ✅ **Message parsing**: Test complete HL7 ORM message processing
-- ✅ **Segment parsing**: Test individual HL7 segments (MSH, PID, OBR, etc.)
-- ✅ **Model generation**: Test creation of Patient, Study, Order, Visit models
-- ✅ **Error handling**: Test invalid and empty message handling
-- ⚠️ **Field mapping**: Some field mappings need adjustment
-
-## 📊 Current Test Results
-
-### Test Statistics
-```
-Total Tests: 25+
-Passing Tests: ~80%
-Failing Tests: ~20% (mostly due to DICOM VR issues and field mapping adjustments)
-Coverage: 34.2% (initial implementation)
-```
-
-### Test Status by Component
-
-| Component | Tests | Status | Coverage | Notes |
-|-----------|-------|--------|----------|-------|
-| **CLI Create** | 5 | ⚠️ Partial | Medium | DICOM generation VR issues |
-| **CLI Export** | 6 | ⚠️ Partial | Medium | Validation works, export needs studies |
-| **CLI List** | 7 | ✅ Pass | High | All functionality working |
-| **CLI ORM** | 4 | ✅ Pass | High | Template generation working |
-| **HL7 Parser** | 8 | ⚠️ Partial | High | Parsing works, field mapping adjustments needed |
-
-## 🔧 Running Specific Tests
-
-### Test Individual Commands
+#### Test JPEG Export
 ```bash
-# Test create command only
-go test -v ./internal/cli -run TestCreateCommand
-
-# Test export command only
-go test -v ./internal/cli -run TestExportCommand
-
-# Test ORM functionality
-go test -v ./internal/cli -run TestORM
-go test -v ./internal/orm/parser -run TestHL7
-
-# Test with specific pattern
-go test -v ./internal/cli -run "TestCreateCommand/valid_basic_create"
+# Export the same study to JPEG
+./bin/crgodicom export --study-id <study-uid> --format jpeg --output-dir test-exports
 ```
 
-### Debug Failing Tests
+#### Test PDF Export
 ```bash
-# Run with detailed output
-go test -v ./internal/cli -run TestCreateCommand 2>&1 | grep -A5 -B5 "Error"
-
-# Run single failing test
-go test -v ./internal/cli -run "TestCreateCommand/valid_basic_create"
+# Export the study to PDF
+./bin/crgodicom export --study-id <study-uid> --format pdf --output-file test-report.pdf
 ```
 
-## 🎯 Test Development Guidelines
+### Verification Tests
 
-### Writing New Tests
-1. **Use table-driven tests** for multiple scenarios
-2. **Create temporary directories** for file operations
-3. **Mock external dependencies** (PACS servers, file systems)
-4. **Test both success and failure cases**
-5. **Include edge cases and boundary conditions**
+#### Verify Pixel Data Extraction
+1. Create a DICOM study with known pixel data
+2. Export to PNG, JPEG, and PDF formats
+3. Verify that:
+   - PNG files contain the expected pixel data
+   - JPEG files contain the expected pixel data (with compression)
+   - PDF files contain embedded images with pixel data
+   - All formats include burnt-in metadata
 
-### Test Structure Example
-```go
-func TestNewFeature(t *testing.T) {
-    tests := []struct {
-        name    string
-        input   string
-        want    string
-        wantErr bool
-    }{
-        {"valid input", "test", "expected", false},
-        {"invalid input", "", "", true},
-    }
+#### Test Commands
+```bash
+# List available studies
+./bin/crgodicom list
 
-    for _, tt := range tests {
-        t.Run(tt.name, func(t *testing.T) {
-            result, err := NewFeature(tt.input)
-            if tt.wantErr {
-                assert.Error(t, err)
-            } else {
-                assert.NoError(t, err)
-                assert.Equal(t, tt.want, result)
-            }
-        })
-    }
-}
+# Check DCMTK availability
+./bin/crgodicom check-dcmtk
+
+# Verify PACS connection (if DCMTK is available)
+./bin/crgodicom echo --host localhost --port 11112 --aec CLIENT --aet PACS
 ```
 
-## 🔍 Known Issues and Fixes
+## Test Data
 
-### 1. DICOM VR (Value Representation) Issues
-**Problem**: Tests fail with "ValueType does not match the specified type in the VR"
-**Status**: Known issue in DICOM generation
-**Workaround**: Test command structure without actual DICOM file creation
+### Sample Studies
+The `studies/` directory contains sample DICOM studies for testing:
+- Study UID: `1.2.840.10008.5.1.4.1.1.1758590232.1649618261125328773`
+  - Contains 2 series with 5 images each
+  - Includes pixel data for export testing
 
-### 2. Field Mapping Adjustments
-**Problem**: Some HL7 field mappings don't match expected test values
-**Status**: Parser logic needs refinement
-**Fix**: Adjust parser logic or test expectations
+### Expected Outputs
+When running export tests, verify:
+1. **PNG Files**: High-quality lossless images with burnt-in metadata
+2. **JPEG Files**: Compressed images (quality 95) with burnt-in metadata
+3. **PDF Files**: Multi-page reports with embedded images and study metadata
 
-### 3. Missing Study Dependencies
-**Problem**: Export tests fail because they need existing studies
-**Status**: Expected behavior
-**Fix**: Create mock studies in test setup
+## Automated Test Scripts
 
-## 🚀 Continuous Integration
+### Run All Export Tests
+```bash
+#!/bin/bash
+# test-exports.sh
 
-### GitHub Actions Integration
-The test suite is integrated with GitHub Actions workflows:
+STUDY_ID="1.2.840.10008.5.1.4.1.1.1758590232.1649618261125328773"
+OUTPUT_DIR="test-exports-$(date +%Y%m%d-%H%M%S)"
 
-```yaml
-- name: Run tests
-  run: |
-    echo "Running comprehensive test suite..."
-    go test -v -race -coverprofile=coverage.out ./...
-    go tool cover -html=coverage.out -o coverage.html
+echo "Testing PNG export..."
+./bin/crgodicom export --study-id $STUDY_ID --format png --output-dir $OUTPUT_DIR/png
 
-- name: Upload Coverage Report
-  uses: actions/upload-artifact@v4
-  with:
-    name: coverage-report-${{ matrix.platform }}
-    path: coverage.html
+echo "Testing JPEG export..."
+./bin/crgodicom export --study-id $STUDY_ID --format jpeg --output-dir $OUTPUT_DIR/jpeg
+
+echo "Testing PDF export..."
+./bin/crgodicom export --study-id $STUDY_ID --format pdf --output-file $OUTPUT_DIR/report.pdf
+
+echo "Export tests completed. Check $OUTPUT_DIR for results."
 ```
 
-### Test Automation
-- **Feature Branches**: Tests run on every push
-- **Pull Requests**: Tests required for merge
-- **Coverage Reports**: Generated and uploaded as artifacts
-- **Race Detection**: Enabled for concurrency testing
+### Verify Pixel Data
+```bash
+#!/bin/bash
+# verify-pixel-data.sh
 
-## 📈 Coverage Goals
+STUDY_ID="1.2.840.10008.5.1.4.1.1.1758590232.1649618261125328773"
 
-### Current Coverage: 34.2%
-### Target Coverage: 80%+
+echo "Verifying pixel data extraction..."
 
-**Priority Areas for Coverage Improvement:**
-1. **Core DICOM functionality** (types, generation)
-2. **Export functionality** (PNG, PDF generation)
-3. **PACS integration** (network communication)
-4. **Configuration management** (YAML parsing, validation)
+# Check if PNG files exist and have content
+PNG_COUNT=$(find studies/exports -name "*.png" | wc -l)
+echo "Found $PNG_COUNT PNG files"
 
-## 🔧 Test Maintenance
+# Check if JPEG files exist and have content
+JPEG_COUNT=$(find studies/exports -name "*.jpg" | wc -l)
+echo "Found $JPEG_COUNT JPEG files"
 
-### Adding New Tests
-1. Create `*_test.go` files alongside source files
-2. Follow existing test patterns and conventions
-3. Include both unit and integration tests
-4. Update this documentation
+# Check if PDF file exists
+if [ -f "studies/exports/study__report.pdf" ]; then
+    echo "PDF report exists"
+else
+    echo "PDF report missing"
+fi
 
-### Fixing Failing Tests
-1. Identify root cause (logic error vs. test setup)
-2. Fix underlying issue or adjust test expectations
-3. Verify fix doesn't break other tests
-4. Update documentation if behavior changes
-
-## 📚 Test Examples
-
-### Example Test Run Output
-```
-🧪 RUNNING COMPLETE TEST SUITE:
-
-=== RUN   TestCreateCommand
-=== RUN   TestCreateCommand/valid_basic_create
-time="2025-09-18T14:56:28+10:00" level=info msg="Creating 1 study(ies)..."
-=== RUN   TestCreateCommand/invalid_modality
---- FAIL: TestCreateCommand/invalid_modality (0.00s)
-=== RUN   TestListCommand
-=== RUN   TestListCommand/empty_directory
-time="2025-09-18T14:56:12+10:00" level=info msg="Listing studies..."
---- PASS: TestListCommand (0.00s)
-=== RUN   TestORMCommandValidation
-=== RUN   TestORMCommandValidation/valid_HL7_input
-time="2025-09-18T14:56:12+10:00" level=info msg="Successfully generated DICOM template"
---- PASS: TestORMCommandValidation (0.00s)
-
-PASS: 15 tests
-FAIL: 8 tests
-Coverage: 34.2% of statements
+echo "Pixel data verification completed."
 ```
 
-## 📞 Support
+## Continuous Integration
 
-- **Test Issues**: [Report Test Problems](https://github.com/flatmapit/crgodicom/issues)
-- **Coverage Reports**: Available in GitHub Actions artifacts
-- **Documentation**: This file and inline test documentation
+### GitHub Actions
+The project includes GitHub Actions workflows for automated testing:
+- Unit tests on multiple platforms
+- Integration tests with Docker PACS
+- Export functionality tests
+- Cross-platform builds
 
----
+### Local CI Simulation
+```bash
+# Run the same tests as CI
+make test
+make build-all
+make docker-test-setup
+```
 
-*Automated testing ensures code quality and reliability across all CRGoDICOM features*
+## Troubleshooting
+
+### Common Issues
+
+1. **DICOM Parsing Errors**
+   - Ensure DICOM files are valid
+   - Check file permissions
+   - Verify file size and format
+
+2. **Export Failures**
+   - Check output directory permissions
+   - Ensure sufficient disk space
+   - Verify study ID exists
+
+3. **Missing Pixel Data**
+   - Check DICOM file integrity
+   - Verify pixel data tags are present
+   - Check for compression issues
+
+### Debug Mode
+```bash
+# Enable debug logging
+export LOG_LEVEL=debug
+./bin/crgodicom export --study-id <study-uid> --format png --output-dir test-exports
+```
+
+## Performance Testing
+
+### Benchmark Tests
+```bash
+# Run benchmark tests
+go test -bench=. ./...
+
+# Memory profiling
+go test -memprofile=mem.prof ./...
+go tool pprof mem.prof
+```
+
+### Load Testing
+```bash
+# Test with large studies
+./bin/crgodicom create --study-count 10 --series-count 5 --image-count 20
+
+# Test export performance
+time ./bin/crgodicom export --study-id <study-uid> --format png --output-dir test-exports
+```

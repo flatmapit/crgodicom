@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 
 	"github.com/flatmapit/crgodicom/internal/config"
+	"github.com/flatmapit/crgodicom/internal/dicom"
 	"github.com/flatmapit/crgodicom/internal/pacs"
 	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli/v2"
@@ -129,8 +130,8 @@ func sendAction(c *cli.Context) error {
 			continue
 		}
 
-		// Extract SOP Instance UID from filename or data (simplified)
-		sopInstanceUID := extractSOPInstanceUID(filePath)
+		// Extract SOP Instance UID from actual DICOM metadata
+		sopInstanceUID := extractSOPInstanceUIDFromDICOM(filePath, cfg)
 
 		// Send to PACS
 		if err := client.CStore(c.Context, dicomData, sopInstanceUID); err != nil {
@@ -165,8 +166,27 @@ func findDICOMFiles(dir string) ([]string, error) {
 	return dicomFiles, err
 }
 
-// extractSOPInstanceUID extracts SOP Instance UID from file path
-// This is a simplified implementation - in a real scenario, you'd parse the DICOM file
+// extractSOPInstanceUIDFromDICOM extracts SOP Instance UID from actual DICOM metadata
+func extractSOPInstanceUIDFromDICOM(filePath string, cfg *config.Config) string {
+	// Create DICOM reader
+	reader := dicom.NewReader(cfg)
+
+	// Try to extract real SOP Instance UID from DICOM file
+	sopInstanceUID, err := reader.ExtractSOPInstanceUID(filePath)
+	if err != nil {
+		logrus.Warnf("Failed to extract SOP Instance UID from %s: %v", filePath, err)
+		logrus.Warnf("Using fallback SOP Instance UID generation")
+
+		// Fallback to the old placeholder approach
+		return extractSOPInstanceUID(filePath)
+	}
+
+	logrus.Debugf("Extracted real SOP Instance UID: %s", sopInstanceUID)
+	return sopInstanceUID
+}
+
+// extractSOPInstanceUID extracts SOP Instance UID from file path (fallback method)
+// This is a simplified implementation - used as fallback when DICOM parsing fails
 func extractSOPInstanceUID(filePath string) string {
 	// For now, use a simple approach based on filename
 	// In a real implementation, you'd parse the DICOM file to extract the actual UID

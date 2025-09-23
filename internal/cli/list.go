@@ -1,12 +1,14 @@
 package cli
 
 import (
+	"encoding/json"
 	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
 
 	"github.com/flatmapit/crgodicom/internal/config"
+	"github.com/flatmapit/crgodicom/internal/dicom"
 	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli/v2"
 )
@@ -39,7 +41,7 @@ func ListCommand() *cli.Command {
 
 func listAction(c *cli.Context) error {
 	// Get configuration from context
-	_, ok := c.Context.Value("config").(*config.Config)
+	cfg, ok := c.Context.Value("config").(*config.Config)
 	if !ok {
 		return fmt.Errorf("configuration not found in context")
 	}
@@ -72,9 +74,8 @@ func listAction(c *cli.Context) error {
 		return nil
 	}
 
-	// TODO: Implement actual study listing
-	// For now, just show directory structure
-	studies, err := listStudies(outputDir)
+	// List studies with real DICOM metadata
+	studies, err := listStudies(outputDir, cfg)
 	if err != nil {
 		return fmt.Errorf("failed to list studies: %w", err)
 	}
@@ -111,8 +112,11 @@ type StudyInfo struct {
 }
 
 // listStudies lists all studies in the directory
-func listStudies(outputDir string) ([]StudyInfo, error) {
+func listStudies(outputDir string, cfg *config.Config) ([]StudyInfo, error) {
 	var studies []StudyInfo
+
+	// Create DICOM reader
+	reader := dicom.NewReader(cfg)
 
 	// Walk through the studies directory
 	err := filepath.Walk(outputDir, func(path string, info os.FileInfo, err error) error {
@@ -125,7 +129,7 @@ func listStudies(outputDir string) ([]StudyInfo, error) {
 			// Check if this looks like a study directory
 			studyUID := filepath.Base(path)
 			if isUIDFormat(studyUID) {
-				studyInfo, err := getStudyInfo(path)
+				studyInfo, err := getStudyInfo(path, reader)
 				if err != nil {
 					logrus.Warnf("Failed to read study info for %s: %v", studyUID, err)
 					// Still include it but with minimal info
@@ -150,27 +154,43 @@ func isUIDFormat(s string) bool {
 	if len(s) < 10 {
 		return false
 	}
+
+	// Check if it's a series directory (starts with "series_")
+	if strings.HasPrefix(s, "series_") {
+		return false
+	}
+
+	// Check if it contains dots (UIDs have dots)
+	if !strings.Contains(s, ".") {
+		return false
+	}
+
 	// More sophisticated UID validation could be added here
 	return true
 }
 
-// getStudyInfo reads study information from directory
-func getStudyInfo(studyPath string) (StudyInfo, error) {
-	studyUID := filepath.Base(studyPath)
+// getStudyInfo reads study information from directory using real DICOM metadata
+func getStudyInfo(studyPath string, reader *dicom.Reader) (StudyInfo, error) {
+	// Read actual DICOM metadata from files
+	metadata, err := reader.ReadStudyMetadata(studyPath)
+	if err != nil {
+		return StudyInfo{}, fmt.Errorf("failed to read study metadata: %w", err)
+	}
 
-	// TODO: Read actual DICOM metadata from files
-	// For now, return placeholder info
-	return StudyInfo{
-		StudyUID:         studyUID,
-		PatientName:      "DOE^JOHN^M",
-		PatientID:        "P123456",
-		StudyDate:        "20250101",
-		StudyDescription: "Generated Study",
-		SeriesCount:      1,
-		ImageCount:       1,
-		Modality:         "CR",
-		AccessionNumber:  "ACC123456",
-	}, nil
+	// Convert DICOM metadata to StudyInfo
+	studyInfo := StudyInfo{
+		StudyUID:         metadata.StudyUID,
+		PatientName:      metadata.PatientName,
+		PatientID:        metadata.PatientID,
+		StudyDate:        metadata.StudyDate,
+		StudyDescription: metadata.StudyDescription,
+		SeriesCount:      metadata.SeriesCount,
+		ImageCount:       metadata.ImageCount,
+		Modality:         metadata.Modality,
+		AccessionNumber:  metadata.AccessionNumber,
+	}
+
+	return studyInfo, nil
 }
 
 // displayStudiesTable displays studies in table format
@@ -200,12 +220,50 @@ func displayStudiesTable(studies []StudyInfo, verbose bool) {
 
 // displayStudiesJSON displays studies in JSON format
 func displayStudiesJSON(studies []StudyInfo, verbose bool) {
-	// TODO: Implement JSON output
-	fmt.Println("JSON output not yet implemented")
+	// Convert studies to JSON
+	jsonData, err := json.MarshalIndent(studies, "", "  ")
+	if err != nil {
+		fmt.Printf("Error marshaling JSON: %v\n", err)
+		return
+	}
+
+	fmt.Println(string(jsonData))
 }
 
 // displayStudiesCSV displays studies in CSV format
 func displayStudiesCSV(studies []StudyInfo, verbose bool) {
-	// TODO: Implement CSV output
-	fmt.Println("CSV output not yet implemented")
+	if len(studies) == 0 {
+		return
+	}
+
+	// Print CSV header
+	if verbose {
+		fmt.Println("StudyUID,PatientName,PatientID,StudyDate,StudyDescription,SeriesCount,ImageCount,Modality,AccessionNumber")
+	} else {
+		fmt.Println("StudyUID,PatientName,PatientID,StudyDate,SeriesCount,ImageCount")
+	}
+
+	// Print CSV data rows
+	for _, study := range studies {
+		if verbose {
+			fmt.Printf("%s,%s,%s,%s,%s,%d,%d,%s,%s\n",
+				study.StudyUID,
+				strings.ReplaceAll(study.PatientName, ",", " "),
+				study.PatientID,
+				study.StudyDate,
+				strings.ReplaceAll(study.StudyDescription, ",", " "),
+				study.SeriesCount,
+				study.ImageCount,
+				study.Modality,
+				study.AccessionNumber)
+		} else {
+			fmt.Printf("%s,%s,%s,%s,%d,%d\n",
+				study.StudyUID,
+				strings.ReplaceAll(study.PatientName, ",", " "),
+				study.PatientID,
+				study.StudyDate,
+				study.SeriesCount,
+				study.ImageCount)
+		}
+	}
 }

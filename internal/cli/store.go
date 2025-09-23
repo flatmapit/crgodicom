@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/flatmapit/crgodicom/internal/config"
+	"github.com/flatmapit/crgodicom/internal/dicom"
 	"github.com/flatmapit/crgodicom/internal/pacs"
 	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli/v2"
@@ -60,6 +61,12 @@ func StoreCommand() *cli.Command {
 }
 
 func storeAction(c *cli.Context) error {
+	// Get configuration from context
+	cfg, ok := c.Context.Value("config").(*config.Config)
+	if !ok {
+		return fmt.Errorf("configuration not found in context")
+	}
+
 	studyID := c.String("study-id")
 	outputDir := c.String("output-dir")
 
@@ -116,8 +123,8 @@ func storeAction(c *cli.Context) error {
 			continue
 		}
 
-		// Extract SOP Instance UID from filename (simplified)
-		sopInstanceUID := extractSOPInstanceUIDFromPath(filePath)
+		// Extract SOP Instance UID from actual DICOM metadata
+		sopInstanceUID := extractSOPInstanceUIDFromDICOMFile(filePath, cfg)
 
 		logrus.Debugf("Attempting C-STORE for SOP Instance UID: %s", sopInstanceUID)
 
@@ -158,7 +165,26 @@ func findDICOMFilesInStudy(studyDir string) ([]string, error) {
 	return dicomFiles, err
 }
 
-// extractSOPInstanceUIDFromPath extracts SOP Instance UID from file path (simplified)
+// extractSOPInstanceUIDFromDICOMFile extracts SOP Instance UID from actual DICOM metadata
+func extractSOPInstanceUIDFromDICOMFile(filePath string, cfg *config.Config) string {
+	// Create DICOM reader
+	reader := dicom.NewReader(cfg)
+
+	// Try to extract real SOP Instance UID from DICOM file
+	sopInstanceUID, err := reader.ExtractSOPInstanceUID(filePath)
+	if err != nil {
+		logrus.Warnf("Failed to extract SOP Instance UID from %s: %v", filePath, err)
+		logrus.Warnf("Using fallback SOP Instance UID generation")
+
+		// Fallback to the old placeholder approach
+		return extractSOPInstanceUIDFromPath(filePath)
+	}
+
+	logrus.Debugf("Extracted real SOP Instance UID: %s", sopInstanceUID)
+	return sopInstanceUID
+}
+
+// extractSOPInstanceUIDFromPath extracts SOP Instance UID from file path (fallback method)
 func extractSOPInstanceUIDFromPath(filePath string) string {
 	// For now, generate a simple UID based on filename
 	// In a real implementation, you'd parse the DICOM file

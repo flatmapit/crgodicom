@@ -192,50 +192,68 @@ func (w *Writer) addImagePresentationElements(dataset *dicom.Dataset, study *typ
 
 // addImagePixelElements adds 0028 group elements in order
 func (w *Writer) addImagePixelElements(dataset *dicom.Dataset, image *types.Image) {
-	// Samples per Pixel (0028,0002) - TEMPORARILY COMMENTED OUT TO TEST
-	// if elem, err := dicom.NewElement(tag.SamplesPerPixel, []int{1}); err == nil {
-	//	dataset.Elements = append(dataset.Elements, elem)
-	// }
+	// Samples per Pixel (0028,0002)
+	if elem, err := dicom.NewElement(tag.SamplesPerPixel, []int{1}); err == nil {
+		dataset.Elements = append(dataset.Elements, elem)
+	}
 
-	// Photometric Interpretation (0028,0004) - TEMPORARILY COMMENTED OUT TO TEST
-	// if elem, err := dicom.NewElement(tag.PhotometricInterpretation, []string{"MONOCHROME2"}); err == nil {
-	//	dataset.Elements = append(dataset.Elements, elem)
-	// }
+	// Photometric Interpretation (0028,0004)
+	if elem, err := dicom.NewElement(tag.PhotometricInterpretation, []string{"MONOCHROME2"}); err == nil {
+		dataset.Elements = append(dataset.Elements, elem)
+	}
 
-	// Planar Configuration (0028,0006) - TEMPORARILY COMMENTED OUT TO TEST
-	// if elem, err := dicom.NewElement(tag.PlanarConfiguration, []int{0}); err == nil {
-	//	dataset.Elements = append(dataset.Elements, elem)
-	// }
+	// Planar Configuration (0028,0006)
+	if elem, err := dicom.NewElement(tag.PlanarConfiguration, []int{0}); err == nil {
+		dataset.Elements = append(dataset.Elements, elem)
+	}
 
-	// Rows (0028,0010) - TEMPORARILY COMMENTED OUT TO TEST
-	// if elem, err := dicom.NewElement(tag.Rows, []int{int(image.Height)}); err == nil {
-	//	dataset.Elements = append(dataset.Elements, elem)
-	// }
+	// Rows (0028,0010)
+	if elem, err := dicom.NewElement(tag.Rows, []int{int(image.Height)}); err == nil {
+		dataset.Elements = append(dataset.Elements, elem)
+	}
 
-	// Columns (0028,0011) - TEMPORARILY COMMENTED OUT TO TEST
-	// if elem, err := dicom.NewElement(tag.Columns, []int{int(image.Width)}); err == nil {
-	//	dataset.Elements = append(dataset.Elements, elem)
-	// }
+	// Columns (0028,0011)
+	if elem, err := dicom.NewElement(tag.Columns, []int{int(image.Width)}); err == nil {
+		dataset.Elements = append(dataset.Elements, elem)
+	}
 
-	// Bits Allocated (0028,0100) - TEMPORARILY COMMENTED OUT TO TEST
-	// if elem, err := dicom.NewElement(tag.BitsAllocated, []int{int(image.BitsPerPixel)}); err == nil {
-	//	dataset.Elements = append(dataset.Elements, elem)
-	// }
+	// Bits Allocated (0028,0100)
+	if elem, err := dicom.NewElement(tag.BitsAllocated, []int{int(image.BitsPerPixel)}); err == nil {
+		dataset.Elements = append(dataset.Elements, elem)
+	}
 
-	// Bits Stored (0028,0101) - TEMPORARILY COMMENTED OUT TO TEST
-	// if elem, err := dicom.NewElement(tag.BitsStored, []int{int(image.BitsPerPixel)}); err == nil {
-	//	dataset.Elements = append(dataset.Elements, elem)
-	// }
+	// Bits Stored (0028,0101)
+	if elem, err := dicom.NewElement(tag.BitsStored, []int{int(image.BitsPerPixel)}); err == nil {
+		dataset.Elements = append(dataset.Elements, elem)
+	}
 
-	// High Bit (0028,0102) - TEMPORARILY COMMENTED OUT TO TEST
-	// if elem, err := dicom.NewElement(tag.HighBit, []int{int(image.BitsPerPixel - 1)}); err == nil {
-	//	dataset.Elements = append(dataset.Elements, elem)
-	// }
+	// High Bit (0028,0102)
+	if elem, err := dicom.NewElement(tag.HighBit, []int{int(image.BitsPerPixel - 1)}); err == nil {
+		dataset.Elements = append(dataset.Elements, elem)
+	}
 
-	// Pixel Representation (0028,0103) - TEMPORARILY COMMENTED OUT TO TEST
-	// if elem, err := dicom.NewElement(tag.PixelRepresentation, []int{0}); err == nil {
-	//	dataset.Elements = append(dataset.Elements, elem)
-	// }
+	// Pixel Representation (0028,0103)
+	if elem, err := dicom.NewElement(tag.PixelRepresentation, []int{0}); err == nil {
+		dataset.Elements = append(dataset.Elements, elem)
+	}
+
+	// Pixel Data (7FE0,0010) - Add the actual pixel data using PixelDataInfo
+	if len(image.PixelData) > 0 {
+		logrus.Infof("Adding pixel data: %d bytes", len(image.PixelData))
+
+		// Create PixelDataInfo with unprocessed pixel data
+		pixelDataInfo := dicom.PixelDataInfo{
+			IntentionallyUnprocessed: true,
+			UnprocessedValueData:     image.PixelData,
+		}
+
+		if elem, err := dicom.NewElement(tag.PixelData, pixelDataInfo); err == nil {
+			dataset.Elements = append(dataset.Elements, elem)
+			logrus.Info("Successfully added pixel data using PixelDataInfo")
+		} else {
+			logrus.Warnf("Failed to create pixel data element with PixelDataInfo: %v", err)
+		}
+	}
 }
 
 // addPatientElements adds patient-related DICOM elements

@@ -10,7 +10,7 @@ A cross-platform CLI utility written in Go for creating synthetic DICOM data and
 - **DICOM 3.0 Compliant**: Full support for DICOM standard with configurable fields
 - **Study Templates**: Built-in and user-defined templates for common modalities
 - **PACS Integration**: C-ECHO and C-STORE operations via [DCMTK](https://github.com/DCMTK/dcmtk) integration
-- **Export Capabilities**: Export to PNG+text files or PDF with metadata
+- **Export Capabilities**: Export to PNG, JPEG, and PDF formats with metadata
 - **Minimal Dependencies**: Core functionality requires no external dependencies
 - **Configuration**: YAML-based configuration with CLI overrides
 
@@ -80,6 +80,12 @@ crgodicom dcmtk --study-id <study-uid> --host localhost --port 4242 --aec CLIENT
 # Export study to PNG files
 crgodicom export --study-id <study-uid> --format png --output-dir exports/
 
+# Export study to JPEG files
+crgodicom export --study-id <study-uid> --format jpeg --output-dir exports/
+
+# Export study to PDF report
+crgodicom export --study-id <study-uid> --format pdf --output-file report.pdf
+
 # Create a new study template
 crgodicom create-template --name my-template --modality CT --series-count 2 --image-count 20
 ```
@@ -119,16 +125,14 @@ crgodicom create --template cardiac-mri
 
 The application uses a YAML configuration file (`crgodicom.yaml`) in the current working directory. CLI flags override configuration file values.
 
+### Basic Configuration
+
+The default `crgodicom.yaml` contains essential settings:
+
 ```yaml
 # crgodicom.yaml
 dicom:
   org_root: "1.2.840.10008.5.1.4.1.1"
-
-default_pacs:
-  host: "localhost"
-  port: 11112
-  aec: "CRGODICOM"
-  aet: "PACS_SERVER"
 
 study_templates:
   chest-xray:
@@ -137,6 +141,40 @@ study_templates:
     image_count: 2
     anatomical_region: "chest"
     study_description: "Chest X-Ray"
+```
+
+### Advanced Configuration
+
+For PACS integration and advanced settings, copy `crgodicom.example.yaml` to `crgodicom.yaml` and customize:
+
+```bash
+cp crgodicom.example.yaml crgodicom.yaml
+```
+
+The example configuration includes:
+- **PACS Server Configurations**: Multiple PACS environments (production, test, cloud)
+- **Default PACS Settings**: Fallback PACS configuration
+- **Extended Templates**: Additional study templates
+- **Logging Options**: Configurable log levels and formats
+- **Storage Settings**: Compression and caching options
+
+### PACS Configuration
+
+PACS settings can be configured in the config file or provided via CLI flags:
+
+```yaml
+# In crgodicom.yaml
+default_pacs:
+  host: "pacs.company.com"
+  port: 11112
+  aec: "COMPANY_PACS"
+  aet: "CRGODICOM"
+  timeout: 30
+```
+
+Or via CLI flags:
+```bash
+crgodicom verify --host pacs.company.com --port 11112 --aec COMPANY_PACS --aet CRGODICOM
 ```
 
 ## Development
@@ -183,7 +221,6 @@ make docker-test-stop
 - 🔄 PACS communication (C-ECHO, C-STORE)
 
 ### Planned
-- ⏳ Export functionality (PNG, PDF)
 - ⏳ Comprehensive testing
 - ⏳ Docker test setup
 - ⏳ Performance optimization

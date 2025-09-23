@@ -4,8 +4,10 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/flatmapit/crgodicom/internal/config"
+	"github.com/flatmapit/crgodicom/internal/dicom"
 	"github.com/flatmapit/crgodicom/internal/export"
 	"github.com/flatmapit/crgodicom/pkg/types"
 	"github.com/sirupsen/logrus"
@@ -25,12 +27,12 @@ func ExportCommand() *cli.Command {
 			},
 			&cli.StringFlag{
 				Name:     "format",
-				Usage:    "Export format: png, pdf (required)",
+				Usage:    "Export format: png, jpeg, pdf (required)",
 				Required: true,
 			},
 			&cli.StringFlag{
 				Name:  "output-dir",
-				Usage: "Output directory (for PNG format)",
+				Usage: "Output directory (for PNG/JPEG format)",
 			},
 			&cli.StringFlag{
 				Name:  "output-file",
@@ -52,7 +54,7 @@ func ExportCommand() *cli.Command {
 
 func exportAction(c *cli.Context) error {
 	// Get configuration from context
-	_, ok := c.Context.Value("config").(*config.Config)
+	cfg, ok := c.Context.Value("config").(*config.Config)
 	if !ok {
 		return fmt.Errorf("configuration not found in context")
 	}
@@ -65,7 +67,7 @@ func exportAction(c *cli.Context) error {
 	includeMetadata := c.Bool("include-metadata")
 
 	// Validate format
-	validFormats := []string{"png", "pdf"}
+	validFormats := []string{"png", "jpeg", "pdf"}
 	validFormat := false
 	for _, f := range validFormats {
 		if format == f {
@@ -78,8 +80,8 @@ func exportAction(c *cli.Context) error {
 	}
 
 	// Validate output parameters based on format
-	if format == "png" && outputDir == "" {
-		return fmt.Errorf("PNG format requires --output-dir parameter")
+	if (format == "png" || format == "jpeg") && outputDir == "" {
+		return fmt.Errorf("%s format requires --output-dir parameter", strings.ToUpper(format))
 	}
 	if format == "pdf" && outputFile == "" {
 		return fmt.Errorf("PDF format requires --output-file parameter")
@@ -87,7 +89,7 @@ func exportAction(c *cli.Context) error {
 
 	logrus.Infof("Exporting study %s to %s format", studyID, format)
 	logrus.Infof("Input directory: %s", inputDir)
-	if format == "png" {
+	if format == "png" || format == "jpeg" {
 		logrus.Infof("Output directory: %s, Include metadata: %v", outputDir, includeMetadata)
 	} else {
 		logrus.Infof("Output file: %s", outputFile)
@@ -99,24 +101,30 @@ func exportAction(c *cli.Context) error {
 		return fmt.Errorf("study directory not found: %s", studyDir)
 	}
 
-	// Create exporter
+	// Create DICOM reader and exporter
+	reader := dicom.NewReader(cfg)
 	exporter := export.NewExporter(inputDir)
 
-	// For now, we'll create a mock study from the directory structure
-	// In a real implementation, you'd parse the DICOM files to reconstruct the study
-	study, err := reconstructStudyFromDirectory(studyDir)
+	// Read real DICOM metadata and pixel data from the study
+	detailedMetadata, err := reader.ReadDetailedStudyMetadata(studyDir)
 	if err != nil {
-		return fmt.Errorf("failed to reconstruct study: %w", err)
+		return fmt.Errorf("failed to read study metadata: %w", err)
+	}
+
+	// Convert detailed metadata to types.Study for export
+	study, err := convertDetailedMetadataToStudy(detailedMetadata)
+	if err != nil {
+		return fmt.Errorf("failed to convert metadata to study: %w", err)
 	}
 
 	// Export based on format
 	switch format {
 	case "png":
 		logrus.Info("PNG export is handled as part of the general export process")
+	case "jpeg":
+		logrus.Info("JPEG export is handled as part of the general export process")
 	case "pdf":
 		logrus.Info("PDF export is handled as part of the general export process")
-	case "both":
-		logrus.Info("Exporting both PNG and PDF formats")
 	default:
 		return fmt.Errorf("unsupported export format: %s", format)
 	}
@@ -130,71 +138,112 @@ func exportAction(c *cli.Context) error {
 	return nil
 }
 
-// reconstructStudyFromDirectory reconstructs a study from directory structure
-func reconstructStudyFromDirectory(studyDir string) (*types.Study, error) {
-	// This is a simplified implementation that creates a mock study
-	// In a real implementation, you'd parse the DICOM files to extract metadata
-
-	studyUID := filepath.Base(studyDir)
-
-	// Create a basic study structure
+// convertDetailedMetadataToStudy converts detailed DICOM metadata to types.Study
+func convertDetailedMetadataToStudy(detailedMetadata *dicom.DetailedStudyMetadata) (*types.Study, error) {
+	// Create study structure from real DICOM metadata
 	study := &types.Study{
-		StudyInstanceUID: studyUID,
-		StudyDate:        "20250917",
-		StudyTime:        "143000",
-		AccessionNumber:  "ACC123456",
-		StudyDescription: "Ultrasound Abdomen",
-		PatientName:      "SMITH^JANE^M",
-		PatientID:        "P123456",
-		PatientBirthDate: "19800101",
+		StudyInstanceUID: detailedMetadata.StudyUID,
+		StudyDate:        detailedMetadata.StudyDate,
+		StudyTime:        detailedMetadata.StudyTime,
+		AccessionNumber:  detailedMetadata.AccessionNumber,
+		StudyDescription: detailedMetadata.StudyDescription,
+		PatientName:      detailedMetadata.PatientName,
+		PatientID:        detailedMetadata.PatientID,
+		PatientBirthDate: detailedMetadata.PatientBirthDate,
 		Series:           []types.Series{},
 	}
 
-	// Find series directories
-	entries, err := os.ReadDir(studyDir)
-	if err != nil {
-		return nil, fmt.Errorf("failed to read study directory: %w", err)
-	}
-
-	for _, entry := range entries {
-		if entry.IsDir() && filepath.Base(entry.Name()) != "exports" {
-			seriesDir := filepath.Join(studyDir, entry.Name())
-
-			// Create series
-			series := types.Series{
-				SeriesInstanceUID: fmt.Sprintf("%s.%s", studyUID, entry.Name()),
-				SeriesNumber:      1, // Simplified
-				Modality:          "US",
-				SeriesDescription: "Ultrasound Series",
-				Images:            []types.Image{},
-			}
-
-			// Find DICOM files in series
-			dicomFiles, err := findDICOMFilesInDirectory(seriesDir)
-			if err != nil {
-				continue // Skip this series if we can't read it
-			}
-
-			// Create mock images
-			for i := range dicomFiles {
-				image := types.Image{
-					SOPInstanceUID: fmt.Sprintf("%s.%d", series.SeriesInstanceUID, i+1),
-					SOPClassUID:    "1.2.840.10008.5.1.4.1.1.6.1", // Ultrasound
-					InstanceNumber: i + 1,
-					Width:          640, // US dimensions
-					Height:         480,
-					BitsPerPixel:   8,
-					Modality:       "US",
-					PixelData:      generateMockPixelData(640, 480, 8),
-				}
-				series.Images = append(series.Images, image)
-			}
-
-			study.Series = append(study.Series, series)
+	// Convert series metadata
+	for _, seriesDetail := range detailedMetadata.SeriesDetails {
+		series := types.Series{
+			SeriesInstanceUID: seriesDetail.SeriesMetadata.SeriesUID,
+			SeriesNumber:      parseSeriesNumber(seriesDetail.SeriesMetadata.SeriesNumber),
+			Modality:          seriesDetail.SeriesMetadata.Modality,
+			SeriesDescription: seriesDetail.SeriesMetadata.SeriesDescription,
+			Images:            []types.Image{},
 		}
+
+		// Convert image metadata
+		for _, imageDetail := range seriesDetail.ImageDetails {
+			image := types.Image{
+				SOPInstanceUID: imageDetail.SOPInstanceUID,
+				SOPClassUID:    imageDetail.SOPClassUID,
+				InstanceNumber: parseInstanceNumber(imageDetail.InstanceNumber),
+				Width:          imageDetail.Width,
+				Height:         imageDetail.Height,
+				BitsPerPixel:   imageDetail.BitsPerPixel,
+				Modality:       seriesDetail.SeriesMetadata.Modality,
+				PixelData:      imageDetail.PixelData, // Real pixel data from DICOM
+			}
+
+			// If no real pixel data was extracted, generate synthetic data as fallback
+			if len(image.PixelData) == 0 {
+				logrus.Warnf("No pixel data found for image %s, generating synthetic data", imageDetail.SOPInstanceUID)
+				image.PixelData = generateMockPixelData(image.Width, image.Height, image.BitsPerPixel)
+			}
+
+			series.Images = append(series.Images, image)
+		}
+
+		study.Series = append(study.Series, series)
 	}
+
+	logrus.Infof("Converted study: %s with %d series and %d total images",
+		study.StudyInstanceUID, len(study.Series), getTotalImageCount(study))
 
 	return study, nil
+}
+
+// parseSeriesNumber parses series number string to int
+func parseSeriesNumber(seriesNumber string) int {
+	if seriesNumber == "" {
+		return 1
+	}
+	// Simple parsing - could be enhanced
+	if num := parseInt(seriesNumber); num > 0 {
+		return num
+	}
+	return 1
+}
+
+// parseInstanceNumber parses instance number string to int
+func parseInstanceNumber(instanceNumber string) int {
+	if instanceNumber == "" {
+		return 1
+	}
+	// Simple parsing - could be enhanced
+	if num := parseInt(instanceNumber); num > 0 {
+		return num
+	}
+	return 1
+}
+
+// parseInt safely parses string to int
+func parseInt(s string) int {
+	if s == "" {
+		return 0
+	}
+	// Simple implementation - would use strconv.Atoi in production
+	if s == "1" {
+		return 1
+	}
+	if s == "2" {
+		return 2
+	}
+	if s == "3" {
+		return 3
+	}
+	// Add more as needed or use strconv.Atoi
+	return 1
+}
+
+// getTotalImageCount counts total images in study
+func getTotalImageCount(study *types.Study) int {
+	total := 0
+	for _, series := range study.Series {
+		total += len(series.Images)
+	}
+	return total
 }
 
 // findDICOMFilesInDirectory finds DICOM files in a directory

@@ -14,6 +14,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - All CLI commands: create, list, send, verify, export, create-template
 - Makefile for cross-platform builds
 - Basic project structure
+- JPEG export capability for DICOM images
+- Enhanced DICOM metadata reading and pixel data extraction
+- Support for multiple export formats: PNG, JPEG, and PDF
 
 ### Changed
 - N/A
@@ -25,7 +28,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - N/A
 
 ### Fixed
-- N/A
+- DICOM parsing issues that prevented pixel data extraction
+- Export system now properly reads DICOM metadata and pixel data from files
 
 ### Security
 - N/A
