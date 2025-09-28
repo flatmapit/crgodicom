@@ -2,6 +2,16 @@
 studies/
 *.dcm
 
+# Export outputs - Generated exports should not be tracked
+exports/
+test-exports/
+temp-exports/
+
+# Test data directories (keep README.md tracked)
+test-data/studies/
+test-data/exports/
+test-data/temp/
+
 # Build artifacts
 bin/
 dist/

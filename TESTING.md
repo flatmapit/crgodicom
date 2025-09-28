@@ -2,6 +2,28 @@
 
 This document describes how to run automated tests for CRGoDICOM features.
 
+## Quick Start
+
+### Automated Test Suite
+```bash
+# Run comprehensive test suite (generation + export)
+./scripts/test-comprehensive.sh
+
+# Run only generation tests
+./scripts/test-dicom-generation.sh
+
+# Run only export tests
+./scripts/test-dicom-export.sh
+
+# Clean up all test data
+./scripts/cleanup-test-data.sh
+```
+
+### Test Data Structure
+- `test-data/studies/` - Generated DICOM studies (untracked)
+- `test-data/exports/` - Exported PNG, JPEG, PDF files (untracked)
+- `test-data/temp/` - Temporary files during testing (untracked)
+
 ## Running Tests
 
 ### Unit Tests
