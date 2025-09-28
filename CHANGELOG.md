@@ -14,6 +14,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **US Study Generation**: Created 3-series Ultrasound study for patient SMITH^GRANNY
 - **Multi-format Export**: Exported US study to PNG (24 images) and PDF report formats
 - **PACS Integration**: Successfully sent US study to PACS1 (Orthanc) using DCMTK storescu
+- **JPEG Export Support**: Added JPEG export functionality with high-quality compression (95% quality)
+- **Enhanced UID Generation**: Implemented cryptographically secure UID generation
+- **Metadata Generation**: Added comprehensive DICOM metadata generation system
 
 ### Changed
 - **Study Cleanup**: Cleaned up old and incomplete studies, keeping only the complete CTTEST study

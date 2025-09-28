@@ -62,15 +62,15 @@ func (g *DICOMTemplateGenerator) ValidateTemplate(template *orm.GeneratedTemplat
 	if template.Name == "" {
 		return fmt.Errorf("template name is required")
 	}
-	
+
 	if template.Modality == "" {
 		return fmt.Errorf("modality is required")
 	}
-	
+
 	if template.SeriesCount <= 0 {
 		return fmt.Errorf("series count must be greater than 0")
 	}
-	
+
 	if template.ImageCount <= 0 {
 		return fmt.Errorf("image count must be greater than 0")
 	}
@@ -80,12 +80,12 @@ func (g *DICOMTemplateGenerator) ValidateTemplate(template *orm.GeneratedTemplat
 		if len(tags) == 0 {
 			continue
 		}
-		
+
 		for tagStr, value := range tags {
 			if !g.isValidDICOMTag(tagStr) {
 				return fmt.Errorf("invalid DICOM tag format in category %s: %s", category, tagStr)
 			}
-			
+
 			if value == "" {
 				return fmt.Errorf("empty value for DICOM tag %s in category %s", tagStr, category)
 			}
@@ -138,13 +138,13 @@ func (g *DICOMTemplateGenerator) exportJSON(template *orm.GeneratedTemplate) ([]
 	if err != nil {
 		return nil, err
 	}
-	
+
 	// Convert YAML to JSON (simplified approach)
 	var data interface{}
 	if err := yaml.Unmarshal(yamlData, &data); err != nil {
 		return nil, err
 	}
-	
+
 	// This is a simplified conversion - a proper JSON export would be implemented
 	return yamlData, nil
 }
@@ -179,14 +179,14 @@ func (g *DICOMTemplateGenerator) extractAnatomicalRegion(models []orm.ModelDefin
 	for _, model := range models {
 		for _, field := range model.Fields {
 			if strings.Contains(strings.ToLower(field.FieldName), "body") ||
-			   strings.Contains(strings.ToLower(field.FieldName), "anatomy") ||
-			   strings.Contains(strings.ToLower(field.FieldName), "region") {
+				strings.Contains(strings.ToLower(field.FieldName), "anatomy") ||
+				strings.Contains(strings.ToLower(field.FieldName), "region") {
 				// This would contain logic to extract the actual value
 				// For now, return a default based on procedure
 				break
 			}
 		}
-		
+
 		// Check metadata for modality clues
 		if modality, ok := model.Metadata["modality"].(string); ok {
 			switch strings.ToUpper(modality) {
@@ -209,7 +209,7 @@ func (g *DICOMTemplateGenerator) extractStudyDescription(models []orm.ModelDefin
 	for _, model := range models {
 		for _, field := range model.Fields {
 			if strings.Contains(strings.ToLower(field.FieldName), "description") ||
-			   strings.Contains(strings.ToLower(field.FieldName), "procedure") {
+				strings.Contains(strings.ToLower(field.FieldName), "procedure") {
 				// This would contain logic to extract the actual value
 				return "Generated from HL7 ORM"
 			}
@@ -237,7 +237,7 @@ func (g *DICOMTemplateGenerator) generateFieldValue(field orm.FieldMapping, mode
 	case orm.FieldTypeInt, orm.FieldTypeUint:
 		return fmt.Sprintf("{{ .%s.%s }}", model.Name, field.FieldName)
 	case orm.FieldTypeFloat:
-		return fmt.Sprintf("{{ printf \"%.1f\" .%s.%s }}", model.Name, field.FieldName)
+		return fmt.Sprintf("{{ printf \"%%.1f\" .%s.%s }}", model.Name, field.FieldName)
 	case orm.FieldTypeBool:
 		return fmt.Sprintf("{{ if .%s.%s }}Y{{ else }}N{{ end }}", model.Name, field.FieldName)
 	default:
@@ -262,13 +262,13 @@ func (g *DICOMTemplateGenerator) isValidDICOMTag(tagStr string) bool {
 	if !strings.HasPrefix(tagStr, "(") || !strings.HasSuffix(tagStr, ")") {
 		return false
 	}
-	
+
 	inner := strings.Trim(tagStr, "()")
 	parts := strings.Split(inner, ",")
 	if len(parts) != 2 {
 		return false
 	}
-	
+
 	// Check if both parts are valid hex
 	for _, part := range parts {
 		if len(part) != 4 {
@@ -280,7 +280,7 @@ func (g *DICOMTemplateGenerator) isValidDICOMTag(tagStr string) bool {
 			}
 		}
 	}
-	
+
 	return true
 }
 

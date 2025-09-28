@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strconv"
 	"strings"
 	"time"
 
@@ -106,8 +107,10 @@ func exportAction(c *cli.Context) error {
 	}
 
 	// Create DICOM reader and exporter
+	logrus.Infof("Creating DICOM reader and exporter")
 	reader := dicom.NewReader(cfg)
 	exporter := export.NewExporter(outputDir)
+	logrus.Infof("DICOM reader and exporter created successfully")
 
 	// Read real DICOM metadata and pixel data from the study
 	logrus.Infof("About to call ReadDetailedStudyMetadata for: %s", studyDir)
@@ -137,7 +140,7 @@ func exportAction(c *cli.Context) error {
 	}
 
 	// Export the study
-	if err := exporter.ExportStudy(study); err != nil {
+	if err := exporter.ExportStudy(study, format); err != nil {
 		return fmt.Errorf("failed to export study: %w", err)
 	}
 
@@ -210,7 +213,7 @@ func convertDetailedMetadataToStudy(detailedMetadata *dicom.DetailedStudyMetadat
 			for i := range series.Images {
 				logrus.Infof("Extracting pixel data for image %d in series %s (modality: %s)", i+1, series.SeriesInstanceUID, series.Modality)
 				// Extract real pixel data from DICOM file
-				pixelData, err := extractPixelDataFromDICOM(&series.Images[i], inputDir)
+				pixelData, err := extractPixelDataFromDICOM(&series.Images[i], inputDir, i)
 				if err != nil {
 					logrus.Warnf("Failed to extract pixel data from DICOM: %v", err)
 					logrus.Warnf("Falling back to regeneration for this image")
@@ -231,55 +234,78 @@ func convertDetailedMetadataToStudy(detailedMetadata *dicom.DetailedStudyMetadat
 }
 
 // extractPixelDataFromDICOM extracts pixel data from the actual DICOM file
-func extractPixelDataFromDICOM(img *types.Image, inputDir string) ([]byte, error) {
+func extractPixelDataFromDICOM(img *types.Image, inputDir string, imageIndex int) ([]byte, error) {
 	// Find the DICOM file for this image
-	dicomPath := findDICOMFileForImage(img, inputDir)
+	dicomPath := findDICOMFileForImage(img, inputDir, imageIndex)
 	if dicomPath == "" {
+		logrus.Errorf("DICOM file not found for image %s in directory %s", img.SOPInstanceUID, inputDir)
 		return nil, fmt.Errorf("DICOM file not found for image %s", img.SOPInstanceUID)
 	}
+	logrus.Infof("Found DICOM file: %s", dicomPath)
 
-	// Use dcm2img to extract pixel data
-	cmd := exec.Command("dcm2img", "+Wb", dicomPath, "-")
-	output, err := cmd.Output()
-	if err != nil {
+	// Use dcm2img to extract pixel data as 16-bit ASCII PNM format
+	// Create temporary file for dcm2img output (piping to stdout doesn't work reliably)
+	tempPNMFile := filepath.Join(os.TempDir(), fmt.Sprintf("dcm2img_%d.pnm", time.Now().UnixNano()))
+	defer os.Remove(tempPNMFile) // Clean up temp file
+
+	cmd := exec.Command("dcm2img", "+opw", dicomPath, tempPNMFile)
+	if err := cmd.Run(); err != nil {
 		return nil, fmt.Errorf("dcm2img failed: %w", err)
 	}
 
-	// dcm2img outputs raw pixel data
-	return output, nil
-}
-
-// findDICOMFileForImage finds the DICOM file path for a given image
-func findDICOMFileForImage(img *types.Image, inputDir string) string {
-	// Search for DICOM file with matching SOP Instance UID
-	studyDir := filepath.Join(inputDir, img.SOPInstanceUID)
-	if _, err := os.Stat(studyDir); err == nil {
-		// Look for DICOM files in the study directory
-		err := filepath.Walk(studyDir, func(path string, info os.FileInfo, err error) error {
-			if err != nil {
-				return err
-			}
-			if !info.IsDir() && filepath.Ext(path) == ".dcm" {
-				// Found a DICOM file
-				return nil
-			}
-			return nil
-		})
-		if err == nil {
-			// Return the first DICOM file found
-			matches, _ := filepath.Glob(filepath.Join(studyDir, "**", "*.dcm"))
-			if len(matches) > 0 {
-				return matches[0]
-			}
-		}
+	// Read the PNM file
+	output, err := os.ReadFile(tempPNMFile)
+	if err != nil {
+		return nil, fmt.Errorf("failed to read PNM file: %w", err)
 	}
 
-	// Fallback: search by SOP Instance UID in filename
-	matches, _ := filepath.Glob(filepath.Join(inputDir, "**", "*.dcm"))
+	// Parse PNM format to extract raw pixel data
+	pixelData, err := parsePNMData(output)
+	if err != nil {
+		return nil, fmt.Errorf("failed to parse PNM data: %w", err)
+	}
+
+	return pixelData, nil
+}
+
+// findDICOMFileForImage finds the DICOM file for a given image
+func findDICOMFileForImage(img *types.Image, inputDir string, imageIndex int) string {
+	// Search for DICOM file with matching SOP Instance UID in filename
+	// The structure is: inputDir/studyUID/seriesUID/image_XXX.dcm
+	// Use filepath.Walk to find all DICOM files recursively
+	var matches []string
+	filepath.Walk(inputDir, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+		if !info.IsDir() && filepath.Ext(path) == ".dcm" {
+			matches = append(matches, path)
+		}
+		return nil
+	})
+
 	for _, match := range matches {
 		if strings.Contains(match, img.SOPInstanceUID) {
 			return match
 		}
+	}
+
+	// Fallback: search by filename pattern (image_XXX.dcm) using image index
+	// This matches the image index to the file number (image_001.dcm, image_002.dcm, etc.)
+	var imageMatches []string
+	filepath.Walk(inputDir, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+		if !info.IsDir() && strings.Contains(filepath.Base(path), "image_") && filepath.Ext(path) == ".dcm" {
+			imageMatches = append(imageMatches, path)
+		}
+		return nil
+	})
+
+	if len(imageMatches) > imageIndex {
+		// Return the file at the corresponding index
+		return imageMatches[imageIndex]
 	}
 
 	return ""
@@ -816,4 +842,84 @@ func isMRTextPixel(x, y, centerX, centerY int) bool {
 	}
 
 	return false
+}
+
+// parsePNMData parses ASCII PNM format data (P2) to extract raw pixel data
+func parsePNMData(pnmData []byte) ([]byte, error) {
+	if len(pnmData) < 10 {
+		return nil, fmt.Errorf("PNM data too short")
+	}
+
+	// Convert to string for easier parsing
+	pnmStr := string(pnmData)
+	lines := strings.Split(pnmStr, "\n")
+
+	if len(lines) < 4 {
+		return nil, fmt.Errorf("invalid PNM format: not enough lines")
+	}
+
+	// Parse header: P2, width height, maxval
+	if lines[0] != "P2" {
+		return nil, fmt.Errorf("expected P2 format, got %s", lines[0])
+	}
+
+	// Parse dimensions
+	dimParts := strings.Fields(lines[1])
+	if len(dimParts) != 2 {
+		return nil, fmt.Errorf("invalid dimensions line: %s", lines[1])
+	}
+
+	width, err := strconv.Atoi(dimParts[0])
+	if err != nil {
+		return nil, fmt.Errorf("invalid width: %s", dimParts[0])
+	}
+
+	height, err := strconv.Atoi(dimParts[1])
+	if err != nil {
+		return nil, fmt.Errorf("invalid height: %s", dimParts[1])
+	}
+
+	// Parse max value
+	maxVal, err := strconv.Atoi(lines[2])
+	if err != nil {
+		return nil, fmt.Errorf("invalid max value: %s", lines[2])
+	}
+
+	logrus.Infof("PNM header: P2 %dx%d, max=%d", width, height, maxVal)
+
+	// Find start of pixel data (after header lines)
+	headerLines := 3
+	pixelDataStart := 0
+	for i := 0; i < headerLines; i++ {
+		pixelDataStart += len(lines[i]) + 1 // +1 for newline
+	}
+
+	// Extract pixel data as string
+	pixelDataStr := pnmStr[pixelDataStart:]
+
+	// Parse ASCII pixel values
+	words := strings.Fields(pixelDataStr)
+	if len(words) != width*height {
+		return nil, fmt.Errorf("expected %d pixel values, got %d", width*height, len(words))
+	}
+
+	// Convert ASCII values to 8-bit binary (scaled from 16-bit)
+	pixelData := make([]byte, len(words)) // 8-bit values = 1 byte each
+	for i, word := range words {
+		val, err := strconv.Atoi(word)
+		if err != nil {
+			return nil, fmt.Errorf("invalid pixel value: %s", word)
+		}
+
+		// Convert 16-bit to 8-bit by scaling (preserves pattern)
+		pixel8bit := val * 255 / maxVal
+		if pixel8bit > 255 {
+			pixel8bit = 255
+		}
+		pixelData[i] = byte(pixel8bit)
+	}
+
+	logrus.Infof("Parsed PNM data: %d pixels, %d bytes binary", len(words), len(pixelData))
+
+	return pixelData, nil
 }

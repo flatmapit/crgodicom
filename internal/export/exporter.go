@@ -31,8 +31,8 @@ func NewExporter(outputDir string) *Exporter {
 	}
 }
 
-// ExportStudy exports a study to PNG and PDF formats
-func (e *Exporter) ExportStudy(study *types.Study) error {
+// ExportStudy exports a study to specified format
+func (e *Exporter) ExportStudy(study *types.Study, format string) error {
 	studyDir := filepath.Join(e.outputDir, study.StudyInstanceUID)
 
 	logrus.Infof("Exporting study %s to %s", study.StudyInstanceUID, studyDir)
@@ -51,8 +51,20 @@ func (e *Exporter) ExportStudy(study *types.Study) error {
 			return fmt.Errorf("failed to create series export directory: %w", err)
 		}
 
-		// Export images in this series
-		seriesImages, err := e.exportSeries(study, &series, seriesExportDir)
+		// Export images in this series based on format
+		var seriesImages []string
+		var err error
+		switch format {
+		case "png":
+			seriesImages, err = e.exportSeriesPNG(study, &series, seriesExportDir)
+		case "jpeg":
+			seriesImages, err = e.exportSeriesJPEG(study, &series, seriesExportDir)
+		case "pdf":
+			// For PDF export, we need PNG images first
+			seriesImages, err = e.exportSeriesPNG(study, &series, seriesExportDir)
+		default:
+			return fmt.Errorf("unsupported format: %s", format)
+		}
 		if err != nil {
 			return fmt.Errorf("failed to export series %d: %w", i+1, err)
 		}
@@ -60,14 +72,54 @@ func (e *Exporter) ExportStudy(study *types.Study) error {
 		allImages = append(allImages, seriesImages...)
 	}
 
-	// Create PDF report
-	pdfPath := filepath.Join(exportDir, fmt.Sprintf("study_%s_report.pdf", study.StudyInstanceUID))
-	if err := e.createPDFReport(study, allImages, pdfPath); err != nil {
-		return fmt.Errorf("failed to create PDF report: %w", err)
+	// Create PDF report only if format is pdf
+	if format == "pdf" {
+		pdfPath := filepath.Join(exportDir, fmt.Sprintf("study_%s_report.pdf", study.StudyInstanceUID))
+		if err := e.createPDFReport(study, allImages, pdfPath); err != nil {
+			return fmt.Errorf("failed to create PDF report: %w", err)
+		}
 	}
 
 	logrus.Infof("Successfully exported study to %s", exportDir)
 	return nil
+}
+
+// exportSeriesPNG exports all images in a series to PNG format only
+func (e *Exporter) exportSeriesPNG(study *types.Study, series *types.Series, exportDir string) ([]string, error) {
+	var exportedImages []string
+
+	logrus.Infof("Exporting series %s with %d images to PNG", series.SeriesInstanceUID, len(series.Images))
+
+	for i, image := range series.Images {
+		// Export as PNG
+		pngPath := filepath.Join(exportDir, fmt.Sprintf("image_%03d.png", i+1))
+		if err := e.exportImageToPNG(study, series, &image, i+1, len(series.Images), pngPath); err != nil {
+			logrus.Errorf("Failed to export PNG image %d: %v", i+1, err)
+			continue
+		}
+		exportedImages = append(exportedImages, pngPath)
+	}
+
+	return exportedImages, nil
+}
+
+// exportSeriesJPEG exports all images in a series to JPEG format only
+func (e *Exporter) exportSeriesJPEG(study *types.Study, series *types.Series, exportDir string) ([]string, error) {
+	var exportedImages []string
+
+	logrus.Infof("Exporting series %s with %d images to JPEG", series.SeriesInstanceUID, len(series.Images))
+
+	for i, image := range series.Images {
+		// Export as JPEG
+		jpegPath := filepath.Join(exportDir, fmt.Sprintf("image_%03d.jpg", i+1))
+		if err := e.exportImageToJPEG(study, series, &image, i+1, len(series.Images), jpegPath); err != nil {
+			logrus.Errorf("Failed to export JPEG image %d: %v", i+1, err)
+			continue
+		}
+		exportedImages = append(exportedImages, jpegPath)
+	}
+
+	return exportedImages, nil
 }
 
 // exportSeries exports all images in a series to PNG and JPEG
@@ -99,7 +151,7 @@ func (e *Exporter) exportSeries(study *types.Study, series *types.Series, export
 	return exportedImages, nil
 }
 
-// exportImageToJPEG exports a DICOM image to JPEG format with burnt-in metadata
+// exportImageToJPEG exports a DICOM image to JPEG format (clean extraction, no burned-in metadata)
 func (e *Exporter) exportImageToJPEG(study *types.Study, series *types.Series, img *types.Image, instanceNum, totalInstances int, outputPath string) error {
 	logrus.Debugf("Starting JPEG export for image %dx%d, %d bits per pixel, %d bytes pixel data", img.Width, img.Height, img.BitsPerPixel, len(img.PixelData))
 
@@ -134,10 +186,8 @@ func (e *Exporter) exportImageToJPEG(study *types.Study, series *types.Series, i
 		}
 	}
 
-	// Add burnt-in metadata text
-	if err := e.addBurntInText(grayImage, study, series, img, instanceNum, totalInstances); err != nil {
-		return fmt.Errorf("failed to add burnt-in text: %w", err)
-	}
+	// Note: Burned-in metadata is NOT added to exported images.
+	// Exported images should be clean extractions from DICOM pixel data only.
 
 	// Convert grayscale to RGB for JPEG encoding
 	rgbaImg := image.NewRGBA(grayImage.Bounds())
@@ -159,7 +209,7 @@ func (e *Exporter) exportImageToJPEG(study *types.Study, series *types.Series, i
 	return nil
 }
 
-// exportImageToPNG exports a DICOM image to PNG format with burnt-in metadata
+// exportImageToPNG exports a DICOM image to PNG format (clean extraction, no burned-in metadata)
 func (e *Exporter) exportImageToPNG(study *types.Study, series *types.Series, img *types.Image, instanceNum, totalInstances int, outputPath string) error {
 	// Create grayscale image from pixel data
 	grayImage := image.NewGray(image.Rect(0, 0, img.Width, img.Height))
@@ -192,10 +242,8 @@ func (e *Exporter) exportImageToPNG(study *types.Study, series *types.Series, im
 		}
 	}
 
-	// Add burnt-in metadata text
-	if err := e.addBurntInText(grayImage, study, series, img, instanceNum, totalInstances); err != nil {
-		return fmt.Errorf("failed to add burnt-in text: %w", err)
-	}
+	// Note: Burned-in metadata is NOT added to exported images.
+	// Exported images should be clean extractions from DICOM pixel data only.
 
 	// Save as PNG
 	file, err := os.Create(outputPath)

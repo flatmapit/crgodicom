@@ -9,6 +9,7 @@ CRGoDICOM is a cross-platform CLI utility written in Go for creating synthetic D
 **Key Features:**
 - Synthetic DICOM data generation with configurable fields
 - PACS integration via DCMTK (C-ECHO, C-STORE operations)
+- HL7 ORM message parsing and DICOM generation from ORM data
 - Study templates for common modalities
 - Export capabilities (PNG, JPEG, PDF)
 - Cross-platform single binary distribution
@@ -60,6 +61,10 @@ go test -v ./internal/cli/ -run TestCreateCommand
 
 # Run tests with specific flags
 go test -race -coverprofile=coverage.out ./...
+
+# Test specific functionality
+go test -v ./internal/cli/ -run TestORMCommand
+go test -v ./internal/export/ -run TestExporter
 ```
 
 ## Architecture Overview
@@ -91,6 +96,8 @@ internal/
 **DICOM Generation:** Core DICOM creation in `internal/dicom/` using suyashkumar/dicom library. Templates defined in config system.
 
 **DCMTK Integration:** External DCMTK toolkit integration in `internal/dcmtk/` for PACS operations. Uses system calls to DCMTK binaries (storescu, echoscu, findscu).
+
+**HL7 ORM Processing:** HL7 message parsing and DICOM generation from ORM data in `internal/orm/`. Supports patient demographics and study metadata extraction.
 
 **Study Templates:** Built-in templates for common modalities (chest-xray, ct-chest, mri-brain, etc.) with configurable series/image counts.
 
@@ -181,3 +188,9 @@ go test -race -coverprofile=coverage.out ./... && go tool cover -html=coverage.o
 1. Implement exporter in `internal/export/`
 2. Add format to export command flags in `internal/cli/export.go`
 3. Add tests in `internal/export/*_test.go`
+
+### Work with HL7 ORM Messages
+1. Use `crgodicom orm --input message.hl7` to generate DICOM from HL7 ORM
+2. Parse HL7 messages with `internal/orm/parser/hl7_parser.go`
+3. Generate studies from ORM data using `internal/orm/generator/`
+4. Test ORM functionality: `go test -v ./internal/orm/...`

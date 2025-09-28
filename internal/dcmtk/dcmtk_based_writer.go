@@ -202,43 +202,107 @@ func encodeBMP(w *os.File, img *image.RGBA) error {
 	return nil
 }
 
+// getSOPClassUID returns the appropriate SOP Class UID for the modality
+func getSOPClassUID(modality string) string {
+	sopClassUIDs := map[string]string{
+		"CR": "1.2.840.10008.5.1.4.1.1.1",     // Computed Radiography Image Storage
+		"CT": "1.2.840.10008.5.1.4.1.1.2",     // CT Image Storage
+		"MR": "1.2.840.10008.5.1.4.1.1.4",     // MR Image Storage
+		"US": "1.2.840.10008.5.1.4.1.1.6.1",   // Ultrasound Image Storage
+		"DX": "1.2.840.10008.5.1.4.1.1.1.1",   // Digital X-Ray Image Storage
+		"MG": "1.2.840.10008.5.1.4.1.1.1.2",   // Digital Mammography X-Ray Image Storage
+		"NM": "1.2.840.10008.5.1.4.1.1.20",    // Nuclear Medicine Image Storage
+		"PT": "1.2.840.10008.5.1.4.1.1.128",   // Positron Emission Tomography Image Storage
+		"RT": "1.2.840.10008.5.1.4.1.1.481.1", // RT Image Storage
+		"SR": "1.2.840.10008.5.1.4.1.1.88.11", // Basic Text SR Storage
+	}
+
+	if sopClassUID, exists := sopClassUIDs[modality]; exists {
+		return sopClassUID
+	}
+
+	// Default to CT Image Storage if modality not found
+	return "1.2.840.10008.5.1.4.1.1.2"
+}
+
 // createDICOMWithImg2dcm uses DCMTK's img2dcm to create a DICOM file
 func (w *DCMTKBasedWriter) createDICOMWithImg2dcm(imagePath, outputPath, patientName, patientID, studyUID, seriesUID, instanceUID, modality string, width, height int) error {
 	// Build img2dcm command with DICOM attributes
 	cmd := exec.Command("img2dcm", "--input-format", "BMP", imagePath, outputPath)
 
-	// Add DICOM attributes as key-value pairs
+	// Add comprehensive DICOM attributes as key-value pairs
 	now := time.Now()
+
+	// Get SOP Class UID for modality
+	sopClassUID := getSOPClassUID(modality)
+
+	// Generate comprehensive metadata
 	attributes := []string{
-		"0010,0010=" + patientName,                     // Patient Name
-		"0010,0020=" + patientID,                       // Patient ID
-		"0008,0060=" + modality,                        // Modality
+		// Patient Module (Type 1 attributes)
+		"0010,0010=" + patientName, // Patient Name
+		"0010,0020=" + patientID,   // Patient ID
+		"0010,0030=20000101",       // Patient Birth Date
+		"0010,0040=M",              // Patient Sex
+		"0010,1010=045Y",           // Patient Age
+		"0010,1020=1.75",           // Patient Size
+		"0010,1030=70.0",           // Patient Weight
+
+		// Study Module (Type 1 attributes)
 		"0020,000D=" + studyUID,                        // Study Instance UID
-		"0020,000E=" + seriesUID,                       // Series Instance UID
-		"0008,0018=" + instanceUID,                     // SOP Instance UID
-		"0008,0016=1.2.840.10008.5.1.4.1.1.2",          // SOP Class UID (CT Image Storage)
 		"0008,0020=" + now.Format("20060102"),          // Study Date
 		"0008,0030=" + now.Format("150405"),            // Study Time
 		"0008,0050=" + now.Format("20060102") + "-001", // Accession Number
 		"0008,1030=Generated Study",                    // Study Description
-		"0008,103E=" + modality + " Series 1",          // Series Description
-		"0010,0030=20000101",                           // Patient Birth Date
-		"0010,0040=O",                                  // Patient Sex
-		"0020,0011=1",                                  // Series Number
-		"0020,0013=1",                                  // Instance Number
-		"0028,0002=1",                                  // Samples Per Pixel
-		"0028,0004=MONOCHROME2",                        // Photometric Interpretation
-		"0028,0100=16",                                 // Bits Allocated
-		"0028,0101=16",                                 // Bits Stored
-		"0028,0102=15",                                 // High Bit
-		"0028,0103=0",                                  // Pixel Representation (unsigned)
-		"0028,1050=214",                                // Window Center
-		"0028,1051=200",                                // Window Width
-		"0028,1052=0",                                  // Rescale Intercept
-		"0028,1053=1",                                  // Rescale Slope
-		"0028,0008=1",                                  // Number of Frames
-		"0028,0010=" + fmt.Sprintf("%d", height),       // Rows
-		"0028,0011=" + fmt.Sprintf("%d", width),        // Columns
+		"0020,0010=ST000001",                           // Study ID
+		"0008,0090=Dr. Smith^John^M",                   // Referring Physician Name
+
+		// Series Module (Type 1 attributes)
+		"0020,000E=" + seriesUID,              // Series Instance UID
+		"0020,0011=1",                         // Series Number
+		"0008,0060=" + modality,               // Modality
+		"0008,103E=" + modality + " Series 1", // Series Description
+		"0008,0021=" + now.Format("20060102"), // Series Date
+		"0008,0031=" + now.Format("150405"),   // Series Time
+		"0008,1050=Dr. Johnson^Jane^F",        // Performing Physician Name
+		"0018,1030=" + modality + " Protocol", // Protocol Name
+		"0018,0015=CHEST",                     // Body Part Examined
+		"0018,5100=HFS",                       // Patient Position
+
+		// Image Module (Type 1 attributes)
+		"0008,0018=" + instanceUID,            // SOP Instance UID
+		"0008,0016=" + sopClassUID,            // SOP Class UID
+		"0020,0013=1",                         // Instance Number
+		"0008,0023=" + now.Format("20060102"), // Content Date
+		"0008,0033=" + now.Format("150405"),   // Content Time
+		"0008,0008=ORIGINAL\\PRIMARY",         // Image Type
+		"0020,0012=1",                         // Acquisition Number
+		"0008,0022=" + now.Format("20060102"), // Acquisition Date
+		"0008,0032=" + now.Format("150405"),   // Acquisition Time
+
+		// Image Pixel Module (Type 1 attributes)
+		"0028,0002=1",                            // Samples Per Pixel
+		"0028,0004=MONOCHROME2",                  // Photometric Interpretation
+		"0028,0010=" + fmt.Sprintf("%d", height), // Rows
+		"0028,0011=" + fmt.Sprintf("%d", width),  // Columns
+		"0028,0100=16",                           // Bits Allocated
+		"0028,0101=16",                           // Bits Stored
+		"0028,0102=15",                           // High Bit
+		"0028,0103=0",                            // Pixel Representation (unsigned)
+		"0028,0006=0",                            // Planar Configuration
+		"0028,0034=1\\1",                         // Pixel Aspect Ratio
+		"0028,0008=1",                            // Number of Frames
+
+		// Window/Level settings based on modality
+		"0028,1050=128", // Window Center
+		"0028,1051=256", // Window Width
+		"0028,1052=0",   // Rescale Intercept
+		"0028,1053=1",   // Rescale Slope
+
+		// Implementation-specific attributes (should NOT be in data set)
+		// These are handled by img2dcm automatically in the meta-information header
+		// "0002,0012=1.2.840.10008.5.1.4.1.1.1759021972.6584336156046252565", // Implementation Class UID
+		// "0002,0013=CRGoDICOM v0.2.0",                                       // Implementation Version Name
+		// "0002,0003=CRGODICOM",                                              // Source Application Entity Title
 	}
 
 	// Add all attributes as --key parameters

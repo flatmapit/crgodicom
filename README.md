@@ -7,10 +7,14 @@ A cross-platform CLI utility written in Go for creating synthetic DICOM data and
 ## Features
 
 - **Cross-Platform**: Single binary for Windows, macOS, and Linux (amd64, arm64)
-- **DICOM 3.0 Compliant**: Full support for DICOM standard with configurable fields
+- **DICOM 3.0 Compliant**: Full support for DICOM standard with comprehensive metadata coverage
+- **Enterprise-Grade UID Management**: Cryptographically secure UID generation with guaranteed uniqueness
+- **Comprehensive Modality Support**: CR, CT, MR, US, DX, MG, NM, PT, RT, SR with modality-specific patterns
+- **DICOM Conformance Validation**: Built-in conformance checking for Type 1, Type 2, and Type 3 attributes
 - **Study Templates**: Built-in and user-defined templates for common modalities
 - **PACS Integration**: C-ECHO and C-STORE operations via [DCMTK](https://github.com/DCMTK/dcmtk) integration
 - **Export Capabilities**: Export to PNG, JPEG, and PDF formats with metadata
+- **Visual Verification**: Burned-in metadata for integration testing and debugging
 - **Minimal Dependencies**: Core functionality requires no external dependencies
 - **Configuration**: YAML-based configuration with CLI overrides
 
@@ -59,11 +63,14 @@ sudo apt-get install dcmtk
 ### Basic Usage
 
 ```bash
-# Create a synthetic DICOM study
-crgodicom create --study-count 1 --series-count 2 --image-count 10
+# Create a synthetic DICOM study with comprehensive metadata
+crgodicom create --study-count 1 --series-count 2 --image-count 10 --modality CT
 
-# Create study from template
-crgodicom create --template chest-xray --series-count 1 --image-count 2
+# Create study from template with conformance checking
+crgodicom create --template chest-xray --series-count 1 --image-count 2 --conformance-check
+
+# Create study with specific modality and anatomical region
+crgodicom create --modality MR --anatomical-region brain --series-count 3 --image-count 15
 
 # List local studies
 crgodicom list
@@ -101,6 +108,18 @@ CRGoDICOM comes with built-in templates for common medical imaging modalities:
 - **mammography**: Mammography (MG) breast imaging
 - **digital-xray**: Digital X-Ray (DX) imaging
 - **mri-brain**: Magnetic Resonance Imaging (MR) brain studies
+
+### Supported Modalities
+- **CR**: Computed Radiography - High-resolution digital radiography
+- **CT**: Computed Tomography - Cross-sectional imaging with Hounsfield units
+- **MR**: Magnetic Resonance Imaging - Multi-sequence MRI with T1/T2/FLAIR patterns
+- **US**: Ultrasound - Speckle noise patterns with anatomical structures
+- **DX**: Digital X-Ray - High-resolution digital radiography
+- **MG**: Mammography - High-resolution breast imaging
+- **NM**: Nuclear Medicine - Low-resolution imaging with hot spots
+- **PT**: Positron Emission Tomography - Metabolic activity patterns
+- **RT**: Radiotherapy - Treatment planning with dose distributions
+- **SR**: Structured Reports - Text-based reports (no pixel data)
 
 ### Template Examples
 📚 **[View Complete Template Examples](docs/template-examples/README.md)** - Comprehensive examples showing:

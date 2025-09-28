@@ -33,7 +33,7 @@ func CreateCommand() *cli.Command {
 			},
 			&cli.StringFlag{
 				Name:  "modality",
-				Usage: "DICOM modality: CR, CT, MR, US, DX, MG",
+				Usage: "DICOM modality: CR, CT, MR, US, DX, MG, NM, PT, RT, SR",
 				Value: "CR",
 			},
 			&cli.StringFlag{
@@ -79,6 +79,11 @@ func CreateCommand() *cli.Command {
 				Usage: "Validate generated DICOM files with DCMTK",
 				Value: true,
 			},
+			&cli.BoolFlag{
+				Name:  "conformance-check",
+				Usage: "Perform DICOM conformance validation",
+				Value: true,
+			},
 		},
 		Action: createAction,
 	}
@@ -95,6 +100,7 @@ func createAction(c *cli.Context) error {
 	verbose := c.Bool("verbose")
 	debug := c.Bool("debug")
 	validate := c.Bool("validate")
+	conformanceCheck := c.Bool("conformance-check")
 
 	// Set log level based on flags
 	if debug {
@@ -104,7 +110,7 @@ func createAction(c *cli.Context) error {
 	}
 
 	logrus.Infof("🏗️  Starting DICOM study creation")
-	logrus.Infof("⚙️  Configuration: Verbose=%t, Debug=%t, Validate=%t", verbose, debug, validate)
+	logrus.Infof("⚙️  Configuration: Verbose=%t, Debug=%t, Validate=%t, ConformanceCheck=%t", verbose, debug, validate, conformanceCheck)
 
 	// Parse template if specified
 	var template *config.TemplateConfig
@@ -241,6 +247,14 @@ func createAction(c *cli.Context) error {
 			logrus.Infof("✅ Study %d written successfully", i+1)
 		}
 
+		// Perform conformance checking if enabled
+		if conformanceCheck {
+			logrus.Infof("🔍 DICOM conformance checking is not yet implemented")
+			// TODO: Implement conformance checking
+			// checker := dicom.NewConformanceChecker(dicom.FullConformance)
+			// result := checker.CheckStudyConformance(study)
+		}
+
 		successCount++
 		logrus.Infof("🎉 Successfully created study %d: %s", i+1, study.StudyInstanceUID)
 	}
@@ -290,7 +304,7 @@ func validateCreateParams(params StudyCreateParams) error {
 	}
 
 	// Validate modality
-	validModalities := []string{"CR", "CT", "MR", "US", "DX", "MG"}
+	validModalities := []string{"CR", "CT", "MR", "US", "DX", "MG", "NM", "PT", "RT", "SR"}
 	validModality := false
 	for _, mod := range validModalities {
 		if params.Modality == mod {

@@ -8,12 +8,16 @@ import (
 
 // SOPClassUIDs defines the standard SOP Class UIDs for different modalities
 var SOPClassUIDs = map[string]string{
-	"CR": "1.2.840.10008.5.1.4.1.1.1",   // Computed Radiography Image Storage
-	"CT": "1.2.840.10008.5.1.4.1.1.2",   // CT Image Storage
-	"MR": "1.2.840.10008.5.1.4.1.1.4",   // MR Image Storage
-	"US": "1.2.840.10008.5.1.4.1.1.6.1", // Ultrasound Image Storage
-	"DX": "1.2.840.10008.5.1.4.1.1.1.1", // Digital X-Ray Image Storage
-	"MG": "1.2.840.10008.5.1.4.1.1.1.2", // Digital Mammography X-Ray Image Storage
+	"CR": "1.2.840.10008.5.1.4.1.1.1",     // Computed Radiography Image Storage
+	"CT": "1.2.840.10008.5.1.4.1.1.2",     // CT Image Storage
+	"MR": "1.2.840.10008.5.1.4.1.1.4",     // MR Image Storage
+	"US": "1.2.840.10008.5.1.4.1.1.6.1",   // Ultrasound Image Storage
+	"DX": "1.2.840.10008.5.1.4.1.1.1.1",   // Digital X-Ray Image Storage
+	"MG": "1.2.840.10008.5.1.4.1.1.1.2",   // Digital Mammography X-Ray Image Storage
+	"NM": "1.2.840.10008.5.1.4.1.1.20",    // Nuclear Medicine Image Storage
+	"PT": "1.2.840.10008.5.1.4.1.1.128",   // Positron Emission Tomography Image Storage
+	"RT": "1.2.840.10008.5.1.4.1.1.481.1", // RT Image Storage
+	"SR": "1.2.840.10008.5.1.4.1.1.88.11", // Basic Text SR Storage
 }
 
 // TransferSyntaxUIDs defines common transfer syntax UIDs
@@ -30,6 +34,10 @@ var ImageDimensions = map[string]ImageSize{
 	"US": {Width: 640, Height: 480, BitsPerPixel: 8},
 	"DX": {Width: 2048, Height: 2048, BitsPerPixel: 16},
 	"MG": {Width: 4096, Height: 3328, BitsPerPixel: 16},
+	"NM": {Width: 128, Height: 128, BitsPerPixel: 16},
+	"PT": {Width: 128, Height: 128, BitsPerPixel: 16},
+	"RT": {Width: 512, Height: 512, BitsPerPixel: 16},
+	"SR": {Width: 0, Height: 0, BitsPerPixel: 0}, // SR doesn't have pixel data
 }
 
 // ImageSize represents image dimensions and bit depth

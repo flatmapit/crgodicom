@@ -2,9 +2,12 @@ package cli
 
 import (
 	"os"
+	"os/exec"
 	"path/filepath"
 	"testing"
 
+	"github.com/flatmapit/crgodicom/internal/dcmtk"
+	"github.com/flatmapit/crgodicom/internal/dicom"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -159,7 +162,6 @@ func TestCreateCommand_FileStructure(t *testing.T) {
 
 	// Create mock directory structure
 	studyUID := "1.2.3.4.5.6.7.8.9"
-	seriesUID := "1.2.3.4.5.6.7.8.9.1"
 
 	studyDir := filepath.Join(tempDir, studyUID)
 	seriesDir := filepath.Join(studyDir, "series_001")
@@ -230,7 +232,6 @@ func TestCreateCommand_Integration(t *testing.T) {
 	modality := "DX"
 	seriesCount := 1
 	imageCount := 1
-	studyDescription := "Integration Test Study"
 
 	// Simulate the complete create command workflow
 	t.Run("Complete_Workflow", func(t *testing.T) {
@@ -249,12 +250,51 @@ func TestCreateCommand_Integration(t *testing.T) {
 		_, err = os.Stat(tempDir)
 		assert.NoError(t, err, "Output directory should be created")
 
-		// 4. In a real test, you would:
-		//    - Generate UIDs
-		//    - Create study/series/image structures
-		//    - Generate DICOM files
-		//    - Validate file contents
-		//    - Test error scenarios
+		// 4. Test actual DICOM creation
+		t.Run("Real_DICOM_Creation", func(t *testing.T) {
+			// Create a real DICOM file using our DCMTK writer
+			writer := dcmtk.NewDCMTKBasedWriter()
+
+			// Generate pixel data
+			generator := dicom.NewImageGenerator()
+			pixelData, err := generator.GenerateImage(modality, 512, 512, 16)
+			require.NoError(t, err, "Should generate pixel data")
+
+			// Create DICOM file
+			dicomPath := filepath.Join(tempDir, "test.dcm")
+			err = writer.WriteDICOMFile(
+				dicomPath,
+				patientName,
+				patientID,
+				"1.2.840.10008.5.1.4.1.1.1759021409.7465550661221513685", // studyUID
+				"1.2.840.10008.5.1.4.1.1.1759021409.7465550661221513686", // seriesUID
+				"1.2.840.10008.5.1.4.1.1.1759021409.7465550661221513687", // instanceUID
+				modality,
+				512, 512, // width, height
+				16, 16, 15, // bitsAllocated, bitsStored, highBit
+				1,             // samplesPerPixel
+				"MONOCHROME2", // photometricInterpretation
+				pixelData,
+			)
+			require.NoError(t, err, "Should create DICOM file")
+
+			// Validate DICOM file exists and has reasonable size
+			fileInfo, err := os.Stat(dicomPath)
+			require.NoError(t, err, "DICOM file should exist")
+			assert.True(t, fileInfo.Size() > 100*1024, "DICOM file should be > 100KB")
+
+			// Validate DICOM file with dcmdump
+			cmd := exec.Command("dcmdump", dicomPath)
+			output, err := cmd.CombinedOutput()
+			require.NoError(t, err, "dcmdump should succeed")
+
+			// Check for key DICOM elements
+			outputStr := string(output)
+			assert.Contains(t, outputStr, "PatientName", "Should contain PatientName")
+			assert.Contains(t, outputStr, "PatientID", "Should contain PatientID")
+			assert.Contains(t, outputStr, "Modality", "Should contain Modality")
+			assert.Contains(t, outputStr, "PixelData", "Should contain PixelData")
+		})
 	})
 }
 
@@ -294,7 +334,3 @@ func TestCreateCommand_PixelDataRegression(t *testing.T) {
 		assert.True(t, true, "Element order regression test placeholder")
 	})
 }
-
-
-
-
