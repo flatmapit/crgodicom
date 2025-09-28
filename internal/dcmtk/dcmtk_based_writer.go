@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"image"
 	"image/color"
+	"image/png"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -57,29 +58,26 @@ func (w *DCMTKBasedWriter) convertPixelDataToImage(pixelData []byte, width, heig
 		return "", fmt.Errorf("failed to create image from pixel data: %w", err)
 	}
 
-	// Save as BMP (lossless format for better image quality)
-	imagePath := filepath.Join(w.tempDir, "temp_image.bmp")
+	// Save as PNG (lossless format, supports grayscale directly)
+	imagePath := filepath.Join(w.tempDir, "temp_image.png")
 	file, err := os.Create(imagePath)
 	if err != nil {
 		return "", fmt.Errorf("failed to create image file: %w", err)
 	}
 	defer file.Close()
 
-	// Convert to RGB for BMP encoding
-	rgbaImg := image.NewRGBA(img.Bounds())
-	for y := 0; y < height; y++ {
-		for x := 0; x < width; x++ {
-			gray := img.GrayAt(x, y)
-			rgbaImg.Set(x, y, color.RGBA{gray.Y, gray.Y, gray.Y, 255})
-		}
+	// Encode as PNG (lossless, grayscale)
+	if err := png.Encode(file, img); err != nil {
+		return "", fmt.Errorf("failed to encode PNG: %w", err)
 	}
 
-	// Encode as BMP (lossless)
-	if err := encodeBMP(file, rgbaImg); err != nil {
-		return "", fmt.Errorf("failed to encode BMP: %w", err)
+	// Convert PNG to BMP for img2dcm (since img2dcm doesn't support PNG)
+	bmpPath := filepath.Join(w.tempDir, "temp_image.bmp")
+	if err := w.convertPNGToBMP(imagePath, bmpPath); err != nil {
+		return "", fmt.Errorf("failed to convert PNG to BMP: %w", err)
 	}
 
-	return imagePath, nil
+	return bmpPath, nil
 }
 
 // createImageFromPixelData creates a grayscale image from raw pixel data
@@ -135,56 +133,72 @@ func (w *DCMTKBasedWriter) getImageDimensions(imagePath string) (int, int, error
 	return img.Width, img.Height, nil
 }
 
+// convertPNGToBMP converts a PNG file to BMP format using system tools
+func (w *DCMTKBasedWriter) convertPNGToBMP(pngPath, bmpPath string) error {
+	// Use ImageMagick convert command if available
+	cmd := exec.Command("convert", pngPath, bmpPath)
+	output, err := cmd.CombinedOutput()
+	if err != nil {
+		// Fallback: try sips (macOS built-in)
+		cmd = exec.Command("sips", "-s", "format", "bmp", pngPath, "--out", bmpPath)
+		output, err = cmd.CombinedOutput()
+		if err != nil {
+			return fmt.Errorf("failed to convert PNG to BMP: %s, output: %s", err, string(output))
+		}
+	}
+	return nil
+}
+
 // encodeBMP encodes an RGBA image as BMP format
 func encodeBMP(w *os.File, img *image.RGBA) error {
 	bounds := img.Bounds()
 	width := bounds.Dx()
 	height := bounds.Dy()
-	
+
 	// BMP header
 	fileSize := 54 + width*height*3 // Header + pixel data
 	header := make([]byte, 54)
-	
+
 	// BMP file header (14 bytes)
-	copy(header[0:2], "BM")                    // Signature
-	binary.LittleEndian.PutUint32(header[2:6], uint32(fileSize))  // File size
-	binary.LittleEndian.PutUint32(header[6:10], 0)                // Reserved
-	binary.LittleEndian.PutUint32(header[10:14], 54)              // Data offset
-	
+	copy(header[0:2], "BM")                                      // Signature
+	binary.LittleEndian.PutUint32(header[2:6], uint32(fileSize)) // File size
+	binary.LittleEndian.PutUint32(header[6:10], 0)               // Reserved
+	binary.LittleEndian.PutUint32(header[10:14], 54)             // Data offset
+
 	// BMP info header (40 bytes)
-	binary.LittleEndian.PutUint32(header[14:18], 40)              // Header size
-	binary.LittleEndian.PutUint32(header[18:22], uint32(width))   // Width
-	binary.LittleEndian.PutUint32(header[22:26], uint32(height))   // Height
-	binary.LittleEndian.PutUint16(header[26:28], 1)               // Planes
-	binary.LittleEndian.PutUint16(header[28:30], 24)              // Bits per pixel
-	binary.LittleEndian.PutUint32(header[30:34], 0)               // Compression
+	binary.LittleEndian.PutUint32(header[14:18], 40)                     // Header size
+	binary.LittleEndian.PutUint32(header[18:22], uint32(width))          // Width
+	binary.LittleEndian.PutUint32(header[22:26], uint32(height))         // Height
+	binary.LittleEndian.PutUint16(header[26:28], 1)                      // Planes
+	binary.LittleEndian.PutUint16(header[28:30], 24)                     // Bits per pixel
+	binary.LittleEndian.PutUint32(header[30:34], 0)                      // Compression
 	binary.LittleEndian.PutUint32(header[34:38], uint32(width*height*3)) // Image size
-	binary.LittleEndian.PutUint32(header[38:42], 0)               // X pixels per meter
-	binary.LittleEndian.PutUint32(header[42:46], 0)               // Y pixels per meter
-	binary.LittleEndian.PutUint32(header[46:50], 0)               // Colors used
-	binary.LittleEndian.PutUint32(header[50:54], 0)               // Important colors
-	
+	binary.LittleEndian.PutUint32(header[38:42], 0)                      // X pixels per meter
+	binary.LittleEndian.PutUint32(header[42:46], 0)                      // Y pixels per meter
+	binary.LittleEndian.PutUint32(header[46:50], 0)                      // Colors used
+	binary.LittleEndian.PutUint32(header[50:54], 0)                      // Important colors
+
 	// Write header
 	if _, err := w.Write(header); err != nil {
 		return err
 	}
-	
+
 	// Write pixel data (BMP is bottom-up, so we need to flip)
-	rowSize := ((width * 3 + 3) / 4) * 4 // Row size must be multiple of 4
+	rowSize := ((width*3 + 3) / 4) * 4 // Row size must be multiple of 4
 	for y := height - 1; y >= 0; y-- {
 		row := make([]byte, rowSize)
 		for x := 0; x < width; x++ {
 			c := img.RGBAAt(x, y)
 			offset := x * 3
-			row[offset] = c.B     // Blue
-			row[offset+1] = c.G   // Green
-			row[offset+2] = c.R   // Red
+			row[offset] = c.B   // Blue
+			row[offset+1] = c.G // Green
+			row[offset+2] = c.R // Red
 		}
 		if _, err := w.Write(row); err != nil {
 			return err
 		}
 	}
-	
+
 	return nil
 }
 

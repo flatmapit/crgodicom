@@ -5,6 +5,7 @@ import (
 	"math"
 	"math/rand"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"strings"
 	"time"
@@ -118,7 +119,7 @@ func exportAction(c *cli.Context) error {
 	logrus.Infof("ReadDetailedStudyMetadata completed successfully")
 
 	// Convert detailed metadata to types.Study for export
-	study, err := convertDetailedMetadataToStudy(detailedMetadata)
+	study, err := convertDetailedMetadataToStudy(detailedMetadata, inputDir)
 	if err != nil {
 		return fmt.Errorf("failed to convert metadata to study: %w", err)
 	}
@@ -145,7 +146,7 @@ func exportAction(c *cli.Context) error {
 }
 
 // convertDetailedMetadataToStudy converts detailed DICOM metadata to types.Study
-func convertDetailedMetadataToStudy(detailedMetadata *dicom.DetailedStudyMetadata) (*types.Study, error) {
+func convertDetailedMetadataToStudy(detailedMetadata *dicom.DetailedStudyMetadata, inputDir string) (*types.Study, error) {
 	// Create study structure from real DICOM metadata
 	study := &types.Study{
 		StudyInstanceUID: detailedMetadata.StudyUID,
@@ -202,26 +203,86 @@ func convertDetailedMetadataToStudy(detailedMetadata *dicom.DetailedStudyMetadat
 	logrus.Infof("Converted study: %s with %d series and %d total images",
 		study.StudyInstanceUID, len(study.Series), getTotalImageCount(study))
 
-	// WORKAROUND: Always regenerate pixel data to ensure correct patterns
-	// The DICOM library processes pixel data, destroying our patterns
-	// So we regenerate it during export to ensure consistency
+	// Extract real pixel data from DICOM files (no longer regenerate)
+	// With lossless DICOM, we can now extract the actual pixel data
 	if getTotalImageCount(study) > 0 {
 		for _, series := range study.Series {
 			for i := range series.Images {
-				logrus.Infof("Regenerating pixel data for image %d in series %s (modality: %s)", i+1, series.SeriesInstanceUID, series.Modality)
-				// Always regenerate pixel data with correct patterns
-				pixelData, err := regeneratePixelDataWithBurnedText(&series.Images[i])
+				logrus.Infof("Extracting pixel data for image %d in series %s (modality: %s)", i+1, series.SeriesInstanceUID, series.Modality)
+				// Extract real pixel data from DICOM file
+				pixelData, err := extractPixelDataFromDICOM(&series.Images[i], inputDir)
 				if err != nil {
-					logrus.Warnf("Failed to regenerate pixel data: %v", err)
-					continue
+					logrus.Warnf("Failed to extract pixel data from DICOM: %v", err)
+					logrus.Warnf("Falling back to regeneration for this image")
+					// Fallback to regeneration if extraction fails
+					pixelData, err = regeneratePixelDataWithBurnedText(&series.Images[i])
+					if err != nil {
+						logrus.Warnf("Failed to regenerate pixel data: %v", err)
+						continue
+					}
 				}
 				series.Images[i].PixelData = pixelData
-				logrus.Infof("Successfully regenerated %d bytes of pixel data with correct patterns", len(pixelData))
+				logrus.Infof("Successfully extracted %d bytes of pixel data from DICOM", len(pixelData))
 			}
 		}
 	}
 
 	return study, nil
+}
+
+// extractPixelDataFromDICOM extracts pixel data from the actual DICOM file
+func extractPixelDataFromDICOM(img *types.Image, inputDir string) ([]byte, error) {
+	// Find the DICOM file for this image
+	dicomPath := findDICOMFileForImage(img, inputDir)
+	if dicomPath == "" {
+		return nil, fmt.Errorf("DICOM file not found for image %s", img.SOPInstanceUID)
+	}
+
+	// Use dcm2img to extract pixel data
+	cmd := exec.Command("dcm2img", "+Wb", dicomPath, "-")
+	output, err := cmd.Output()
+	if err != nil {
+		return nil, fmt.Errorf("dcm2img failed: %w", err)
+	}
+
+	// dcm2img outputs raw pixel data
+	return output, nil
+}
+
+// findDICOMFileForImage finds the DICOM file path for a given image
+func findDICOMFileForImage(img *types.Image, inputDir string) string {
+	// Search for DICOM file with matching SOP Instance UID
+	studyDir := filepath.Join(inputDir, img.SOPInstanceUID)
+	if _, err := os.Stat(studyDir); err == nil {
+		// Look for DICOM files in the study directory
+		err := filepath.Walk(studyDir, func(path string, info os.FileInfo, err error) error {
+			if err != nil {
+				return err
+			}
+			if !info.IsDir() && filepath.Ext(path) == ".dcm" {
+				// Found a DICOM file
+				return nil
+			}
+			return nil
+		})
+		if err == nil {
+			// Return the first DICOM file found
+			matches, _ := filepath.Glob(filepath.Join(studyDir, "**", "*.dcm"))
+			if len(matches) > 0 {
+				return matches[0]
+			}
+		}
+	}
+
+	// Fallback: search by SOP Instance UID in filename
+	matches, _ := filepath.Glob(filepath.Join(inputDir, "**", "*.dcm"))
+	for _, match := range matches {
+		if strings.Contains(match, img.SOPInstanceUID) {
+			return match
+		}
+	}
+
+	return ""
 }
 
 // regeneratePixelDataWithBurnedText regenerates pixel data with burnt-in text
