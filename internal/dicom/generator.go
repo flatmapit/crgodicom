@@ -13,37 +13,25 @@ import (
 
 // Generator handles DICOM data generation
 type Generator struct {
-	config   *config.Config
-	uidGen   *UIDGenerator
-	imageGen *ImageGenerator
+	config      *config.Config
+	uidGen      *EnhancedUIDGenerator
+	imageGen    *ImageGenerator
+	metadataGen *MetadataGenerator
 }
 
 // NewGenerator creates a new DICOM generator
 func NewGenerator(cfg *config.Config) *Generator {
 	return &Generator{
-		config:   cfg,
-		uidGen:   NewUIDGenerator(cfg.DICOM.OrgRoot),
-		imageGen: NewImageGenerator(),
+		config:      cfg,
+		uidGen:      NewEnhancedUIDGenerator(cfg.DICOM.OrgRoot),
+		imageGen:    NewImageGenerator(),
+		metadataGen: NewMetadataGenerator(cfg.DICOM.OrgRoot),
 	}
-}
-
-// UIDGenerator generates DICOM UIDs
-type UIDGenerator struct {
-	orgRoot string
-	rand    *rand.Rand
 }
 
 // ImageGenerator generates synthetic images
 type ImageGenerator struct {
 	rand *rand.Rand
-}
-
-// NewUIDGenerator creates a new UID generator
-func NewUIDGenerator(orgRoot string) *UIDGenerator {
-	return &UIDGenerator{
-		orgRoot: orgRoot,
-		rand:    rand.New(rand.NewSource(time.Now().UnixNano())),
-	}
 }
 
 // NewImageGenerator creates a new image generator
@@ -53,33 +41,30 @@ func NewImageGenerator() *ImageGenerator {
 	}
 }
 
-// GenerateStudy generates a complete DICOM study
+// GenerateStudy generates a complete DICOM study with comprehensive metadata
 func (g *Generator) GenerateStudy(params types.StudyParams) (*types.Study, error) {
-	// Generate patient information
-	patientInfo := g.generatePatientInfo(params.PatientName, params.PatientID)
+	// Generate comprehensive patient metadata
+	patientMetadata := g.metadataGen.PatientModule(params.PatientName, params.PatientID)
 
-	// Generate study information
-	studyInfo := g.generateStudyInfo(params.StudyDescription, params.AccessionNumber)
+	// Generate comprehensive study metadata
+	studyMetadata := g.metadataGen.StudyModule(params.StudyDescription, params.AccessionNumber)
 
-	// Generate study UID
-	studyUID := g.uidGen.GenerateStudyUID()
-
-	// Create study
+	// Create study with comprehensive metadata
 	study := &types.Study{
-		StudyInstanceUID: studyUID,
-		StudyDate:        studyInfo.Date.Format("20060102"),
-		StudyTime:        studyInfo.Date.Format("150405"),
-		AccessionNumber:  studyInfo.AccessionNumber,
-		StudyDescription: studyInfo.Description,
-		PatientName:      patientInfo.Name,
-		PatientID:        patientInfo.ID,
-		PatientBirthDate: patientInfo.BirthDate.Format("20060102"),
+		StudyInstanceUID: studyMetadata["StudyInstanceUID"].(string),
+		StudyDate:        studyMetadata["StudyDate"].(string),
+		StudyTime:        studyMetadata["StudyTime"].(string),
+		AccessionNumber:  studyMetadata["AccessionNumber"].(string),
+		StudyDescription: studyMetadata["StudyDescription"].(string),
+		PatientName:      patientMetadata["PatientName"].(string),
+		PatientID:        patientMetadata["PatientID"].(string),
+		PatientBirthDate: patientMetadata["PatientBirthDate"].(string),
 		Series:           make([]types.Series, 0, params.SeriesCount),
 	}
 
-	// Generate series
+	// Generate series with comprehensive metadata
 	for i := 0; i < params.SeriesCount; i++ {
-		series, err := g.generateSeries(studyUID, params.Modality, i+1, params.ImageCount)
+		series, err := g.generateSeries(study, params.Modality, i+1, params.ImageCount, params.AnatomicalRegion)
 		if err != nil {
 			return nil, fmt.Errorf("failed to generate series %d: %w", i+1, err)
 		}
@@ -89,21 +74,22 @@ func (g *Generator) GenerateStudy(params types.StudyParams) (*types.Study, error
 	return study, nil
 }
 
-// generateSeries generates a DICOM series
-func (g *Generator) generateSeries(studyUID, modality string, seriesNumber, imageCount int) (*types.Series, error) {
-	seriesUID := g.uidGen.GenerateSeriesUID()
+// generateSeries generates a DICOM series with comprehensive metadata
+func (g *Generator) generateSeries(study *types.Study, modality string, seriesNumber, imageCount int, anatomicalRegion string) (*types.Series, error) {
+	// Generate comprehensive series metadata
+	seriesMetadata := g.metadataGen.SeriesModule(modality, seriesNumber, anatomicalRegion)
 
 	series := &types.Series{
-		SeriesInstanceUID: seriesUID,
-		SeriesNumber:      seriesNumber,
-		Modality:          modality,
-		SeriesDescription: fmt.Sprintf("%s Series %d", modality, seriesNumber),
+		SeriesInstanceUID: seriesMetadata["SeriesInstanceUID"].(string),
+		SeriesNumber:      seriesMetadata["SeriesNumber"].(int),
+		Modality:          seriesMetadata["Modality"].(string),
+		SeriesDescription: seriesMetadata["SeriesDescription"].(string),
 		Images:            make([]types.Image, 0, imageCount),
 	}
 
-	// Generate images
+	// Generate images with comprehensive metadata
 	for i := 0; i < imageCount; i++ {
-		image, err := g.generateImage(studyUID, seriesUID, modality, i+1)
+		image, err := g.generateImage(study, series, i+1)
 		if err != nil {
 			return nil, fmt.Errorf("failed to generate image %d: %w", i+1, err)
 		}
@@ -113,123 +99,45 @@ func (g *Generator) generateSeries(studyUID, modality string, seriesNumber, imag
 	return series, nil
 }
 
-// generateImage generates a DICOM image
-func (g *Generator) generateImage(studyUID, seriesUID, modality string, instanceNumber int) (*types.Image, error) {
-	instanceUID := g.uidGen.GenerateInstanceUID()
-
+// generateImage generates a DICOM image with comprehensive metadata and burned-in text for integration debugging
+func (g *Generator) generateImage(study *types.Study, series *types.Series, instanceNumber int) (*types.Image, error) {
 	// Get SOP class UID for modality
-	sopClassUID, exists := types.SOPClassUIDs[modality]
+	sopClassUID, exists := types.SOPClassUIDs[series.Modality]
 	if !exists {
-		return nil, fmt.Errorf("unsupported modality: %s", modality)
+		return nil, fmt.Errorf("unsupported modality: %s", series.Modality)
 	}
+
+	// Generate comprehensive image metadata
+	imageMetadata := g.metadataGen.ImageModule(series.Modality, instanceNumber, sopClassUID)
 
 	// Get image dimensions
-	imageSize, exists := types.ImageDimensions[modality]
+	imageSize, exists := types.ImageDimensions[series.Modality]
 	if !exists {
-		return nil, fmt.Errorf("unsupported modality: %s", modality)
+		return nil, fmt.Errorf("unsupported modality: %s", series.Modality)
 	}
 
-	// Generate pixel data
-	fmt.Printf("DEBUG: generateImage - modality='%s', imageSize=%+v\n", modality, imageSize)
-	pixelData, err := g.imageGen.GenerateImage(modality, imageSize.Width, imageSize.Height, imageSize.BitsPerPixel)
+	// Generate comprehensive image pixel metadata
+	pixelMetadata := g.metadataGen.ImagePixelModule(imageSize.Width, imageSize.Height, imageSize.BitsPerPixel, series.Modality)
+
+	// Generate pixel data with burned-in metadata
+	fmt.Printf("DEBUG: generateImage - modality='%s', imageSize=%+v\n", series.Modality, imageSize)
+	pixelData, err := g.imageGen.GenerateImageWithMetadata(study, series, instanceNumber, len(series.Images)+1, imageSize.Width, imageSize.Height, imageSize.BitsPerPixel)
 	if err != nil {
 		return nil, fmt.Errorf("failed to generate pixel data: %w", err)
 	}
 
 	image := &types.Image{
-		SOPInstanceUID: instanceUID,
-		SOPClassUID:    sopClassUID,
-		InstanceNumber: instanceNumber,
+		SOPInstanceUID: imageMetadata["SOPInstanceUID"].(string),
+		SOPClassUID:    imageMetadata["SOPClassUID"].(string),
+		InstanceNumber: imageMetadata["InstanceNumber"].(int),
 		PixelData:      pixelData,
-		Width:          imageSize.Width,
-		Height:         imageSize.Height,
-		BitsPerPixel:   imageSize.BitsPerPixel,
-		Modality:       modality,
+		Width:          pixelMetadata["Columns"].(int),
+		Height:         pixelMetadata["Rows"].(int),
+		BitsPerPixel:   pixelMetadata["BitsAllocated"].(int),
+		Modality:       series.Modality,
 	}
 
 	return image, nil
-}
-
-// generatePatientInfo generates patient information
-func (g *Generator) generatePatientInfo(patientName, patientID string) types.PatientInfo {
-	// Use provided values or generate defaults
-	if patientName == "" {
-		patientName = "DOE^JOHN^M"
-	}
-	if patientID == "" {
-		patientID = g.generateRandomPatientID()
-	}
-
-	// Generate random birth date (18-80 years old)
-	now := time.Now()
-	minAge := 18
-	maxAge := 80
-	age := g.uidGen.rand.Intn(maxAge-minAge+1) + minAge
-	birthYear := now.Year() - age
-	birthDate := time.Date(birthYear, time.Month(g.uidGen.rand.Intn(12)+1), g.uidGen.rand.Intn(28)+1, 0, 0, 0, 0, time.UTC)
-
-	return types.PatientInfo{
-		Name:      patientName,
-		ID:        patientID,
-		BirthDate: birthDate,
-	}
-}
-
-// generateStudyInfo generates study information
-func (g *Generator) generateStudyInfo(studyDescription, accessionNumber string) types.StudyInfo {
-	// Use provided values or generate defaults
-	if studyDescription == "" {
-		studyDescription = "Generated Study"
-	}
-	if accessionNumber == "" {
-		accessionNumber = g.generateAccessionNumber()
-	}
-
-	now := time.Now()
-
-	return types.StudyInfo{
-		Description:     studyDescription,
-		AccessionNumber: accessionNumber,
-		Date:            now,
-		Time:            now,
-	}
-}
-
-// generateRandomPatientID generates a random patient ID
-func (g *Generator) generateRandomPatientID() string {
-	const chars = "0123456789ABCDEF"
-	patientID := make([]byte, 8)
-	for i := range patientID {
-		patientID[i] = chars[g.uidGen.rand.Intn(len(chars))]
-	}
-	return string(patientID)
-}
-
-// generateAccessionNumber generates an accession number
-func (g *Generator) generateAccessionNumber() string {
-	now := time.Now()
-	return fmt.Sprintf("%s-%04d", now.Format("20060102"), g.uidGen.rand.Intn(10000))
-}
-
-// GenerateStudyUID generates a study instance UID
-func (u *UIDGenerator) GenerateStudyUID() string {
-	timestamp := time.Now().Unix()
-	random := u.rand.Int63()
-	return fmt.Sprintf("%s.%d.%d", u.orgRoot, timestamp, random)
-}
-
-// GenerateSeriesUID generates a series instance UID
-func (u *UIDGenerator) GenerateSeriesUID() string {
-	timestamp := time.Now().Unix()
-	random := u.rand.Int63()
-	return fmt.Sprintf("%s.%d.%d", u.orgRoot, timestamp, random)
-}
-
-// GenerateInstanceUID generates a SOP instance UID
-func (u *UIDGenerator) GenerateInstanceUID() string {
-	timestamp := time.Now().Unix()
-	random := u.rand.Int63()
-	return fmt.Sprintf("%s.%d.%d", u.orgRoot, timestamp, random)
 }
 
 // GenerateImage generates synthetic image data
@@ -256,7 +164,7 @@ func (i *ImageGenerator) GenerateImage(modality string, width, height, bitsPerPi
 		// CT: moderate contrast, slice-like patterns
 		i.generateCTPattern(pixelData, width, height, bytesPerPixel)
 	case "MR":
-		// MRI: high contrast, more uniform noise
+		// MRI: high contrast, more uniform noise with sequence-specific patterns
 		i.generateMRPattern(pixelData, width, height, bytesPerPixel)
 	case "US":
 		// Ultrasound: low contrast, speckle noise
@@ -264,9 +172,37 @@ func (i *ImageGenerator) GenerateImage(modality string, width, height, bitsPerPi
 	case "MG":
 		// Mammography: high resolution, subtle patterns
 		i.generateMGPattern(pixelData, width, height, bytesPerPixel)
+	case "NM":
+		// Nuclear Medicine: low resolution, hot spots
+		i.generateCTPattern(pixelData, width, height, bytesPerPixel) // Use CT pattern as fallback
+	case "PT":
+		// PET: low resolution, metabolic activity patterns
+		i.generateCTPattern(pixelData, width, height, bytesPerPixel) // Use CT pattern as fallback
+	case "RT":
+		// Radiotherapy: treatment planning patterns
+		i.generateCTPattern(pixelData, width, height, bytesPerPixel) // Use CT pattern as fallback
+	case "SR":
+		// Structured Reports: no pixel data
+		logrus.Info("SR modality - no pixel data generation needed")
 	default:
 		// Default: simple noise pattern
 		i.generateDefaultPattern(pixelData, width, height, bytesPerPixel)
+	}
+
+	return pixelData, nil
+}
+
+// GenerateImageWithMetadata generates synthetic image data with burned-in metadata for integration debugging
+func (i *ImageGenerator) GenerateImageWithMetadata(study *types.Study, series *types.Series, instanceNumber, totalInstances int, width, height, bitsPerPixel int) ([]byte, error) {
+	// First generate the base pattern
+	pixelData, err := i.GenerateImage(series.Modality, width, height, bitsPerPixel)
+	if err != nil {
+		return nil, fmt.Errorf("failed to generate base image: %w", err)
+	}
+
+	// Add burned-in metadata to the pixel data
+	if err := i.addBurnedInMetadata(pixelData, study, series, instanceNumber, totalInstances, width, height, bitsPerPixel); err != nil {
+		return nil, fmt.Errorf("failed to add burned-in metadata: %w", err)
 	}
 
 	return pixelData, nil
@@ -430,8 +366,8 @@ func (i *ImageGenerator) generateCTPattern(pixelData []byte, width, height, byte
 			// Store pixel value
 			if bytesPerPixel == 2 {
 				value := uint16(baseValue)
-				pixelData[idx] = byte(value & 0xFF)
-				pixelData[idx+1] = byte((value >> 8) & 0xFF)
+				pixelData[idx] = byte(value & 0xFF)          // Low byte first (little-endian)
+				pixelData[idx+1] = byte((value >> 8) & 0xFF) // High byte second
 			} else {
 				pixelData[idx] = byte(baseValue & 0xFF)
 			}
@@ -473,8 +409,8 @@ func (i *ImageGenerator) generateMRPattern(pixelData []byte, width, height, byte
 			// Store pixel value
 			if bytesPerPixel == 2 {
 				value := uint16(noise) * 256
-				pixelData[idx] = byte(value & 0xFF)
-				pixelData[idx+1] = byte((value >> 8) & 0xFF)
+				pixelData[idx] = byte(value & 0xFF)          // Low byte first (little-endian)
+				pixelData[idx+1] = byte((value >> 8) & 0xFF) // High byte second
 			} else {
 				pixelData[idx] = byte(noise)
 			}
@@ -540,10 +476,145 @@ func (i *ImageGenerator) generateMGPattern(pixelData []byte, width, height, byte
 			// Store pixel value
 			if bytesPerPixel == 2 {
 				value := uint16(noise) * 256
-				pixelData[idx] = byte(value & 0xFF)
-				pixelData[idx+1] = byte((value >> 8) & 0xFF)
+				pixelData[idx] = byte(value & 0xFF)          // Low byte first (little-endian)
+				pixelData[idx+1] = byte((value >> 8) & 0xFF) // High byte second
 			} else {
 				pixelData[idx] = byte(noise)
+			}
+		}
+	}
+}
+
+// generateNMPattern generates Nuclear Medicine-like pattern with hot spots
+func (i *ImageGenerator) generateNMPattern(pixelData []byte, width, height, bytesPerPixel int) {
+	// NM characteristics: low resolution, hot spots representing radioactive uptake
+	for y := 0; y < height; y++ {
+		for x := 0; x < width; x++ {
+			idx := (y*width + x) * bytesPerPixel
+
+			// Base background noise (low activity)
+			baseValue := i.rand.Intn(50) + 10
+
+			// Add hot spots (areas of high radioactive uptake)
+			hotSpots := []struct{ cx, cy, radius, intensity int }{
+				{width / 4, height / 4, width / 8, 200},
+				{3 * width / 4, height / 2, width / 6, 150},
+				{width / 2, 3 * height / 4, width / 10, 100},
+			}
+
+			for _, spot := range hotSpots {
+				dx := x - spot.cx
+				dy := y - spot.cy
+				distance := dx*dx + dy*dy
+				if distance < spot.radius*spot.radius {
+					// Gaussian falloff for hot spot
+					intensity := float64(spot.intensity) * math.Exp(-float64(distance)/(2*float64(spot.radius*spot.radius)))
+					baseValue += int(intensity)
+				}
+			}
+
+			// Ensure values are in valid range
+			if baseValue > 65535 {
+				baseValue = 65535
+			}
+
+			// Store pixel value
+			if bytesPerPixel == 2 {
+				value := uint16(baseValue)
+				pixelData[idx] = byte(value & 0xFF)          // Low byte first (little-endian)
+				pixelData[idx+1] = byte((value >> 8) & 0xFF) // High byte second
+			} else {
+				pixelData[idx] = byte(baseValue & 0xFF)
+			}
+		}
+	}
+}
+
+// generatePTPattern generates PET-like pattern with metabolic activity
+func (i *ImageGenerator) generatePTPattern(pixelData []byte, width, height, bytesPerPixel int) {
+	// PET characteristics: metabolic activity patterns, SUV values
+	for y := 0; y < height; y++ {
+		for x := 0; x < width; x++ {
+			idx := (y*width + x) * bytesPerPixel
+
+			// Base background (low metabolic activity)
+			baseValue := i.rand.Intn(30) + 5
+
+			// Add metabolic activity regions
+			activityRegions := []struct{ cx, cy, radius, suv float64 }{
+				{float64(width) * 0.3, float64(height) * 0.3, float64(width) * 0.15, 3.5},
+				{float64(width) * 0.7, float64(height) * 0.6, float64(width) * 0.12, 2.8},
+				{float64(width) * 0.5, float64(height) * 0.8, float64(width) * 0.08, 1.9},
+			}
+
+			for _, region := range activityRegions {
+				dx := float64(x) - region.cx
+				dy := float64(y) - region.cy
+				distance := math.Sqrt(dx*dx + dy*dy)
+				if distance < region.radius {
+					// Gaussian falloff for metabolic activity
+					intensity := region.suv * 1000 * math.Exp(-(distance*distance)/(2*region.radius*region.radius))
+					baseValue += int(intensity)
+				}
+			}
+
+			// Ensure values are in valid range
+			if baseValue > 65535 {
+				baseValue = 65535
+			}
+
+			// Store pixel value
+			if bytesPerPixel == 2 {
+				value := uint16(baseValue)
+				pixelData[idx] = byte(value & 0xFF)          // Low byte first (little-endian)
+				pixelData[idx+1] = byte((value >> 8) & 0xFF) // High byte second
+			} else {
+				pixelData[idx] = byte(baseValue & 0xFF)
+			}
+		}
+	}
+}
+
+// generateRTPattern generates Radiotherapy treatment planning pattern
+func (i *ImageGenerator) generateRTPattern(pixelData []byte, width, height, bytesPerPixel int) {
+	// RT characteristics: treatment planning with dose distributions
+	for y := 0; y < height; y++ {
+		for x := 0; x < width; x++ {
+			idx := (y*width + x) * bytesPerPixel
+
+			// Base background (air/tissue)
+			baseValue := i.rand.Intn(100) + 50
+
+			// Add treatment field (rectangular high-dose region)
+			fieldX1, fieldY1 := width/4, height/4
+			fieldX2, fieldY2 := 3*width/4, 3*height/4
+
+			if x >= fieldX1 && x <= fieldX2 && y >= fieldY1 && y <= fieldY2 {
+				// High dose region
+				baseValue += 2000 + i.rand.Intn(500)
+			}
+
+			// Add dose gradient around field edges
+			edgeDistance := 20
+			if (x >= fieldX1-edgeDistance && x <= fieldX1+edgeDistance) ||
+				(x >= fieldX2-edgeDistance && x <= fieldX2+edgeDistance) ||
+				(y >= fieldY1-edgeDistance && y <= fieldY1+edgeDistance) ||
+				(y >= fieldY2-edgeDistance && y <= fieldY2+edgeDistance) {
+				baseValue += 500 + i.rand.Intn(200)
+			}
+
+			// Ensure values are in valid range
+			if baseValue > 65535 {
+				baseValue = 65535
+			}
+
+			// Store pixel value
+			if bytesPerPixel == 2 {
+				value := uint16(baseValue)
+				pixelData[idx] = byte(value & 0xFF)          // Low byte first (little-endian)
+				pixelData[idx+1] = byte((value >> 8) & 0xFF) // High byte second
+			} else {
+				pixelData[idx] = byte(baseValue & 0xFF)
 			}
 		}
 	}
@@ -558,8 +629,8 @@ func (i *ImageGenerator) generateDefaultPattern(pixelData []byte, width, height,
 
 			if bytesPerPixel == 2 {
 				value := uint16(noise) * 256
-				pixelData[idx] = byte(value & 0xFF)
-				pixelData[idx+1] = byte((value >> 8) & 0xFF)
+				pixelData[idx] = byte(value & 0xFF)          // Low byte first (little-endian)
+				pixelData[idx+1] = byte((value >> 8) & 0xFF) // High byte second
 			} else {
 				pixelData[idx] = byte(noise)
 			}
@@ -699,6 +770,1577 @@ func (i *ImageGenerator) drawCharacter(pixelData []byte, width, height, bytesPer
 				} else {
 					// 8-bit bright value
 					pixelData[idx] = 0xFF
+				}
+			}
+		}
+	}
+}
+
+// addBurnedInMetadata adds patient and study metadata to pixel data for integration debugging
+func (i *ImageGenerator) addBurnedInMetadata(pixelData []byte, study *types.Study, series *types.Series, instanceNumber, totalInstances int, width, height, bitsPerPixel int) error {
+	// Skip burned-in metadata for modalities without pixel data (like SR)
+	if width == 0 || height == 0 || bitsPerPixel == 0 {
+		return nil
+	}
+
+	bytesPerPixel := bitsPerPixel / 8
+	if bitsPerPixel%8 != 0 {
+		bytesPerPixel++
+	}
+
+	// Create metadata text lines
+	textLines := []string{
+		fmt.Sprintf("Patient: %s", study.PatientName),
+		fmt.Sprintf("Patient ID: %s", study.PatientID),
+		fmt.Sprintf("DOB: %s", study.PatientBirthDate),
+		fmt.Sprintf("Accession: %s", study.AccessionNumber),
+		fmt.Sprintf("Study UID: %s", study.StudyInstanceUID),
+		fmt.Sprintf("Series UID: %s", series.SeriesInstanceUID),
+		fmt.Sprintf("Instance: %d of %d", instanceNumber, totalInstances),
+		fmt.Sprintf("Modality: %s", series.Modality),
+		fmt.Sprintf("Study Date: %s", study.StudyDate),
+		"Generated by crgodicom flatmapit.com",
+	}
+
+	// Position for text (top-left corner with padding)
+	x := 20
+	y := 30
+	lineHeight := 16
+	padding := 12
+
+	// Calculate the maximum text width more accurately
+	maxTextWidth := 0
+	for _, line := range textLines {
+		textWidth := len(line) * 8 // More accurate width for 7x13 font
+		if textWidth > maxTextWidth {
+			maxTextWidth = textWidth
+		}
+	}
+
+	// Ensure we don't exceed image boundaries
+	if rectRight := x + maxTextWidth + padding; rectRight > width {
+		maxTextWidth = width - x - padding
+	}
+	if rectBottom := y + (len(textLines) * lineHeight) + padding; rectBottom > height {
+		// Truncate text lines if they would exceed image height
+		maxLines := (height - y - padding) / lineHeight
+		if maxLines < len(textLines) {
+			textLines = textLines[:maxLines]
+		}
+	}
+
+	// Draw text lines FIRST
+	for lineIndex, line := range textLines {
+		textY := y + (lineIndex * lineHeight)
+		if textY >= height {
+			break
+		}
+		i.drawText(pixelData, line, x, textY, width, height, bytesPerPixel)
+	}
+
+	// Draw background rectangle AFTER text (so text is visible)
+	rectTop := y - padding
+	rectBottom := y + (len(textLines) * lineHeight) + padding
+	rectLeft := x - padding
+	rectRight := x + maxTextWidth + padding
+
+	// Draw semi-transparent background rectangle (but preserve text pixels)
+	for rectY := rectTop; rectY < rectBottom && rectY < height; rectY++ {
+		for rectX := rectLeft; rectX < rectRight && rectX < width; rectX++ {
+			idx := (rectY*width + rectX) * bytesPerPixel
+			if idx+bytesPerPixel <= len(pixelData) {
+				// Only set background if pixel is not text (not maximum brightness)
+				if bytesPerPixel == 2 {
+					lowByte := pixelData[idx]
+					highByte := pixelData[idx+1]
+					currentValue := uint16(lowByte) | (uint16(highByte) << 8)
+
+					// Only set background if pixel is not text
+					if currentValue != 65535 {
+						pixelData[idx] = 0x00
+						pixelData[idx+1] = 0x00
+					}
+				} else {
+					// Only set background if pixel is not text
+					if pixelData[idx] != 255 {
+						pixelData[idx] = 0x00
+					}
+				}
+			}
+		}
+	}
+
+	return nil
+}
+
+// formatDate formats a time.Time to YYYYMMDD string
+func (i *ImageGenerator) formatDate(t time.Time) string {
+	return t.Format("20060102")
+}
+
+// drawText draws text using a simple block-based approach for better readability
+func (i *ImageGenerator) drawText(pixelData []byte, text string, startX, startY, width, height, bytesPerPixel int) {
+	fontWidth := 8
+	charSpacing := 1
+
+	// Calculate adaptive text color ONCE for the entire text area
+	// This ensures all characters use the same brightness for perfect consistency
+	textColor := i.calculateAdaptiveTextColor(pixelData, width, height, bytesPerPixel, startX, startY, len(text)*9, 12)
+
+	for charIndex, char := range text {
+		charX := startX + (charIndex * (fontWidth + charSpacing))
+		if charX+fontWidth >= width {
+			break
+		}
+
+		// Draw character using the consistent text color
+		i.drawSimpleCharWithColor(pixelData, char, charX, startY, width, height, bytesPerPixel, textColor)
+	}
+}
+
+// drawSimpleChar draws a character using consistent brightness for all characters (backward compatibility)
+func (i *ImageGenerator) drawSimpleChar(pixelData []byte, char rune, startX, startY, width, height, bytesPerPixel int) {
+	// Calculate adaptive text color for this character
+	textColor := i.calculateAdaptiveTextColor(pixelData, width, height, bytesPerPixel, startX, startY, 8, 12)
+
+	// Use the new function with the calculated color
+	i.drawSimpleCharWithColor(pixelData, char, startX, startY, width, height, bytesPerPixel, textColor)
+}
+
+// drawSimpleCharWithColor draws a character using a pre-calculated consistent text color
+func (i *ImageGenerator) drawSimpleCharWithColor(pixelData []byte, char rune, startX, startY, width, height, bytesPerPixel int, textColor uint16) {
+	fontWidth := 8
+	fontHeight := 12
+
+	// Simple character patterns - each character is drawn as blocks
+	// All patterns are exactly 8x12 for consistency
+	charPatterns := map[rune][]string{
+		' ': []string{
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'A': []string{
+			"  XXXX  ",
+			" XX  XX ",
+			"XX    XX",
+			"XXXXXXXX",
+			"XX    XX",
+			"XX    XX",
+			"XX    XX",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'B': []string{
+			"XXXXXX  ",
+			"XX    XX",
+			"XX    XX",
+			"XXXXXX  ",
+			"XX    XX",
+			"XX    XX",
+			"XXXXXX  ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'C': []string{
+			"  XXXX  ",
+			" XX  XX ",
+			"XX      ",
+			"XX      ",
+			"XX      ",
+			" XX  XX ",
+			"  XXXX  ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'D': []string{
+			"XXXXXX  ",
+			"XX    XX",
+			"XX    XX",
+			"XX    XX",
+			"XX    XX",
+			"XX    XX",
+			"XXXXXX  ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'E': []string{
+			"XXXXXXXX",
+			"XX      ",
+			"XX      ",
+			"XXXXXX  ",
+			"XX      ",
+			"XX      ",
+			"XXXXXXXX",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'F': []string{
+			"XXXXXXXX",
+			"XX      ",
+			"XX      ",
+			"XXXXXX  ",
+			"XX      ",
+			"XX      ",
+			"XX      ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'G': []string{
+			"  XXXX  ",
+			" XX  XX ",
+			"XX      ",
+			"XX  XXXX",
+			"XX    XX",
+			" XX  XX ",
+			"  XXXX  ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'H': []string{
+			"XX    XX",
+			"XX    XX",
+			"XX    XX",
+			"XXXXXXXX",
+			"XX    XX",
+			"XX    XX",
+			"XX    XX",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'I': []string{
+			"XXXXXXXX",
+			"   XX   ",
+			"   XX   ",
+			"   XX   ",
+			"   XX   ",
+			"   XX   ",
+			"XXXXXXXX",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'J': []string{
+			"XXXXXXXX",
+			"     XX ",
+			"     XX ",
+			"     XX ",
+			"XX   XX ",
+			" XX XX  ",
+			"  XXX   ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'K': []string{
+			"XX    XX",
+			"XX   XX ",
+			"XX  XX  ",
+			"XXXX    ",
+			"XX  XX  ",
+			"XX   XX ",
+			"XX    XX",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'L': []string{
+			"XX      ",
+			"XX      ",
+			"XX      ",
+			"XX      ",
+			"XX      ",
+			"XX      ",
+			"XXXXXXXX",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'M': []string{
+			"XX    XX",
+			"XXX  XXX",
+			"XXXXXXX ",
+			"XX X XX ",
+			"XX   XX ",
+			"XX   XX ",
+			"XX   XX ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'N': []string{
+			"XX    XX",
+			"XXX   XX",
+			"XXXX  XX",
+			"XX XX XX",
+			"XX  XXXX",
+			"XX   XXX",
+			"XX    XX",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'O': []string{
+			"  XXXX  ",
+			" XX  XX ",
+			"XX    XX",
+			"XX    XX",
+			"XX    XX",
+			" XX  XX ",
+			"  XXXX  ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'P': []string{
+			"XXXXXX  ",
+			"XX    XX",
+			"XX    XX",
+			"XXXXXX  ",
+			"XX      ",
+			"XX      ",
+			"XX      ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'Q': []string{
+			"  XXXX  ",
+			" XX  XX ",
+			"XX    XX",
+			"XX    XX",
+			"XX  X XX",
+			" XX  XX ",
+			"  XXXXX ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'R': []string{
+			"XXXXXX  ",
+			"XX    XX",
+			"XX    XX",
+			"XXXXXX  ",
+			"XX  XX  ",
+			"XX   XX ",
+			"XX    XX",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'S': []string{
+			"  XXXXX ",
+			" XX     ",
+			"XX      ",
+			"  XXXX  ",
+			"     XX ",
+			"     XX ",
+			" XXXXX  ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'T': []string{
+			"XXXXXXXX",
+			"   XX   ",
+			"   XX   ",
+			"   XX   ",
+			"   XX   ",
+			"   XX   ",
+			"   XX   ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'U': []string{
+			"XX    XX",
+			"XX    XX",
+			"XX    XX",
+			"XX    XX",
+			"XX    XX",
+			" XX  XX ",
+			"  XXXX  ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'V': []string{
+			"XX    XX",
+			"XX    XX",
+			"XX    XX",
+			" XX  XX ",
+			" XX  XX ",
+			"  XXXX  ",
+			"   XX   ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'W': []string{
+			"XX    XX",
+			"XX    XX",
+			"XX    XX",
+			"XX X XX ",
+			"XXXXXXX ",
+			"XXX XXX ",
+			"XX   XX ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'X': []string{
+			"XX    XX",
+			" XX  XX ",
+			"  XXXX  ",
+			"   XX   ",
+			"  XXXX  ",
+			" XX  XX ",
+			"XX    XX",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'Y': []string{
+			"XX    XX",
+			" XX  XX ",
+			"  XXXX  ",
+			"   XX   ",
+			"   XX   ",
+			"   XX   ",
+			"   XX   ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'Z': []string{
+			"XXXXXXXX",
+			"     XX ",
+			"    XX  ",
+			"   XX   ",
+			"  XX    ",
+			" XX     ",
+			"XXXXXXXX",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'0': []string{
+			"  XXXX  ",
+			" XX  XX ",
+			"XX  X XX",
+			"XX XX XX",
+			"XXX  XX ",
+			" XX  XX ",
+			"  XXXX  ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'1': []string{
+			"   XX   ",
+			"  XXX   ",
+			"   XX   ",
+			"   XX   ",
+			"   XX   ",
+			"   XX   ",
+			" XXXXXX ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'2': []string{
+			"  XXXX  ",
+			" XX  XX ",
+			"     XX ",
+			"    XX  ",
+			"   XX   ",
+			"  XX    ",
+			" XXXXXX ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'3': []string{
+			"  XXXX  ",
+			" XX  XX ",
+			"     XX ",
+			"  XXXX  ",
+			"     XX ",
+			" XX  XX ",
+			"  XXXX  ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'4': []string{
+			"    XX  ",
+			"   XXX  ",
+			"  XXXX  ",
+			" XX XX  ",
+			"XXXXXXXX",
+			"    XX  ",
+			"    XX  ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'5': []string{
+			" XXXXXX ",
+			" XX     ",
+			" XXXXX  ",
+			"     XX ",
+			"     XX ",
+			" XX  XX ",
+			"  XXXX  ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'6': []string{
+			"  XXXX  ",
+			" XX     ",
+			"XX      ",
+			"XXXXXX  ",
+			"XX    XX",
+			"XX    XX",
+			"  XXXX  ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'7': []string{
+			"XXXXXXXX",
+			"     XX ",
+			"    XX  ",
+			"   XX   ",
+			"  XX    ",
+			" XX     ",
+			"XX      ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'8': []string{
+			"  XXXX  ",
+			" XX  XX ",
+			" XX  XX ",
+			"  XXXX  ",
+			" XX  XX ",
+			" XX  XX ",
+			"  XXXX  ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'9': []string{
+			"  XXXX  ",
+			" XX  XX ",
+			" XX  XX ",
+			"  XXXXXX",
+			"      XX",
+			" XX  XX ",
+			"  XXXX  ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		':': []string{
+			"        ",
+			"   XX   ",
+			"   XX   ",
+			"        ",
+			"        ",
+			"   XX   ",
+			"   XX   ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'.': []string{
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"   XX   ",
+			"   XX   ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'-': []string{
+			"        ",
+			"        ",
+			"        ",
+			" XXXXXX ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'^': []string{
+			"   XX   ",
+			"  XXXX  ",
+			" XX  XX ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		// Lowercase letters
+		'a': []string{
+			"        ",
+			"        ",
+			"  XXXX  ",
+			"     XX ",
+			"  XXXXX ",
+			" XX  XX ",
+			"  XXXXX ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		't': []string{
+			"   XX   ",
+			"   XX   ",
+			" XXXXXX ",
+			"   XX   ",
+			"   XX   ",
+			"   XX   ",
+			"    XXX ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'i': []string{
+			"   XX   ",
+			"        ",
+			"  XXX   ",
+			"   XX   ",
+			"   XX   ",
+			"   XX   ",
+			" XXXXXX ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'e': []string{
+			"        ",
+			"        ",
+			"  XXXX  ",
+			" XX  XX ",
+			" XXXXXX ",
+			" XX     ",
+			"  XXXX  ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'n': []string{
+			"        ",
+			"        ",
+			" XX XXX ",
+			" XXX  XX",
+			" XX   XX",
+			" XX   XX",
+			" XX   XX",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'r': []string{
+			"        ",
+			"        ",
+			" XX XXX ",
+			" XXX  XX",
+			" XX     ",
+			" XX     ",
+			" XX     ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'o': []string{
+			"        ",
+			"        ",
+			"  XXXX  ",
+			" XX  XX ",
+			" XX  XX ",
+			" XX  XX ",
+			"  XXXX  ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'c': []string{
+			"        ",
+			"        ",
+			"  XXXX  ",
+			" XX  XX ",
+			" XX     ",
+			" XX  XX ",
+			"  XXXX  ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'u': []string{
+			"        ",
+			"        ",
+			" XX   XX",
+			" XX   XX",
+			" XX   XX",
+			" XXX  XX",
+			"  XXXXX ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'l': []string{
+			"  XXX   ",
+			"   XX   ",
+			"   XX   ",
+			"   XX   ",
+			"   XX   ",
+			"   XX   ",
+			" XXXXXX ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'y': []string{
+			"        ",
+			"        ",
+			" XX   XX",
+			" XX   XX",
+			" XX   XX",
+			"  XXXXX ",
+			"     XX ",
+			" XX  XX ",
+			"  XXXX  ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'x': []string{
+			"        ",
+			"        ",
+			" XX   XX",
+			"  XX XX ",
+			"   XXX  ",
+			"  XX XX ",
+			" XX   XX",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'z': []string{
+			"        ",
+			"        ",
+			" XXXXXX ",
+			"     XX ",
+			"   XXX  ",
+			" XX     ",
+			" XXXXXX ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		// Additional missing characters
+		's': []string{
+			"        ",
+			"        ",
+			"  XXXX  ",
+			" XX     ",
+			"  XXXX  ",
+			"     XX ",
+			"  XXXX  ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'd': []string{
+			"     XX ",
+			"     XX ",
+			"  XXXXX ",
+			" XX  XX ",
+			" XX  XX ",
+			" XX  XX ",
+			"  XXXXX ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'f': []string{
+			"   XXX  ",
+			"  XX    ",
+			" XXXXXX ",
+			"  XX    ",
+			"  XX    ",
+			"  XX    ",
+			"  XX    ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'g': []string{
+			"        ",
+			"        ",
+			"  XXXXX ",
+			" XX  XX ",
+			" XX  XX ",
+			"  XXXXX ",
+			"     XX ",
+			" XX  XX ",
+			"  XXXX  ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'h': []string{
+			" XX     ",
+			" XX     ",
+			" XX XXX ",
+			" XXX  XX",
+			" XX   XX",
+			" XX   XX",
+			" XX   XX",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'j': []string{
+			"     XX ",
+			"        ",
+			"    XX  ",
+			"    XX  ",
+			"    XX  ",
+			" XX  XX ",
+			"  XXXX  ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'k': []string{
+			" XX     ",
+			" XX     ",
+			" XX  XX ",
+			" XX XX  ",
+			" XXXX   ",
+			" XX XX  ",
+			" XX  XX ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'm': []string{
+			"        ",
+			"        ",
+			"XX XXX  ",
+			"XXX  XXX",
+			"XX X XX ",
+			"XX   XX ",
+			"XX   XX ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'p': []string{
+			"        ",
+			"        ",
+			" XX XXX ",
+			" XXX  XX",
+			" XX   XX",
+			" XXXXX  ",
+			" XX     ",
+			" XX     ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'q': []string{
+			"        ",
+			"        ",
+			"  XXXXX ",
+			" XX  XX ",
+			" XX  XX ",
+			"  XXXXX ",
+			"     XX ",
+			"     XX ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'v': []string{
+			"        ",
+			"        ",
+			"XX   XX ",
+			"XX   XX ",
+			" XX XX  ",
+			"  XXX   ",
+			"   XX   ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'w': []string{
+			"        ",
+			"        ",
+			"XX   XX ",
+			"XX   XX ",
+			"XX X XX ",
+			"XXXXXXX ",
+			" XX XX  ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'b': []string{
+			" XX     ",
+			" XX     ",
+			" XXXXX  ",
+			" XX  XX ",
+			" XX  XX ",
+			" XX  XX ",
+			" XXXXX  ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		// Special characters
+		'/': []string{
+			"     XX ",
+			"    XX  ",
+			"   XX   ",
+			"  XX    ",
+			" XX     ",
+			" XX     ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'_': []string{
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			" XXXXXX ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'=': []string{
+			"        ",
+			"        ",
+			" XXXXXX ",
+			"        ",
+			" XXXXXX ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'+': []string{
+			"        ",
+			"   XX   ",
+			"   XX   ",
+			" XXXXXX ",
+			"   XX   ",
+			"   XX   ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'*': []string{
+			" XX XX  ",
+			"  XXX   ",
+			"XXXXXXX ",
+			"  XXX   ",
+			" XX XX  ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'#': []string{
+			" XX XX  ",
+			" XXXXXX ",
+			" XX XX  ",
+			" XXXXXX ",
+			" XX XX  ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'@': []string{
+			"  XXXX  ",
+			" XX  XX ",
+			" XX XXX ",
+			" XX XXX ",
+			" XX XXX ",
+			" XX     ",
+			"  XXXX  ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'$': []string{
+			"   XX   ",
+			"  XXXX  ",
+			" XX     ",
+			"  XXXX  ",
+			"     XX ",
+			"  XXXX  ",
+			"   XX   ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'%': []string{
+			"XX    XX",
+			"XX   XX ",
+			"    XX  ",
+			"   XX   ",
+			"  XX    ",
+			" XX   XX",
+			"XX    XX",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'&': []string{
+			"  XXX   ",
+			" XX  XX ",
+			"  XXX   ",
+			" XXX    ",
+			"XX  XX  ",
+			"XX   XX ",
+			" XXX  XX",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'(': []string{
+			"   XX   ",
+			"  XX    ",
+			" XX     ",
+			" XX     ",
+			" XX     ",
+			"  XX    ",
+			"   XX   ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		')': []string{
+			"   XX   ",
+			"    XX  ",
+			"     XX ",
+			"     XX ",
+			"     XX ",
+			"    XX  ",
+			"   XX   ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'[': []string{
+			" XXXXXX ",
+			" XX     ",
+			" XX     ",
+			" XX     ",
+			" XX     ",
+			" XX     ",
+			" XXXXXX ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		']': []string{
+			" XXXXXX ",
+			"     XX ",
+			"     XX ",
+			"     XX ",
+			"     XX ",
+			"     XX ",
+			" XXXXXX ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'{': []string{
+			"   XXX  ",
+			"  XX    ",
+			"  XX    ",
+			" XX     ",
+			"  XX    ",
+			"  XX    ",
+			"   XXX  ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'}': []string{
+			" XXX    ",
+			"    XX  ",
+			"    XX  ",
+			"     XX ",
+			"    XX  ",
+			"    XX  ",
+			" XXX    ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'<': []string{
+			"    XX  ",
+			"   XX   ",
+			"  XX    ",
+			" XX     ",
+			"  XX    ",
+			"   XX   ",
+			"    XX  ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'>': []string{
+			" XX     ",
+			"  XX    ",
+			"   XX   ",
+			"    XX  ",
+			"   XX   ",
+			"  XX    ",
+			" XX     ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'|': []string{
+			"   XX   ",
+			"   XX   ",
+			"   XX   ",
+			"   XX   ",
+			"   XX   ",
+			"   XX   ",
+			"   XX   ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'\\': []string{
+			" XX     ",
+			"  XX    ",
+			"   XX   ",
+			"    XX  ",
+			"     XX ",
+			"     XX ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'`': []string{
+			" XX     ",
+			"  XX    ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'~': []string{
+			"        ",
+			" XX  XX ",
+			"XX  XX  ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'!': []string{
+			"   XX   ",
+			"   XX   ",
+			"   XX   ",
+			"   XX   ",
+			"   XX   ",
+			"        ",
+			"   XX   ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'?': []string{
+			"  XXXX  ",
+			" XX  XX ",
+			"     XX ",
+			"    XX  ",
+			"   XX   ",
+			"        ",
+			"   XX   ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'"': []string{
+			" XX XX  ",
+			" XX XX  ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		'\'': []string{
+			"   XX   ",
+			"   XX   ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		',': []string{
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"   XX   ",
+			"   XX   ",
+			"  XX    ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+		';': []string{
+			"        ",
+			"   XX   ",
+			"   XX   ",
+			"        ",
+			"   XX   ",
+			"   XX   ",
+			"  XX    ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+			"        ",
+		},
+	}
+
+	pattern, exists := charPatterns[char]
+	if !exists {
+		pattern = charPatterns[' '] // Use space for unknown characters
+	}
+
+	// Draw the character pattern - ensure all patterns are exactly 8x12
+	for row := 0; row < fontHeight && startY+row < height; row++ {
+		if row >= len(pattern) {
+			continue
+		}
+		line := pattern[row]
+		// Ensure line is exactly 8 characters
+		if len(line) < fontWidth {
+			line = line + "        "[:fontWidth-len(line)]
+		}
+		if len(line) > fontWidth {
+			line = line[:fontWidth]
+		}
+
+		for col := 0; col < fontWidth && startX+col < width; col++ {
+			if line[col] == 'X' {
+				idx := ((startY+row)*width + (startX + col)) * bytesPerPixel
+				if idx+bytesPerPixel <= len(pixelData) {
+					// Use the pre-calculated consistent text color
+					if bytesPerPixel == 2 {
+						// Store 16-bit value in little-endian format
+						pixelData[idx] = byte(textColor & 0xFF)          // Low byte first
+						pixelData[idx+1] = byte((textColor >> 8) & 0xFF) // High byte second
+					} else {
+						// 8-bit value
+						pixelData[idx] = byte(textColor & 0xFF)
+					}
+
+					// Add text outline for better visibility
+					// i.addTextOutline(pixelData, width, height, bytesPerPixel, startX+col, startY+row, textColor)
+				}
+			}
+		}
+	}
+}
+
+// calculateAdaptiveTextColor returns maximum brightness for burned-in metadata
+func (i *ImageGenerator) calculateAdaptiveTextColor(pixelData []byte, width, height, bytesPerPixel int, startX, startY, fontWidth, fontHeight int) uint16 {
+	// For burned-in metadata (debugging purposes), always use maximum brightness
+	// This ensures all characters are consistently visible and bright
+	return 65535
+}
+
+// addTextOutline adds a subtle outline around text pixels for better visibility
+func (i *ImageGenerator) addTextOutline(pixelData []byte, width, height, bytesPerPixel int, x, y int, textColor uint16) {
+	// Create outline color (opposite of text color for contrast)
+	var outlineColor uint16
+	if textColor > 32768 {
+		// Bright text - use dark outline
+		outlineColor = 0
+	} else {
+		// Dark text - use bright outline
+		outlineColor = 65535
+	}
+
+	// Add outline pixels around the text pixel
+	offsets := []struct{ dx, dy int }{
+		{-1, -1}, {-1, 0}, {-1, 1},
+		{0, -1}, {0, 1},
+		{1, -1}, {1, 0}, {1, 1},
+	}
+
+	for _, offset := range offsets {
+		nx := x + offset.dx
+		ny := y + offset.dy
+
+		// Check bounds
+		if nx >= 0 && nx < width && ny >= 0 && ny < height {
+			idx := (ny*width + nx) * bytesPerPixel
+			if idx+bytesPerPixel <= len(pixelData) {
+				// Only add outline if the pixel isn't already text
+				if bytesPerPixel == 2 {
+					lowByte := pixelData[idx]
+					highByte := pixelData[idx+1]
+					currentValue := uint16(lowByte) | (uint16(highByte) << 8)
+
+					// Only add outline if current pixel is not text color
+					if currentValue != textColor {
+						pixelData[idx] = byte(outlineColor & 0xFF)
+						pixelData[idx+1] = byte((outlineColor >> 8) & 0xFF)
+					}
+				} else {
+					currentValue := uint8(pixelData[idx])
+					if currentValue != uint8(textColor) {
+						pixelData[idx] = byte(outlineColor & 0xFF)
+					}
 				}
 			}
 		}
