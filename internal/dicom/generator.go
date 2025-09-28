@@ -427,7 +427,7 @@ func (i *ImageGenerator) generateUSPattern(pixelData []byte, width, height, byte
 
 			// Create anatomical structure (simulate abdominal ultrasound)
 			var baseValue int
-			
+
 			// Top section: skin/fat layer (bright)
 			if y < height/8 {
 				baseValue = 180 + i.rand.Intn(40) // Bright with some variation
@@ -462,7 +462,7 @@ func (i *ImageGenerator) generateUSPattern(pixelData []byte, width, height, byte
 			// Store pixel value with proper bit depth handling
 			if bytesPerPixel == 2 {
 				// 16-bit - scale to full range
-				value := uint16(baseValue) * 257 // Scale 0-255 to 0-65535
+				value := uint16(baseValue) * 257             // Scale 0-255 to 0-65535
 				pixelData[idx] = byte(value & 0xFF)          // Low byte first (little-endian)
 				pixelData[idx+1] = byte((value >> 8) & 0xFF) // High byte second
 			} else {
@@ -1619,7 +1619,7 @@ func (i *ImageGenerator) drawSimpleCharWithColor(pixelData []byte, char rune, st
 			"        ",
 			"  XXXX  ",
 			" XX  XX ",
-			" XX     ",
+			"XX      ",
 			" XX  XX ",
 			"  XXXX  ",
 			"        ",
