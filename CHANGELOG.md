@@ -11,6 +11,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **CT Study Generation**: Successfully created CT study with two series for patient CTTEST
 - **PACS Integration**: Successfully sent CT study to PACS1 (Orthanc) using DCMTK storescu
 - **Study Export**: Generated PDF report for CT study export
+
+### Changed
+- **Study Cleanup**: Cleaned up old and incomplete studies, keeping only the complete CTTEST study
 - **Comprehensive DICOM Metadata Coverage**: Complete implementation of Type 1, Type 2, and Type 3 DICOM attributes
 - **Enterprise-Grade UID Management**: Cryptographically secure UID generation with guaranteed uniqueness
 - **DICOM Conformance Validation Framework**: Built-in conformance checking for all DICOM modules
