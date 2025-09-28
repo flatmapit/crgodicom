@@ -45,7 +45,7 @@ func (g *EnhancedUIDGenerator) generateSecureUID(orgRoot string) string {
 		logrus.Warnf("Failed to generate secure random number, falling back to timestamp: %v", err)
 		return fmt.Sprintf("%s.%d", orgRoot, time.Now().UnixNano())
 	}
-	
+
 	return fmt.Sprintf("%s.%d", orgRoot, n.Int64())
 }
 
@@ -104,14 +104,14 @@ func (m *MetadataGenerator) ImageModule(modality string, instanceNumber int, sop
 // ImagePixelModule generates image pixel metadata
 func (m *MetadataGenerator) ImagePixelModule(width, height, bitsPerPixel int, modality string) map[string]interface{} {
 	return map[string]interface{}{
-		"Columns":      width,
-		"Rows":         height,
-		"BitsAllocated": bitsPerPixel,
-		"BitsStored":   bitsPerPixel,
-		"HighBit":      bitsPerPixel - 1,
-		"PixelRepresentation": 0, // Unsigned
+		"Columns":                   width,
+		"Rows":                      height,
+		"BitsAllocated":             bitsPerPixel,
+		"BitsStored":                bitsPerPixel,
+		"HighBit":                   bitsPerPixel - 1,
+		"PixelRepresentation":       0, // Unsigned
 		"PhotometricInterpretation": "MONOCHROME2",
-		"SamplesPerPixel": 1,
+		"SamplesPerPixel":           1,
 	}
 }
 
@@ -124,6 +124,6 @@ func (m *MetadataGenerator) generateSecureUID(orgRoot string) string {
 		logrus.Warnf("Failed to generate secure random number, falling back to timestamp: %v", err)
 		return fmt.Sprintf("%s.%d", orgRoot, time.Now().UnixNano())
 	}
-	
+
 	return fmt.Sprintf("%s.%d", orgRoot, n.Int64())
 }

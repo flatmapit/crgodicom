@@ -1264,3 +1264,147 @@
 {"level":"info","msg":"Exporting study 1.2.840.10008.5.1.4.1.1.154637206158424714 to exports/test-jpeg-export/1.2.840.10008.5.1.4.1.1.154637206158424714","time":"2025-09-29T08:03:42.614+10:00"}
 {"level":"info","msg":"Exporting series 1.2.840.10008.5.1.4.1.1.2551293470935974945 with 3 images to JPEG","time":"2025-09-29T08:03:42.615+10:00"}
 {"level":"info","msg":"Successfully exported study to exports/test-jpeg-export/1.2.840.10008.5.1.4.1.1.154637206158424714/exports","time":"2025-09-29T08:03:42.624+10:00"}
+{"level":"info","msg":"Listing studies in directory: studies","time":"2025-09-29T08:04:47.833+10:00"}
+{"level":"info","msg":"Output format: table, Verbose: false","time":"2025-09-29T08:04:47.834+10:00"}
+{"level":"info","msg":"=== ReadDetailedStudyMetadata called for: studies/1.2.840.10008.5.1.4.1.1.154637206158424714 ===","time":"2025-09-29T08:04:47.834+10:00"}
+{"level":"info","msg":"Found 1 entries in study directory","time":"2025-09-29T08:04:47.834+10:00"}
+{"level":"info","msg":"Processing entry: series_001 (isDir: true)","time":"2025-09-29T08:04:47.834+10:00"}
+{"level":"info","msg":"Reading series metadata from: studies/1.2.840.10008.5.1.4.1.1.154637206158424714/series_001","time":"2025-09-29T08:04:47.834+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.154637206158424714/series_001/image_001.dcm using DCMTK","time":"2025-09-29T08:04:47.834+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.154637206158424714/series_001/image_002.dcm using DCMTK","time":"2025-09-29T08:04:47.844+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.154637206158424714/series_001/image_003.dcm using DCMTK","time":"2025-09-29T08:04:47.853+10:00"}
+{"level":"info","msg":"Read study metadata: 1 series, 3 images","time":"2025-09-29T08:04:47.872+10:00"}
+{"level":"info","msg":"=== ReadDetailedStudyMetadata called for: studies/1.2.840.10008.5.1.4.1.1.1759092535.3547299793521258742 ===","time":"2025-09-29T08:04:47.872+10:00"}
+{"level":"info","msg":"Found 4 entries in study directory","time":"2025-09-29T08:04:47.872+10:00"}
+{"level":"info","msg":"Processing entry: .DS_Store (isDir: false)","time":"2025-09-29T08:04:47.872+10:00"}
+{"level":"info","msg":"Skipping entry .DS_Store (not a series directory)","time":"2025-09-29T08:04:47.872+10:00"}
+{"level":"info","msg":"Processing entry: exports (isDir: true)","time":"2025-09-29T08:04:47.872+10:00"}
+{"level":"info","msg":"Skipping entry exports (not a series directory)","time":"2025-09-29T08:04:47.872+10:00"}
+{"level":"info","msg":"Processing entry: series_001 (isDir: true)","time":"2025-09-29T08:04:47.872+10:00"}
+{"level":"info","msg":"Reading series metadata from: studies/1.2.840.10008.5.1.4.1.1.1759092535.3547299793521258742/series_001","time":"2025-09-29T08:04:47.872+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759092535.3547299793521258742/series_001/image_001.dcm using DCMTK","time":"2025-09-29T08:04:47.873+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759092535.3547299793521258742/series_001/image_002.dcm using DCMTK","time":"2025-09-29T08:04:47.882+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759092535.3547299793521258742/series_001/image_003.dcm using DCMTK","time":"2025-09-29T08:04:47.891+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759092535.3547299793521258742/series_001/image_004.dcm using DCMTK","time":"2025-09-29T08:04:47.900+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759092535.3547299793521258742/series_001/image_005.dcm using DCMTK","time":"2025-09-29T08:04:47.909+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759092535.3547299793521258742/series_001/image_006.dcm using DCMTK","time":"2025-09-29T08:04:47.918+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759092535.3547299793521258742/series_001/image_007.dcm using DCMTK","time":"2025-09-29T08:04:47.927+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759092535.3547299793521258742/series_001/image_008.dcm using DCMTK","time":"2025-09-29T08:04:47.936+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759092535.3547299793521258742/series_001/image_009.dcm using DCMTK","time":"2025-09-29T08:04:47.945+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759092535.3547299793521258742/series_001/image_010.dcm using DCMTK","time":"2025-09-29T08:04:47.954+10:00"}
+{"level":"info","msg":"Processing entry: series_002 (isDir: true)","time":"2025-09-29T08:04:47.963+10:00"}
+{"level":"info","msg":"Reading series metadata from: studies/1.2.840.10008.5.1.4.1.1.1759092535.3547299793521258742/series_002","time":"2025-09-29T08:04:47.963+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759092535.3547299793521258742/series_002/image_001.dcm using DCMTK","time":"2025-09-29T08:04:47.963+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759092535.3547299793521258742/series_002/image_002.dcm using DCMTK","time":"2025-09-29T08:04:47.972+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759092535.3547299793521258742/series_002/image_003.dcm using DCMTK","time":"2025-09-29T08:04:47.981+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759092535.3547299793521258742/series_002/image_004.dcm using DCMTK","time":"2025-09-29T08:04:47.990+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759092535.3547299793521258742/series_002/image_005.dcm using DCMTK","time":"2025-09-29T08:04:47.999+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759092535.3547299793521258742/series_002/image_006.dcm using DCMTK","time":"2025-09-29T08:04:48.007+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759092535.3547299793521258742/series_002/image_007.dcm using DCMTK","time":"2025-09-29T08:04:48.016+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759092535.3547299793521258742/series_002/image_008.dcm using DCMTK","time":"2025-09-29T08:04:48.026+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759092535.3547299793521258742/series_002/image_009.dcm using DCMTK","time":"2025-09-29T08:04:48.035+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759092535.3547299793521258742/series_002/image_010.dcm using DCMTK","time":"2025-09-29T08:04:48.045+10:00"}
+{"level":"info","msg":"Read study metadata: 2 series, 20 images","time":"2025-09-29T08:04:48.064+10:00"}
+{"level":"info","msg":"=== ReadDetailedStudyMetadata called for: studies/1.2.840.10008.5.1.4.1.1.1759096789.6414564880020063132 ===","time":"2025-09-29T08:04:48.064+10:00"}
+{"level":"info","msg":"Found 4 entries in study directory","time":"2025-09-29T08:04:48.064+10:00"}
+{"level":"info","msg":"Processing entry: exports (isDir: true)","time":"2025-09-29T08:04:48.064+10:00"}
+{"level":"info","msg":"Skipping entry exports (not a series directory)","time":"2025-09-29T08:04:48.064+10:00"}
+{"level":"info","msg":"Processing entry: series_001 (isDir: true)","time":"2025-09-29T08:04:48.064+10:00"}
+{"level":"info","msg":"Reading series metadata from: studies/1.2.840.10008.5.1.4.1.1.1759096789.6414564880020063132/series_001","time":"2025-09-29T08:04:48.064+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759096789.6414564880020063132/series_001/image_001.dcm using DCMTK","time":"2025-09-29T08:04:48.064+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759096789.6414564880020063132/series_001/image_002.dcm using DCMTK","time":"2025-09-29T08:04:48.073+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759096789.6414564880020063132/series_001/image_003.dcm using DCMTK","time":"2025-09-29T08:04:48.083+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759096789.6414564880020063132/series_001/image_004.dcm using DCMTK","time":"2025-09-29T08:04:48.093+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759096789.6414564880020063132/series_001/image_005.dcm using DCMTK","time":"2025-09-29T08:04:48.102+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759096789.6414564880020063132/series_001/image_006.dcm using DCMTK","time":"2025-09-29T08:04:48.112+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759096789.6414564880020063132/series_001/image_007.dcm using DCMTK","time":"2025-09-29T08:04:48.122+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759096789.6414564880020063132/series_001/image_008.dcm using DCMTK","time":"2025-09-29T08:04:48.131+10:00"}
+{"level":"info","msg":"Processing entry: series_002 (isDir: true)","time":"2025-09-29T08:04:48.141+10:00"}
+{"level":"info","msg":"Reading series metadata from: studies/1.2.840.10008.5.1.4.1.1.1759096789.6414564880020063132/series_002","time":"2025-09-29T08:04:48.141+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759096789.6414564880020063132/series_002/image_001.dcm using DCMTK","time":"2025-09-29T08:04:48.141+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759096789.6414564880020063132/series_002/image_002.dcm using DCMTK","time":"2025-09-29T08:04:48.151+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759096789.6414564880020063132/series_002/image_003.dcm using DCMTK","time":"2025-09-29T08:04:48.161+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759096789.6414564880020063132/series_002/image_004.dcm using DCMTK","time":"2025-09-29T08:04:48.172+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759096789.6414564880020063132/series_002/image_005.dcm using DCMTK","time":"2025-09-29T08:04:48.181+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759096789.6414564880020063132/series_002/image_006.dcm using DCMTK","time":"2025-09-29T08:04:48.191+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759096789.6414564880020063132/series_002/image_007.dcm using DCMTK","time":"2025-09-29T08:04:48.200+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759096789.6414564880020063132/series_002/image_008.dcm using DCMTK","time":"2025-09-29T08:04:48.210+10:00"}
+{"level":"info","msg":"Processing entry: series_003 (isDir: true)","time":"2025-09-29T08:04:48.221+10:00"}
+{"level":"info","msg":"Reading series metadata from: studies/1.2.840.10008.5.1.4.1.1.1759096789.6414564880020063132/series_003","time":"2025-09-29T08:04:48.221+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759096789.6414564880020063132/series_003/image_001.dcm using DCMTK","time":"2025-09-29T08:04:48.221+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759096789.6414564880020063132/series_003/image_002.dcm using DCMTK","time":"2025-09-29T08:04:48.230+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759096789.6414564880020063132/series_003/image_003.dcm using DCMTK","time":"2025-09-29T08:04:48.240+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759096789.6414564880020063132/series_003/image_004.dcm using DCMTK","time":"2025-09-29T08:04:48.250+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759096789.6414564880020063132/series_003/image_005.dcm using DCMTK","time":"2025-09-29T08:04:48.260+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759096789.6414564880020063132/series_003/image_006.dcm using DCMTK","time":"2025-09-29T08:04:48.270+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759096789.6414564880020063132/series_003/image_007.dcm using DCMTK","time":"2025-09-29T08:04:48.280+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759096789.6414564880020063132/series_003/image_008.dcm using DCMTK","time":"2025-09-29T08:04:48.289+10:00"}
+{"level":"info","msg":"Read study metadata: 3 series, 24 images","time":"2025-09-29T08:04:48.308+10:00"}
+{"level":"info","msg":"Listing studies in directory: studies","time":"2025-09-29T08:05:00.021+10:00"}
+{"level":"info","msg":"Output format: table, Verbose: false","time":"2025-09-29T08:05:00.021+10:00"}
+{"level":"info","msg":"=== ReadDetailedStudyMetadata called for: studies/1.2.840.10008.5.1.4.1.1.1759092535.3547299793521258742 ===","time":"2025-09-29T08:05:00.021+10:00"}
+{"level":"info","msg":"Found 4 entries in study directory","time":"2025-09-29T08:05:00.021+10:00"}
+{"level":"info","msg":"Processing entry: .DS_Store (isDir: false)","time":"2025-09-29T08:05:00.021+10:00"}
+{"level":"info","msg":"Skipping entry .DS_Store (not a series directory)","time":"2025-09-29T08:05:00.021+10:00"}
+{"level":"info","msg":"Processing entry: exports (isDir: true)","time":"2025-09-29T08:05:00.021+10:00"}
+{"level":"info","msg":"Skipping entry exports (not a series directory)","time":"2025-09-29T08:05:00.021+10:00"}
+{"level":"info","msg":"Processing entry: series_001 (isDir: true)","time":"2025-09-29T08:05:00.021+10:00"}
+{"level":"info","msg":"Reading series metadata from: studies/1.2.840.10008.5.1.4.1.1.1759092535.3547299793521258742/series_001","time":"2025-09-29T08:05:00.021+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759092535.3547299793521258742/series_001/image_001.dcm using DCMTK","time":"2025-09-29T08:05:00.021+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759092535.3547299793521258742/series_001/image_002.dcm using DCMTK","time":"2025-09-29T08:05:00.031+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759092535.3547299793521258742/series_001/image_003.dcm using DCMTK","time":"2025-09-29T08:05:00.043+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759092535.3547299793521258742/series_001/image_004.dcm using DCMTK","time":"2025-09-29T08:05:00.052+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759092535.3547299793521258742/series_001/image_005.dcm using DCMTK","time":"2025-09-29T08:05:00.061+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759092535.3547299793521258742/series_001/image_006.dcm using DCMTK","time":"2025-09-29T08:05:00.071+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759092535.3547299793521258742/series_001/image_007.dcm using DCMTK","time":"2025-09-29T08:05:00.081+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759092535.3547299793521258742/series_001/image_008.dcm using DCMTK","time":"2025-09-29T08:05:00.090+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759092535.3547299793521258742/series_001/image_009.dcm using DCMTK","time":"2025-09-29T08:05:00.100+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759092535.3547299793521258742/series_001/image_010.dcm using DCMTK","time":"2025-09-29T08:05:00.109+10:00"}
+{"level":"info","msg":"Processing entry: series_002 (isDir: true)","time":"2025-09-29T08:05:00.118+10:00"}
+{"level":"info","msg":"Reading series metadata from: studies/1.2.840.10008.5.1.4.1.1.1759092535.3547299793521258742/series_002","time":"2025-09-29T08:05:00.118+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759092535.3547299793521258742/series_002/image_001.dcm using DCMTK","time":"2025-09-29T08:05:00.119+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759092535.3547299793521258742/series_002/image_002.dcm using DCMTK","time":"2025-09-29T08:05:00.128+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759092535.3547299793521258742/series_002/image_003.dcm using DCMTK","time":"2025-09-29T08:05:00.138+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759092535.3547299793521258742/series_002/image_004.dcm using DCMTK","time":"2025-09-29T08:05:00.147+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759092535.3547299793521258742/series_002/image_005.dcm using DCMTK","time":"2025-09-29T08:05:00.156+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759092535.3547299793521258742/series_002/image_006.dcm using DCMTK","time":"2025-09-29T08:05:00.165+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759092535.3547299793521258742/series_002/image_007.dcm using DCMTK","time":"2025-09-29T08:05:00.174+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759092535.3547299793521258742/series_002/image_008.dcm using DCMTK","time":"2025-09-29T08:05:00.183+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759092535.3547299793521258742/series_002/image_009.dcm using DCMTK","time":"2025-09-29T08:05:00.192+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759092535.3547299793521258742/series_002/image_010.dcm using DCMTK","time":"2025-09-29T08:05:00.202+10:00"}
+{"level":"info","msg":"Read study metadata: 2 series, 20 images","time":"2025-09-29T08:05:00.220+10:00"}
+{"level":"info","msg":"=== ReadDetailedStudyMetadata called for: studies/1.2.840.10008.5.1.4.1.1.1759096789.6414564880020063132 ===","time":"2025-09-29T08:05:00.221+10:00"}
+{"level":"info","msg":"Found 4 entries in study directory","time":"2025-09-29T08:05:00.221+10:00"}
+{"level":"info","msg":"Processing entry: exports (isDir: true)","time":"2025-09-29T08:05:00.221+10:00"}
+{"level":"info","msg":"Skipping entry exports (not a series directory)","time":"2025-09-29T08:05:00.221+10:00"}
+{"level":"info","msg":"Processing entry: series_001 (isDir: true)","time":"2025-09-29T08:05:00.221+10:00"}
+{"level":"info","msg":"Reading series metadata from: studies/1.2.840.10008.5.1.4.1.1.1759096789.6414564880020063132/series_001","time":"2025-09-29T08:05:00.221+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759096789.6414564880020063132/series_001/image_001.dcm using DCMTK","time":"2025-09-29T08:05:00.221+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759096789.6414564880020063132/series_001/image_002.dcm using DCMTK","time":"2025-09-29T08:05:00.230+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759096789.6414564880020063132/series_001/image_003.dcm using DCMTK","time":"2025-09-29T08:05:00.239+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759096789.6414564880020063132/series_001/image_004.dcm using DCMTK","time":"2025-09-29T08:05:00.249+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759096789.6414564880020063132/series_001/image_005.dcm using DCMTK","time":"2025-09-29T08:05:00.258+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759096789.6414564880020063132/series_001/image_006.dcm using DCMTK","time":"2025-09-29T08:05:00.267+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759096789.6414564880020063132/series_001/image_007.dcm using DCMTK","time":"2025-09-29T08:05:00.276+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759096789.6414564880020063132/series_001/image_008.dcm using DCMTK","time":"2025-09-29T08:05:00.285+10:00"}
+{"level":"info","msg":"Processing entry: series_002 (isDir: true)","time":"2025-09-29T08:05:00.294+10:00"}
+{"level":"info","msg":"Reading series metadata from: studies/1.2.840.10008.5.1.4.1.1.1759096789.6414564880020063132/series_002","time":"2025-09-29T08:05:00.294+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759096789.6414564880020063132/series_002/image_001.dcm using DCMTK","time":"2025-09-29T08:05:00.295+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759096789.6414564880020063132/series_002/image_002.dcm using DCMTK","time":"2025-09-29T08:05:00.304+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759096789.6414564880020063132/series_002/image_003.dcm using DCMTK","time":"2025-09-29T08:05:00.313+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759096789.6414564880020063132/series_002/image_004.dcm using DCMTK","time":"2025-09-29T08:05:00.323+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759096789.6414564880020063132/series_002/image_005.dcm using DCMTK","time":"2025-09-29T08:05:00.332+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759096789.6414564880020063132/series_002/image_006.dcm using DCMTK","time":"2025-09-29T08:05:00.341+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759096789.6414564880020063132/series_002/image_007.dcm using DCMTK","time":"2025-09-29T08:05:00.350+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759096789.6414564880020063132/series_002/image_008.dcm using DCMTK","time":"2025-09-29T08:05:00.360+10:00"}
+{"level":"info","msg":"Processing entry: series_003 (isDir: true)","time":"2025-09-29T08:05:00.370+10:00"}
+{"level":"info","msg":"Reading series metadata from: studies/1.2.840.10008.5.1.4.1.1.1759096789.6414564880020063132/series_003","time":"2025-09-29T08:05:00.370+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759096789.6414564880020063132/series_003/image_001.dcm using DCMTK","time":"2025-09-29T08:05:00.370+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759096789.6414564880020063132/series_003/image_002.dcm using DCMTK","time":"2025-09-29T08:05:00.379+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759096789.6414564880020063132/series_003/image_003.dcm using DCMTK","time":"2025-09-29T08:05:00.388+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759096789.6414564880020063132/series_003/image_004.dcm using DCMTK","time":"2025-09-29T08:05:00.397+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759096789.6414564880020063132/series_003/image_005.dcm using DCMTK","time":"2025-09-29T08:05:00.407+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759096789.6414564880020063132/series_003/image_006.dcm using DCMTK","time":"2025-09-29T08:05:00.415+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759096789.6414564880020063132/series_003/image_007.dcm using DCMTK","time":"2025-09-29T08:05:00.424+10:00"}
+{"level":"info","msg":"Reading image metadata from studies/1.2.840.10008.5.1.4.1.1.1759096789.6414564880020063132/series_003/image_008.dcm using DCMTK","time":"2025-09-29T08:05:00.434+10:00"}
+{"level":"info","msg":"Read study metadata: 3 series, 24 images","time":"2025-09-29T08:05:00.453+10:00"}
