@@ -1,10 +1,10 @@
 package dcmtk
 
 import (
+	"encoding/binary"
 	"fmt"
 	"image"
 	"image/color"
-	"image/jpeg"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -42,7 +42,7 @@ func (w *DCMTKBasedWriter) WriteDICOMFile(filename, patientName, patientID, stud
 	defer os.Remove(imagePath) // Clean up temp image file
 
 	// Step 2: Use img2dcm to create DICOM file
-	if err := w.createDICOMWithImg2dcm(imagePath, filename, patientName, patientID, studyUID, seriesUID, instanceUID, modality); err != nil {
+	if err := w.createDICOMWithImg2dcm(imagePath, filename, patientName, patientID, studyUID, seriesUID, instanceUID, modality, width, height); err != nil {
 		return fmt.Errorf("failed to create DICOM with img2dcm: %w", err)
 	}
 
@@ -57,15 +57,15 @@ func (w *DCMTKBasedWriter) convertPixelDataToImage(pixelData []byte, width, heig
 		return "", fmt.Errorf("failed to create image from pixel data: %w", err)
 	}
 
-	// Save as JPEG (img2dcm prefers JPEG)
-	imagePath := filepath.Join(w.tempDir, "temp_image.jpg")
+	// Save as BMP (lossless format for better image quality)
+	imagePath := filepath.Join(w.tempDir, "temp_image.bmp")
 	file, err := os.Create(imagePath)
 	if err != nil {
 		return "", fmt.Errorf("failed to create image file: %w", err)
 	}
 	defer file.Close()
 
-	// Convert to RGB for JPEG encoding
+	// Convert to RGB for BMP encoding
 	rgbaImg := image.NewRGBA(img.Bounds())
 	for y := 0; y < height; y++ {
 		for x := 0; x < width; x++ {
@@ -74,9 +74,9 @@ func (w *DCMTKBasedWriter) convertPixelDataToImage(pixelData []byte, width, heig
 		}
 	}
 
-	// Encode as JPEG
-	if err := jpeg.Encode(file, rgbaImg, &jpeg.Options{Quality: 95}); err != nil {
-		return "", fmt.Errorf("failed to encode JPEG: %w", err)
+	// Encode as BMP (lossless)
+	if err := encodeBMP(file, rgbaImg); err != nil {
+		return "", fmt.Errorf("failed to encode BMP: %w", err)
 	}
 
 	return imagePath, nil
@@ -118,10 +118,80 @@ func (w *DCMTKBasedWriter) createImageFromPixelData(pixelData []byte, width, hei
 	return grayImage, nil
 }
 
+// getImageDimensions extracts width and height from an image file
+func (w *DCMTKBasedWriter) getImageDimensions(imagePath string) (int, int, error) {
+	file, err := os.Open(imagePath)
+	if err != nil {
+		return 0, 0, fmt.Errorf("failed to open image file: %w", err)
+	}
+	defer file.Close()
+
+	// Decode image to get dimensions
+	img, _, err := image.DecodeConfig(file)
+	if err != nil {
+		return 0, 0, fmt.Errorf("failed to decode image: %w", err)
+	}
+
+	return img.Width, img.Height, nil
+}
+
+// encodeBMP encodes an RGBA image as BMP format
+func encodeBMP(w *os.File, img *image.RGBA) error {
+	bounds := img.Bounds()
+	width := bounds.Dx()
+	height := bounds.Dy()
+	
+	// BMP header
+	fileSize := 54 + width*height*3 // Header + pixel data
+	header := make([]byte, 54)
+	
+	// BMP file header (14 bytes)
+	copy(header[0:2], "BM")                    // Signature
+	binary.LittleEndian.PutUint32(header[2:6], uint32(fileSize))  // File size
+	binary.LittleEndian.PutUint32(header[6:10], 0)                // Reserved
+	binary.LittleEndian.PutUint32(header[10:14], 54)              // Data offset
+	
+	// BMP info header (40 bytes)
+	binary.LittleEndian.PutUint32(header[14:18], 40)              // Header size
+	binary.LittleEndian.PutUint32(header[18:22], uint32(width))   // Width
+	binary.LittleEndian.PutUint32(header[22:26], uint32(height))   // Height
+	binary.LittleEndian.PutUint16(header[26:28], 1)               // Planes
+	binary.LittleEndian.PutUint16(header[28:30], 24)              // Bits per pixel
+	binary.LittleEndian.PutUint32(header[30:34], 0)               // Compression
+	binary.LittleEndian.PutUint32(header[34:38], uint32(width*height*3)) // Image size
+	binary.LittleEndian.PutUint32(header[38:42], 0)               // X pixels per meter
+	binary.LittleEndian.PutUint32(header[42:46], 0)               // Y pixels per meter
+	binary.LittleEndian.PutUint32(header[46:50], 0)               // Colors used
+	binary.LittleEndian.PutUint32(header[50:54], 0)               // Important colors
+	
+	// Write header
+	if _, err := w.Write(header); err != nil {
+		return err
+	}
+	
+	// Write pixel data (BMP is bottom-up, so we need to flip)
+	rowSize := ((width * 3 + 3) / 4) * 4 // Row size must be multiple of 4
+	for y := height - 1; y >= 0; y-- {
+		row := make([]byte, rowSize)
+		for x := 0; x < width; x++ {
+			c := img.RGBAAt(x, y)
+			offset := x * 3
+			row[offset] = c.B     // Blue
+			row[offset+1] = c.G   // Green
+			row[offset+2] = c.R   // Red
+		}
+		if _, err := w.Write(row); err != nil {
+			return err
+		}
+	}
+	
+	return nil
+}
+
 // createDICOMWithImg2dcm uses DCMTK's img2dcm to create a DICOM file
-func (w *DCMTKBasedWriter) createDICOMWithImg2dcm(imagePath, outputPath, patientName, patientID, studyUID, seriesUID, instanceUID, modality string) error {
+func (w *DCMTKBasedWriter) createDICOMWithImg2dcm(imagePath, outputPath, patientName, patientID, studyUID, seriesUID, instanceUID, modality string, width, height int) error {
 	// Build img2dcm command with DICOM attributes
-	cmd := exec.Command("img2dcm", imagePath, outputPath)
+	cmd := exec.Command("img2dcm", "--input-format", "BMP", imagePath, outputPath)
 
 	// Add DICOM attributes as key-value pairs
 	now := time.Now()
@@ -153,8 +223,8 @@ func (w *DCMTKBasedWriter) createDICOMWithImg2dcm(imagePath, outputPath, patient
 		"0028,1052=0",                                  // Rescale Intercept
 		"0028,1053=1",                                  // Rescale Slope
 		"0028,0008=1",                                  // Number of Frames
-		"0028,0010=512",                                // Rows
-		"0028,0011=512",                                // Columns
+		"0028,0010=" + fmt.Sprintf("%d", height),       // Rows
+		"0028,0011=" + fmt.Sprintf("%d", width),        // Columns
 	}
 
 	// Add all attributes as --key parameters

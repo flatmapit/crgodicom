@@ -10203,3 +10203,130 @@
 {"level":"info","msg":"Successfully exported JPEG image 3 to 1.2.840.10008.5.1.4.1.1.1759019542.4308983479623418386/exports/series_001/image_003.jpg","time":"2025-09-28T10:32:37.695+10:00"}
 {"level":"info","msg":"Created PDF report: 1.2.840.10008.5.1.4.1.1.1759019542.4308983479623418386/exports/study_1.2.840.10008.5.1.4.1.1.1759019542.4308983479623418386_report.pdf","time":"2025-09-28T10:32:37.697+10:00"}
 {"level":"info","msg":"Successfully exported study to 1.2.840.10008.5.1.4.1.1.1759019542.4308983479623418386/exports","time":"2025-09-28T10:32:37.697+10:00"}
+{"level":"info","msg":"🏗️  Starting DICOM study creation","time":"2025-09-28T10:54:41.500+10:00"}
+{"level":"info","msg":"⚙️  Configuration: Verbose=true, Debug=false, Validate=true","time":"2025-09-28T10:54:41.500+10:00"}
+{"level":"info","msg":"📊 Study Configuration:","time":"2025-09-28T10:54:41.500+10:00"}
+{"level":"info","msg":"   📚 Studies: 1","time":"2025-09-28T10:54:41.500+10:00"}
+{"level":"info","msg":"   📖 Series per study: 1","time":"2025-09-28T10:54:41.500+10:00"}
+{"level":"info","msg":"   🖼️  Images per series: 1","time":"2025-09-28T10:54:41.500+10:00"}
+{"level":"info","msg":"   🔬 Modality: CR","time":"2025-09-28T10:54:41.500+10:00"}
+{"level":"info","msg":"   🏥 Anatomical region: chest","time":"2025-09-28T10:54:41.500+10:00"}
+{"level":"info","msg":"   📁 Output directory: test-data/studies","time":"2025-09-28T10:54:41.500+10:00"}
+{"level":"info","msg":"🏗️  Creating study 1/1","time":"2025-09-28T10:54:41.500+10:00"}
+{"level":"info","msg":"🎲 Generating study 1...","time":"2025-09-28T10:54:41.500+10:00"}
+{"level":"info","msg":"Generating X-ray pattern for modality: CR","time":"2025-09-28T10:54:41.501+10:00"}
+{"level":"info","msg":"Starting spiral pattern generation","time":"2025-09-28T10:54:41.501+10:00"}
+{"level":"info","msg":"Finished spiral pattern generation with modality text","time":"2025-09-28T10:54:41.603+10:00"}
+{"level":"info","msg":"✅ Study 1 generated successfully","time":"2025-09-28T10:54:41.603+10:00"}
+{"level":"info","msg":"   🆔 Study Instance UID: 1.2.840.10008.5.1.4.1.1.1759020881.6273090250754708301","time":"2025-09-28T10:54:41.603+10:00"}
+{"level":"info","msg":"   📖 Series count: 1","time":"2025-09-28T10:54:41.603+10:00"}
+{"level":"info","msg":"💾 Writing study 1 to disk...","time":"2025-09-28T10:54:41.603+10:00"}
+{"level":"info","msg":"Writing study 1.2.840.10008.5.1.4.1.1.1759020881.6273090250754708301 to test-data/studies/1.2.840.10008.5.1.4.1.1.1759020881.6273090250754708301","time":"2025-09-28T10:54:41.603+10:00"}
+{"level":"info","msg":"Study metadata: UID=1.2.840.10008.5.1.4.1.1.1759020881.6273090250754708301, Patient=TEST^PATIENT^CR (CR001), Description=CR Test Study","time":"2025-09-28T10:54:41.603+10:00"}
+{"level":"info","msg":"Writing series 1.2.840.10008.5.1.4.1.1.1759020881.3077922226366656863 with 1 images","time":"2025-09-28T10:54:41.603+10:00"}
+{"level":"info","msg":"Writing DICOM file using DCMTK: test-data/studies/1.2.840.10008.5.1.4.1.1.1759020881.6273090250754708301/series_001/image_001.dcm","time":"2025-09-28T10:54:41.603+10:00"}
+{"level":"info","msg":"Image dimensions: 2048x2048, 16 bits per pixel, 8388608 bytes pixel data","time":"2025-09-28T10:54:41.603+10:00"}
+{"level":"info","msg":"Successfully wrote DICOM file using DCMTK","time":"2025-09-28T10:54:41.751+10:00"}
+{"level":"info","msg":"Successfully wrote study with 1 series","time":"2025-09-28T10:54:41.751+10:00"}
+{"level":"info","msg":"✅ Study 1 written successfully","time":"2025-09-28T10:54:41.751+10:00"}
+{"level":"info","msg":"🎉 Successfully created study 1: 1.2.840.10008.5.1.4.1.1.1759020881.6273090250754708301","time":"2025-09-28T10:54:41.751+10:00"}
+{"level":"info","msg":"🏗️  Starting DICOM study creation","time":"2025-09-28T10:54:45.710+10:00"}
+{"level":"info","msg":"⚙️  Configuration: Verbose=true, Debug=false, Validate=true","time":"2025-09-28T10:54:45.710+10:00"}
+{"level":"info","msg":"📊 Study Configuration:","time":"2025-09-28T10:54:45.710+10:00"}
+{"level":"info","msg":"   📚 Studies: 1","time":"2025-09-28T10:54:45.710+10:00"}
+{"level":"info","msg":"   📖 Series per study: 1","time":"2025-09-28T10:54:45.710+10:00"}
+{"level":"info","msg":"   🖼️  Images per series: 1","time":"2025-09-28T10:54:45.710+10:00"}
+{"level":"info","msg":"   🔬 Modality: CT","time":"2025-09-28T10:54:45.710+10:00"}
+{"level":"info","msg":"   🏥 Anatomical region: chest","time":"2025-09-28T10:54:45.710+10:00"}
+{"level":"info","msg":"   📁 Output directory: test-data/studies","time":"2025-09-28T10:54:45.710+10:00"}
+{"level":"info","msg":"🏗️  Creating study 1/1","time":"2025-09-28T10:54:45.710+10:00"}
+{"level":"info","msg":"🎲 Generating study 1...","time":"2025-09-28T10:54:45.710+10:00"}
+{"level":"info","msg":"✅ Study 1 generated successfully","time":"2025-09-28T10:54:45.711+10:00"}
+{"level":"info","msg":"   🆔 Study Instance UID: 1.2.840.10008.5.1.4.1.1.1759020885.4073720723437543692","time":"2025-09-28T10:54:45.711+10:00"}
+{"level":"info","msg":"   📖 Series count: 1","time":"2025-09-28T10:54:45.711+10:00"}
+{"level":"info","msg":"💾 Writing study 1 to disk...","time":"2025-09-28T10:54:45.711+10:00"}
+{"level":"info","msg":"Writing study 1.2.840.10008.5.1.4.1.1.1759020885.4073720723437543692 to test-data/studies/1.2.840.10008.5.1.4.1.1.1759020885.4073720723437543692","time":"2025-09-28T10:54:45.711+10:00"}
+{"level":"info","msg":"Study metadata: UID=1.2.840.10008.5.1.4.1.1.1759020885.4073720723437543692, Patient=TEST^PATIENT^CT (CT001), Description=CT Test Study","time":"2025-09-28T10:54:45.711+10:00"}
+{"level":"info","msg":"Writing series 1.2.840.10008.5.1.4.1.1.1759020885.7307419970346798903 with 1 images","time":"2025-09-28T10:54:45.711+10:00"}
+{"level":"info","msg":"Writing DICOM file using DCMTK: test-data/studies/1.2.840.10008.5.1.4.1.1.1759020885.4073720723437543692/series_001/image_001.dcm","time":"2025-09-28T10:54:45.711+10:00"}
+{"level":"info","msg":"Image dimensions: 512x512, 16 bits per pixel, 524288 bytes pixel data","time":"2025-09-28T10:54:45.711+10:00"}
+{"level":"info","msg":"Successfully wrote DICOM file using DCMTK","time":"2025-09-28T10:54:45.737+10:00"}
+{"level":"info","msg":"Successfully wrote study with 1 series","time":"2025-09-28T10:54:45.737+10:00"}
+{"level":"info","msg":"✅ Study 1 written successfully","time":"2025-09-28T10:54:45.737+10:00"}
+{"level":"info","msg":"🎉 Successfully created study 1: 1.2.840.10008.5.1.4.1.1.1759020885.4073720723437543692","time":"2025-09-28T10:54:45.737+10:00"}
+{"level":"info","msg":"🏗️  Starting DICOM study creation","time":"2025-09-28T10:55:41.067+10:00"}
+{"level":"info","msg":"⚙️  Configuration: Verbose=true, Debug=false, Validate=true","time":"2025-09-28T10:55:41.068+10:00"}
+{"level":"info","msg":"📊 Study Configuration:","time":"2025-09-28T10:55:41.068+10:00"}
+{"level":"info","msg":"   📚 Studies: 1","time":"2025-09-28T10:55:41.068+10:00"}
+{"level":"info","msg":"   📖 Series per study: 1","time":"2025-09-28T10:55:41.068+10:00"}
+{"level":"info","msg":"   🖼️  Images per series: 1","time":"2025-09-28T10:55:41.068+10:00"}
+{"level":"info","msg":"   🔬 Modality: CR","time":"2025-09-28T10:55:41.068+10:00"}
+{"level":"info","msg":"   🏥 Anatomical region: chest","time":"2025-09-28T10:55:41.068+10:00"}
+{"level":"info","msg":"   📁 Output directory: test-data/studies","time":"2025-09-28T10:55:41.068+10:00"}
+{"level":"info","msg":"🏗️  Creating study 1/1","time":"2025-09-28T10:55:41.068+10:00"}
+{"level":"info","msg":"🎲 Generating study 1...","time":"2025-09-28T10:55:41.068+10:00"}
+{"level":"info","msg":"Generating X-ray pattern for modality: CR","time":"2025-09-28T10:55:41.068+10:00"}
+{"level":"info","msg":"Starting spiral pattern generation","time":"2025-09-28T10:55:41.068+10:00"}
+{"level":"info","msg":"Finished spiral pattern generation with modality text","time":"2025-09-28T10:55:41.172+10:00"}
+{"level":"info","msg":"✅ Study 1 generated successfully","time":"2025-09-28T10:55:41.172+10:00"}
+{"level":"info","msg":"   🆔 Study Instance UID: 1.2.840.10008.5.1.4.1.1.1759020941.3949787931578064666","time":"2025-09-28T10:55:41.172+10:00"}
+{"level":"info","msg":"   📖 Series count: 1","time":"2025-09-28T10:55:41.172+10:00"}
+{"level":"info","msg":"💾 Writing study 1 to disk...","time":"2025-09-28T10:55:41.172+10:00"}
+{"level":"info","msg":"Writing study 1.2.840.10008.5.1.4.1.1.1759020941.3949787931578064666 to test-data/studies/1.2.840.10008.5.1.4.1.1.1759020941.3949787931578064666","time":"2025-09-28T10:55:41.172+10:00"}
+{"level":"info","msg":"Study metadata: UID=1.2.840.10008.5.1.4.1.1.1759020941.3949787931578064666, Patient=TEST^PATIENT^BMP (BMP001), Description=BMP Lossless Test","time":"2025-09-28T10:55:41.172+10:00"}
+{"level":"info","msg":"Writing series 1.2.840.10008.5.1.4.1.1.1759020941.689000656898945672 with 1 images","time":"2025-09-28T10:55:41.172+10:00"}
+{"level":"info","msg":"Writing DICOM file using DCMTK: test-data/studies/1.2.840.10008.5.1.4.1.1.1759020941.3949787931578064666/series_001/image_001.dcm","time":"2025-09-28T10:55:41.172+10:00"}
+{"level":"info","msg":"Image dimensions: 2048x2048, 16 bits per pixel, 8388608 bytes pixel data","time":"2025-09-28T10:55:41.172+10:00"}
+{"level":"error","msg":"❌ Failed to write study 1: failed to write series 1: failed to write image 1: failed to write DICOM file using DCMTK: failed to create DICOM with img2dcm: failed to get image dimensions: failed to decode image: image: unknown format","time":"2025-09-28T10:55:41.244+10:00"}
+{"level":"fatal","msg":"Application error: study creation completed with 1 failures out of 1 studies","time":"2025-09-28T10:55:41.245+10:00"}
+{"level":"info","msg":"🏗️  Starting DICOM study creation","time":"2025-09-28T10:56:03.729+10:00"}
+{"level":"info","msg":"⚙️  Configuration: Verbose=true, Debug=false, Validate=true","time":"2025-09-28T10:56:03.729+10:00"}
+{"level":"info","msg":"📊 Study Configuration:","time":"2025-09-28T10:56:03.729+10:00"}
+{"level":"info","msg":"   📚 Studies: 1","time":"2025-09-28T10:56:03.729+10:00"}
+{"level":"info","msg":"   📖 Series per study: 1","time":"2025-09-28T10:56:03.729+10:00"}
+{"level":"info","msg":"   🖼️  Images per series: 1","time":"2025-09-28T10:56:03.729+10:00"}
+{"level":"info","msg":"   🔬 Modality: CR","time":"2025-09-28T10:56:03.729+10:00"}
+{"level":"info","msg":"   🏥 Anatomical region: chest","time":"2025-09-28T10:56:03.730+10:00"}
+{"level":"info","msg":"   📁 Output directory: test-data/studies","time":"2025-09-28T10:56:03.730+10:00"}
+{"level":"info","msg":"🏗️  Creating study 1/1","time":"2025-09-28T10:56:03.730+10:00"}
+{"level":"info","msg":"🎲 Generating study 1...","time":"2025-09-28T10:56:03.730+10:00"}
+{"level":"info","msg":"Generating X-ray pattern for modality: CR","time":"2025-09-28T10:56:03.730+10:00"}
+{"level":"info","msg":"Starting spiral pattern generation","time":"2025-09-28T10:56:03.730+10:00"}
+{"level":"info","msg":"Finished spiral pattern generation with modality text","time":"2025-09-28T10:56:03.833+10:00"}
+{"level":"info","msg":"✅ Study 1 generated successfully","time":"2025-09-28T10:56:03.833+10:00"}
+{"level":"info","msg":"   🆔 Study Instance UID: 1.2.840.10008.5.1.4.1.1.1759020963.5957501803693572110","time":"2025-09-28T10:56:03.833+10:00"}
+{"level":"info","msg":"   📖 Series count: 1","time":"2025-09-28T10:56:03.833+10:00"}
+{"level":"info","msg":"💾 Writing study 1 to disk...","time":"2025-09-28T10:56:03.833+10:00"}
+{"level":"info","msg":"Writing study 1.2.840.10008.5.1.4.1.1.1759020963.5957501803693572110 to test-data/studies/1.2.840.10008.5.1.4.1.1.1759020963.5957501803693572110","time":"2025-09-28T10:56:03.833+10:00"}
+{"level":"info","msg":"Study metadata: UID=1.2.840.10008.5.1.4.1.1.1759020963.5957501803693572110, Patient=TEST^PATIENT^BMP (BMP001), Description=BMP Lossless Test","time":"2025-09-28T10:56:03.833+10:00"}
+{"level":"info","msg":"Writing series 1.2.840.10008.5.1.4.1.1.1759020963.7229008569834074978 with 1 images","time":"2025-09-28T10:56:03.833+10:00"}
+{"level":"info","msg":"Writing DICOM file using DCMTK: test-data/studies/1.2.840.10008.5.1.4.1.1.1759020963.5957501803693572110/series_001/image_001.dcm","time":"2025-09-28T10:56:03.833+10:00"}
+{"level":"info","msg":"Image dimensions: 2048x2048, 16 bits per pixel, 8388608 bytes pixel data","time":"2025-09-28T10:56:03.833+10:00"}
+{"level":"info","msg":"Successfully wrote DICOM file using DCMTK","time":"2025-09-28T10:56:03.930+10:00"}
+{"level":"info","msg":"Successfully wrote study with 1 series","time":"2025-09-28T10:56:03.930+10:00"}
+{"level":"info","msg":"✅ Study 1 written successfully","time":"2025-09-28T10:56:03.930+10:00"}
+{"level":"info","msg":"🎉 Successfully created study 1: 1.2.840.10008.5.1.4.1.1.1759020963.5957501803693572110","time":"2025-09-28T10:56:03.930+10:00"}
+{"level":"fatal","msg":"Application error: flag provided but not defined: -verbose","time":"2025-09-28T10:56:11.245+10:00"}
+{"level":"info","msg":"Exporting study 1.2.840.10008.5.1.4.1.1.1759020963.5957501803693572110 to png format","time":"2025-09-28T10:56:13.939+10:00"}
+{"level":"info","msg":"Input directory: test-data/studies","time":"2025-09-28T10:56:13.939+10:00"}
+{"level":"info","msg":"Output directory: test-data/exports, Include metadata: false","time":"2025-09-28T10:56:13.939+10:00"}
+{"level":"info","msg":"About to call ReadDetailedStudyMetadata for: test-data/studies/1.2.840.10008.5.1.4.1.1.1759020963.5957501803693572110","time":"2025-09-28T10:56:13.940+10:00"}
+{"level":"info","msg":"=== ReadDetailedStudyMetadata called for: test-data/studies/1.2.840.10008.5.1.4.1.1.1759020963.5957501803693572110 ===","time":"2025-09-28T10:56:13.940+10:00"}
+{"level":"info","msg":"Found 1 entries in study directory","time":"2025-09-28T10:56:13.940+10:00"}
+{"level":"info","msg":"Processing entry: series_001 (isDir: true)","time":"2025-09-28T10:56:13.940+10:00"}
+{"level":"info","msg":"Reading series metadata from: test-data/studies/1.2.840.10008.5.1.4.1.1.1759020963.5957501803693572110/series_001","time":"2025-09-28T10:56:13.940+10:00"}
+{"level":"info","msg":"Reading image metadata from test-data/studies/1.2.840.10008.5.1.4.1.1.1759020963.5957501803693572110/series_001/image_001.dcm using DCMTK","time":"2025-09-28T10:56:13.940+10:00"}
+{"level":"info","msg":"Read study metadata: 1 series, 1 images","time":"2025-09-28T10:56:13.961+10:00"}
+{"level":"info","msg":"ReadDetailedStudyMetadata completed successfully","time":"2025-09-28T10:56:13.961+10:00"}
+{"level":"info","msg":"Image 1.2.840.10008.5.1.4.1.1.1759020963.1377804090868613084: imageDetail.PixelData length = 0, image.PixelData length = 0","time":"2025-09-28T10:56:13.961+10:00"}
+{"level":"warning","msg":"No pixel data found for image 1.2.840.10008.5.1.4.1.1.1759020963.1377804090868613084, generating synthetic data","time":"2025-09-28T10:56:13.961+10:00"}
+{"level":"info","msg":"Converted study: 1.2.840.10008.5.1.4.1.1.1759020963.5957501803693572110 with 1 series and 1 total images","time":"2025-09-28T10:56:13.964+10:00"}
+{"level":"info","msg":"Regenerating pixel data for image 1 in series 1.2.840.10008.5.1.4.1.1.1759020963.7229008569834074978 (modality: CR)","time":"2025-09-28T10:56:13.964+10:00"}
+{"level":"info","msg":"Successfully regenerated 8388608 bytes of pixel data with correct patterns","time":"2025-09-28T10:56:14.071+10:00"}
+{"level":"info","msg":"PNG export is handled as part of the general export process","time":"2025-09-28T10:56:14.071+10:00"}
+{"level":"info","msg":"Exporting study 1.2.840.10008.5.1.4.1.1.1759020963.5957501803693572110 to test-data/exports/1.2.840.10008.5.1.4.1.1.1759020963.5957501803693572110","time":"2025-09-28T10:56:14.071+10:00"}
+{"level":"info","msg":"Exporting series 1.2.840.10008.5.1.4.1.1.1759020963.7229008569834074978 with 1 images","time":"2025-09-28T10:56:14.071+10:00"}
+{"level":"info","msg":"Attempting to export JPEG image 1 to test-data/exports/1.2.840.10008.5.1.4.1.1.1759020963.5957501803693572110/exports/series_001/image_001.jpg","time":"2025-09-28T10:56:14.280+10:00"}
+{"level":"info","msg":"Successfully exported JPEG image 1 to test-data/exports/1.2.840.10008.5.1.4.1.1.1759020963.5957501803693572110/exports/series_001/image_001.jpg","time":"2025-09-28T10:56:14.359+10:00"}
+{"level":"info","msg":"Created PDF report: test-data/exports/1.2.840.10008.5.1.4.1.1.1759020963.5957501803693572110/exports/study_1.2.840.10008.5.1.4.1.1.1759020963.5957501803693572110_report.pdf","time":"2025-09-28T10:56:14.362+10:00"}
+{"level":"info","msg":"Successfully exported study to test-data/exports/1.2.840.10008.5.1.4.1.1.1759020963.5957501803693572110/exports","time":"2025-09-28T10:56:14.362+10:00"}
