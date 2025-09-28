@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - **Study Cleanup**: Cleaned up old and incomplete studies, keeping only the complete CTTEST study
+- **Test Cleanup**: Removed test data files, generated binaries, and temporary files
 - **Comprehensive DICOM Metadata Coverage**: Complete implementation of Type 1, Type 2, and Type 3 DICOM attributes
 - **Enterprise-Grade UID Management**: Cryptographically secure UID generation with guaranteed uniqueness
 - **DICOM Conformance Validation Framework**: Built-in conformance checking for all DICOM modules
