@@ -130,6 +130,7 @@ func (g *Generator) generateImage(studyUID, seriesUID, modality string, instance
 	}
 
 	// Generate pixel data
+	fmt.Printf("DEBUG: generateImage - modality='%s', imageSize=%+v\n", modality, imageSize)
 	pixelData, err := g.imageGen.GenerateImage(modality, imageSize.Width, imageSize.Height, imageSize.BitsPerPixel)
 	if err != nil {
 		return nil, fmt.Errorf("failed to generate pixel data: %w", err)
@@ -240,7 +241,10 @@ func (i *ImageGenerator) GenerateImage(modality string, width, height, bitsPerPi
 	}
 
 	// Create pixel data buffer
-	pixelData := make([]byte, width*height*bytesPerPixel)
+	totalBytes := width * height * bytesPerPixel
+	fmt.Printf("DEBUG: GenerateImage - width=%d, height=%d, bitsPerPixel=%d, bytesPerPixel=%d, totalBytes=%d\n",
+		width, height, bitsPerPixel, bytesPerPixel, totalBytes)
+	pixelData := make([]byte, totalBytes)
 
 	// Generate noise pattern based on modality
 	switch modality {
@@ -396,36 +400,40 @@ func (i *ImageGenerator) isModalityTextPixel(x, y, width, height int) bool {
 
 // generateCTPattern generates CT-like noise pattern
 func (i *ImageGenerator) generateCTPattern(pixelData []byte, width, height, bytesPerPixel int) {
-	// CT characteristics: moderate contrast, slice-like patterns
+	// CT characteristics: create a clear circular pattern with high contrast
 	for y := 0; y < height; y++ {
 		for x := 0; x < width; x++ {
 			idx := (y*width + x) * bytesPerPixel
 
-			// Base noise
-			noise := i.rand.Intn(256)
-
-			// Add circular patterns (simulate cross-sections)
+			// Calculate distance from center
 			centerX, centerY := width/2, height/2
 			dist := (x-centerX)*(x-centerX) + (y-centerY)*(y-centerY)
-			if dist < (width*height)/8 {
-				noise += 40
+			maxRadius := (width * width) / 4
+
+			var baseValue int
+			if dist < maxRadius {
+				// Inside circle - bright (bone/tissue)
+				baseValue = 3000 + i.rand.Intn(500) // High values for visibility
+			} else {
+				// Outside circle - dark (air/lung)
+				baseValue = 100 + i.rand.Intn(200) // Low values for contrast
 			}
 
-			// Ensure values are in valid range
-			if noise < 0 {
-				noise = 0
+			// Ensure values are in valid range for 16-bit
+			if baseValue < 0 {
+				baseValue = 0
 			}
-			if noise > 255 {
-				noise = 255
+			if baseValue > 65535 {
+				baseValue = 65535
 			}
 
 			// Store pixel value
 			if bytesPerPixel == 2 {
-				value := uint16(noise) * 256
+				value := uint16(baseValue)
 				pixelData[idx] = byte(value & 0xFF)
 				pixelData[idx+1] = byte((value >> 8) & 0xFF)
 			} else {
-				pixelData[idx] = byte(noise)
+				pixelData[idx] = byte(baseValue & 0xFF)
 			}
 		}
 	}

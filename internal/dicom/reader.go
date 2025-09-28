@@ -7,10 +7,9 @@ import (
 	"strings"
 
 	"github.com/flatmapit/crgodicom/internal/config"
+	"github.com/flatmapit/crgodicom/internal/dcmtk"
 	"github.com/flatmapit/crgodicom/pkg/types"
 	"github.com/sirupsen/logrus"
-	"github.com/suyashkumar/dicom"
-	"github.com/suyashkumar/dicom/pkg/tag"
 )
 
 // Reader handles DICOM file reading
@@ -63,14 +62,24 @@ type SeriesMetadata struct {
 
 // ImageDetail represents image metadata
 type ImageDetail struct {
-	SOPInstanceUID string
-	SOPClassUID    string
-	InstanceNumber string
-	Width          int
-	Height         int
-	BitsPerPixel   int
-	Modality       string
-	PixelData      []byte
+	SOPInstanceUID    string
+	SOPClassUID       string
+	InstanceNumber    string
+	Width             int
+	Height            int
+	BitsPerPixel      int
+	Modality          string
+	PixelData         []byte
+	PatientName       string
+	PatientID         string
+	StudyInstanceUID  string
+	SeriesInstanceUID string
+	StudyDate         string
+	StudyTime         string
+	StudyDescription  string
+	SeriesDescription string
+	AccessionNumber   string
+	PatientBirthDate  string
 }
 
 // ReadStudy reads a DICOM study from disk
@@ -115,7 +124,7 @@ func (r *Reader) ReadDetailedStudyMetadata(studyDir string) (*DetailedStudyMetad
 
 		seriesDir := filepath.Join(studyDir, entry.Name())
 		logrus.Infof("Reading series metadata from: %s", seriesDir)
-		seriesDetail, err := r.readSeriesMetadata(seriesDir)
+		seriesDetail, err := r.readSeriesMetadataWithDCMTK(seriesDir)
 		if err != nil {
 			logrus.Warnf("Failed to read series %s: %v", entry.Name(), err)
 			continue
@@ -139,9 +148,9 @@ func (r *Reader) ReadDetailedStudyMetadata(studyDir string) (*DetailedStudyMetad
 }
 
 // ReadStudyMetadata reads study metadata
-func (r *Reader) ReadStudyMetadata(studyUID string) (*DetailedStudyMetadata, error) {
-	// Placeholder implementation - will be implemented as needed
-	return &DetailedStudyMetadata{}, nil
+func (r *Reader) ReadStudyMetadata(studyPath string) (*DetailedStudyMetadata, error) {
+	// Use ReadDetailedStudyMetadata to read actual DICOM files
+	return r.ReadDetailedStudyMetadata(studyPath)
 }
 
 // readSeriesMetadata reads metadata for a single series
@@ -164,7 +173,7 @@ func (r *Reader) readSeriesMetadata(seriesDir string) (*SeriesDetail, error) {
 		}
 
 		imagePath := filepath.Join(seriesDir, entry.Name())
-		imageDetail, err := r.readImageMetadata(imagePath)
+		imageDetail, err := r.readImageMetadataWithDCMTK(imagePath)
 		if err != nil {
 			logrus.Warnf("Failed to read image %s: %v", entry.Name(), err)
 			continue
@@ -208,7 +217,7 @@ func (r *Reader) readSeriesMetadataWithDCMTK(seriesDir string) (*SeriesDetail, e
 		}
 
 		imagePath := filepath.Join(seriesDir, entry.Name())
-		imageDetail, err := r.readImageMetadata(imagePath)
+		imageDetail, err := r.readImageMetadataWithDCMTK(imagePath)
 		if err != nil {
 			logrus.Warnf("Failed to read image %s: %v", entry.Name(), err)
 			continue
@@ -230,126 +239,6 @@ func (r *Reader) readSeriesMetadataWithDCMTK(seriesDir string) (*SeriesDetail, e
 
 	logrus.Debugf("Read series metadata using DCMTK: %d images", seriesDetail.ImageCount)
 	return seriesDetail, nil
-}
-
-// readImageMetadata reads metadata from a single DICOM file
-func (r *Reader) readImageMetadata(filePath string) (*ImageDetail, error) {
-	logrus.Infof("Reading image metadata from %s", filePath)
-
-	// Open DICOM file
-	file, err := os.Open(filePath)
-	if err != nil {
-		return nil, fmt.Errorf("failed to open DICOM file: %w", err)
-	}
-	defer file.Close()
-
-	// Get file size for parsing
-	fileInfo, err := file.Stat()
-	if err != nil {
-		return nil, fmt.Errorf("failed to get file info: %w", err)
-	}
-
-	// Parse DICOM file
-	dataset, err := dicom.Parse(file, fileInfo.Size(), nil)
-	if err != nil {
-		return nil, fmt.Errorf("failed to parse DICOM file: %w", err)
-	}
-
-	logrus.Infof("Parsed DICOM file with %d elements", len(dataset.Elements))
-	imageDetail := &ImageDetail{}
-
-	// Extract metadata from DICOM elements
-	for _, elem := range dataset.Elements {
-		switch elem.Tag {
-		case tag.SOPInstanceUID:
-			if value, ok := elem.Value.GetValue().(string); ok {
-				imageDetail.SOPInstanceUID = value
-			}
-		case tag.SOPClassUID:
-			if value, ok := elem.Value.GetValue().(string); ok {
-				imageDetail.SOPClassUID = value
-			}
-		case tag.InstanceNumber:
-			if value, ok := elem.Value.GetValue().(string); ok {
-				imageDetail.InstanceNumber = value
-			}
-		case tag.Modality:
-			if value, ok := elem.Value.GetValue().(string); ok {
-				imageDetail.Modality = value
-			}
-		case tag.Rows:
-			if value, ok := elem.Value.GetValue().(int); ok {
-				imageDetail.Height = value
-			}
-		case tag.Columns:
-			if value, ok := elem.Value.GetValue().(int); ok {
-				imageDetail.Width = value
-			}
-		case tag.BitsAllocated:
-			if value, ok := elem.Value.GetValue().(int); ok {
-				imageDetail.BitsPerPixel = value
-			}
-		case tag.PixelData:
-			logrus.Infof("Found pixel data element, type: %T", elem.Value.GetValue())
-			if value, ok := elem.Value.GetValue().([]byte); ok {
-				imageDetail.PixelData = value
-				logrus.Infof("Extracted pixel data: %d bytes", len(value))
-			} else if pixelDataInfo, ok := elem.Value.GetValue().(dicom.PixelDataInfo); ok {
-				// Handle PixelDataInfo type (fallback for processed data)
-				logrus.Infof("Found PixelDataInfo, UnprocessedValueData length: %d, Frames: %d",
-					len(pixelDataInfo.UnprocessedValueData), len(pixelDataInfo.Frames))
-
-				if len(pixelDataInfo.UnprocessedValueData) > 0 {
-					imageDetail.PixelData = pixelDataInfo.UnprocessedValueData
-					logrus.Infof("Extracted pixel data from UnprocessedValueData: %d bytes", len(pixelDataInfo.UnprocessedValueData))
-				} else if len(pixelDataInfo.Frames) > 0 && len(pixelDataInfo.Frames[0].NativeData.Data) > 0 {
-					// Extract pixel data from the first frame
-					// Convert [][]int to []byte
-					frameData := pixelDataInfo.Frames[0].NativeData.Data
-					pixelBytes := make([]byte, 0, len(frameData)*len(frameData[0])*2) // Assume 16-bit data
-
-					for _, row := range frameData {
-						for _, pixel := range row {
-							// Convert 16-bit int to bytes (little-endian)
-							pixelBytes = append(pixelBytes, byte(pixel&0xFF))
-							pixelBytes = append(pixelBytes, byte((pixel>>8)&0xFF))
-						}
-					}
-
-					imageDetail.PixelData = pixelBytes
-					logrus.Infof("Extracted pixel data from Frames[0].NativeData: %d bytes (converted from %dx%d int array)",
-						len(pixelBytes), len(frameData), len(frameData[0]))
-				} else {
-					logrus.Warnf("PixelDataInfo has no pixel data in UnprocessedValueData or Frames")
-				}
-			} else {
-				logrus.Warnf("Pixel data is not []byte or PixelDataInfo, got type: %T", elem.Value.GetValue())
-			}
-		case tag.BurnedInAnnotation:
-			if value, ok := elem.Value.GetValue().(string); ok {
-				logrus.Infof("Found Burned In Annotation: %s", value)
-			}
-		}
-	}
-
-	// Set defaults if not found
-	if imageDetail.Width == 0 {
-		imageDetail.Width = 512 // Default width
-	}
-	if imageDetail.Height == 0 {
-		imageDetail.Height = 512 // Default height
-	}
-	if imageDetail.BitsPerPixel == 0 {
-		imageDetail.BitsPerPixel = 16 // Default bits per pixel
-	}
-	if imageDetail.Modality == "" {
-		imageDetail.Modality = "CR" // Default modality
-	}
-
-	logrus.Debugf("Read image metadata: %dx%d, %d bits, %d bytes pixel data",
-		imageDetail.Width, imageDetail.Height, imageDetail.BitsPerPixel, len(imageDetail.PixelData))
-
-	return imageDetail, nil
 }
 
 // readImageMetadataWithDCMTK reads metadata from a single DICOM file using DCMTK
@@ -408,96 +297,37 @@ func (r *Reader) readImageMetadataWithDCMTK(filePath string) (*ImageDetail, erro
 func (r *Reader) readStudyMetadataFromFile(filePath string, metadata *DetailedStudyMetadata) error {
 	logrus.Debugf("Reading study metadata from %s using DCMTK", filePath)
 
-	// Open DICOM file
-	file, err := os.Open(filePath)
+	// Use DCMTK to read the DICOM file
+	dcmtkMetadata, err := dcmtk.ReadDicomFile(filePath)
 	if err != nil {
-		return fmt.Errorf("failed to open DICOM file: %w", err)
-	}
-	defer file.Close()
-
-	// Get file size for parsing
-	fileInfo, err := file.Stat()
-	if err != nil {
-		return fmt.Errorf("failed to get file info: %w", err)
+		return fmt.Errorf("failed to read DICOM file with DCMTK: %w", err)
 	}
 
-	// Parse DICOM file
-	dataset, err := dicom.Parse(file, fileInfo.Size(), nil)
-	if err != nil {
-		return fmt.Errorf("failed to parse DICOM file: %w", err)
-	}
-
-	// Extract study-level metadata
-	for _, elem := range dataset.Elements {
-		switch elem.Tag {
-		case tag.StudyInstanceUID:
-			if value, ok := elem.Value.GetValue().(string); ok {
-				metadata.StudyInstanceUID = value
-				metadata.StudyUID = value
-			}
-		case tag.PatientName:
-			if value, ok := elem.Value.GetValue().(string); ok {
-				metadata.PatientName = value
-			}
-		case tag.PatientID:
-			if value, ok := elem.Value.GetValue().(string); ok {
-				metadata.PatientID = value
-			}
-		case tag.StudyDate:
-			if value, ok := elem.Value.GetValue().(string); ok {
-				metadata.StudyDate = value
-			}
-		case tag.StudyTime:
-			if value, ok := elem.Value.GetValue().(string); ok {
-				metadata.StudyTime = value
-			}
-		case tag.AccessionNumber:
-			if value, ok := elem.Value.GetValue().(string); ok {
-				metadata.AccessionNumber = value
-			}
-		case tag.PatientBirthDate:
-			if value, ok := elem.Value.GetValue().(string); ok {
-				metadata.PatientBirthDate = value
-			}
-		case tag.StudyDescription:
-			if value, ok := elem.Value.GetValue().(string); ok {
-				metadata.StudyDescription = value
-			}
-		}
-	}
+	// Extract study-level metadata from DCMTK metadata
+	metadata.StudyInstanceUID = dcmtkMetadata.StudyUID
+	metadata.StudyUID = dcmtkMetadata.StudyUID
+	metadata.PatientName = dcmtkMetadata.PatientName
+	metadata.PatientID = dcmtkMetadata.PatientID
+	metadata.StudyDate = dcmtkMetadata.StudyDate
+	metadata.StudyTime = dcmtkMetadata.StudyTime
+	metadata.AccessionNumber = ""  // Not extracted in DCMTK reader yet
+	metadata.PatientBirthDate = "" // Not extracted in DCMTK reader yet
+	metadata.StudyDescription = dcmtkMetadata.StudyDescription
 
 	return nil
 }
 
-// ExtractSOPInstanceUID extracts SOP Instance UID from DICOM file
+// ExtractSOPInstanceUID extracts SOP Instance UID from DICOM file using DCMTK
 func (r *Reader) ExtractSOPInstanceUID(filePath string) (string, error) {
-	// Open DICOM file
-	file, err := os.Open(filePath)
+	// Use DCMTK to read the DICOM file
+	dcmtkMetadata, err := dcmtk.ReadDicomFile(filePath)
 	if err != nil {
-		return "", fmt.Errorf("failed to open DICOM file: %w", err)
-	}
-	defer file.Close()
-
-	// Get file size for parsing
-	fileInfo, err := file.Stat()
-	if err != nil {
-		return "", fmt.Errorf("failed to get file info: %w", err)
+		return "", fmt.Errorf("failed to read DICOM file with DCMTK: %w", err)
 	}
 
-	// Parse DICOM file
-	dataset, err := dicom.Parse(file, fileInfo.Size(), nil)
-	if err != nil {
-		return "", fmt.Errorf("failed to parse DICOM file: %w", err)
+	if dcmtkMetadata.InstanceUID == "" {
+		return "", fmt.Errorf("SOP Instance UID not found in DICOM file")
 	}
 
-	// Extract SOP Instance UID
-	for _, elem := range dataset.Elements {
-		if elem.Tag == tag.SOPInstanceUID {
-			if value, ok := elem.Value.GetValue().(string); ok {
-				return value, nil
-			}
-		}
-	}
-
-	return "", fmt.Errorf("SOP Instance UID not found in DICOM file")
+	return dcmtkMetadata.InstanceUID, nil
 }

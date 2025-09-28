@@ -80,91 +80,32 @@ func (w *Writer) writeSeries(study *types.Study, series *types.Series, seriesDir
 // writeImage writes a single DICOM image to disk using DCMTK
 func (w *Writer) writeImage(study *types.Study, series *types.Series, image *types.Image, filePath string) error {
 	logrus.Infof("Writing DICOM file using DCMTK: %s", filePath)
-	logrus.Infof("Image dimensions: %dx%d, %d bits per pixel, %d bytes pixel data", 
+	logrus.Infof("Image dimensions: %dx%d, %d bits per pixel, %d bytes pixel data",
 		image.Width, image.Height, image.BitsPerPixel, len(image.PixelData))
 
-	// Create DICOM dataset
-	dataset := dicom.NewDataset()
+	// Use DCMTK to write the DICOM file
+	err := dcmtk.WriteDicomFile(
+		filePath,
+		study.PatientName,
+		study.PatientID,
+		study.StudyInstanceUID,
+		series.SeriesInstanceUID,
+		image.SOPInstanceUID,
+		series.Modality,
+		image.Width,
+		image.Height,
+		image.BitsPerPixel,
+		image.BitsPerPixel,
+		image.BitsPerPixel-1,
+		1,
+		"MONOCHROME2",
+		image.PixelData,
+	)
 
-	// Add study-level elements
-	w.addStudyElements(dataset, study)
-
-	// Add series-level elements
-	w.addSeriesElements(dataset, series)
-
-	// Add image-level elements
-	w.addImageElements(dataset, image)
-
-	// Add pixel data elements
-	w.addPixelDataElements(dataset, image)
-
-	// Write DICOM file
-	file, err := os.Create(filePath)
 	if err != nil {
-		return fmt.Errorf("failed to create DICOM file: %w", err)
-	}
-	defer file.Close()
-
-	// Write DICOM dataset to file
-	err = dicom.Write(file, dataset)
-	if err != nil {
-		return fmt.Errorf("failed to write DICOM dataset: %w", err)
+		return fmt.Errorf("failed to write DICOM file using DCMTK: %w", err)
 	}
 
-	logrus.Info("Successfully wrote DICOM file")
+	logrus.Info("Successfully wrote DICOM file using DCMTK")
 	return nil
-}
-
-// addStudyElements adds study-level DICOM elements
-func (w *Writer) addStudyElements(dataset *dicom.Dataset, study *types.Study) {
-	dataset.AddElement(dicom.NewElement(tag.StudyInstanceUID, study.StudyInstanceUID))
-	dataset.AddElement(dicom.NewElement(tag.PatientName, study.PatientName))
-	dataset.AddElement(dicom.NewElement(tag.PatientID, study.PatientID))
-	dataset.AddElement(dicom.NewElement(tag.StudyDate, study.StudyDate))
-	dataset.AddElement(dicom.NewElement(tag.StudyTime, study.StudyTime))
-	dataset.AddElement(dicom.NewElement(tag.StudyDescription, study.StudyDescription))
-	dataset.AddElement(dicom.NewElement(tag.AccessionNumber, study.AccessionNumber))
-	dataset.AddElement(dicom.NewElement(tag.PatientBirthDate, study.PatientBirthDate))
-}
-
-// addSeriesElements adds series-level DICOM elements
-func (w *Writer) addSeriesElements(dataset *dicom.Dataset, series *types.Series) {
-	dataset.AddElement(dicom.NewElement(tag.SeriesInstanceUID, series.SeriesInstanceUID))
-	dataset.AddElement(dicom.NewElement(tag.SeriesNumber, series.SeriesNumber))
-	dataset.AddElement(dicom.NewElement(tag.Modality, series.Modality))
-	dataset.AddElement(dicom.NewElement(tag.SeriesDescription, series.SeriesDescription))
-}
-
-// addImageElements adds image-level DICOM elements
-func (w *Writer) addImageElements(dataset *dicom.Dataset, image *types.Image) {
-	dataset.AddElement(dicom.NewElement(tag.SOPInstanceUID, image.SOPInstanceUID))
-	dataset.AddElement(dicom.NewElement(tag.SOPClassUID, image.SOPClassUID))
-	dataset.AddElement(dicom.NewElement(tag.InstanceNumber, image.InstanceNumber))
-	dataset.AddElement(dicom.NewElement(tag.Rows, image.Height))
-	dataset.AddElement(dicom.NewElement(tag.Columns, image.Width))
-	dataset.AddElement(dicom.NewElement(tag.BitsAllocated, image.BitsPerPixel))
-	dataset.AddElement(dicom.NewElement(tag.BitsStored, image.BitsPerPixel))
-	dataset.AddElement(dicom.NewElement(tag.HighBit, image.BitsPerPixel-1))
-	dataset.AddElement(dicom.NewElement(tag.SamplesPerPixel, 1))
-	dataset.AddElement(dicom.NewElement(tag.PhotometricInterpretation, "MONOCHROME2"))
-	dataset.AddElement(dicom.NewElement(tag.BurnedInAnnotation, "YES"))
-	
-	// Add windowing parameters
-	dataset.AddElement(dicom.NewElement(tag.WindowCenter, "2048"))
-	dataset.AddElement(dicom.NewElement(tag.WindowWidth, "4096"))
-	dataset.AddElement(dicom.NewElement(tag.RescaleIntercept, "0"))
-	dataset.AddElement(dicom.NewElement(tag.RescaleSlope, "1"))
-}
-
-// addPixelDataElements adds pixel data elements
-func (w *Writer) addPixelDataElements(dataset *dicom.Dataset, image *types.Image) {
-	logrus.Infof("Adding pixel data: %d bytes", len(image.PixelData))
-	
-	// Create pixel data info
-	pixelDataInfo := dicom.PixelDataInfo{
-		UnprocessedValueData: image.PixelData,
-		IntentionallyUnprocessed: true,
-	}
-	
-	dataset.AddElement(dicom.NewElement(tag.PixelData, pixelDataInfo))
 }

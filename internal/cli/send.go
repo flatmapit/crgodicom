@@ -55,6 +55,14 @@ func SendCommand() *cli.Command {
 				Usage: "Retry attempts",
 				Value: 3,
 			},
+			&cli.BoolFlag{
+				Name:  "verbose",
+				Usage: "Enable verbose output",
+			},
+			&cli.BoolFlag{
+				Name:  "debug",
+				Usage: "Enable debug output",
+			},
 		},
 		Action: sendAction,
 	}
@@ -90,59 +98,118 @@ func sendAction(c *cli.Context) error {
 	studyID := c.String("study-id")
 	outputDir := c.String("output-dir")
 	retries := c.Int("retries")
+	verbose := c.Bool("verbose")
+	debug := c.Bool("debug")
 
-	logrus.Infof("Sending study %s to PACS %s:%d (AEC: %s, AET: %s)",
-		studyID, pacsConfig.Host, pacsConfig.Port, pacsConfig.AEC, pacsConfig.AET)
-	logrus.Infof("Studies directory: %s, Retries: %d, Timeout: %ds",
-		outputDir, retries, pacsConfig.Timeout)
+	// Set log level based on flags
+	if debug {
+		logrus.SetLevel(logrus.DebugLevel)
+	} else if verbose {
+		logrus.SetLevel(logrus.InfoLevel)
+	}
 
-	// Create PACS client
-	client := pacs.NewClient(&pacsConfig)
+	logrus.Infof("🚀 Starting DICOM study transmission")
+	logrus.Infof("📋 Study ID: %s", studyID)
+	logrus.Infof("🎯 PACS Target: %s:%d (AEC: %s, AET: %s)",
+		pacsConfig.Host, pacsConfig.Port, pacsConfig.AEC, pacsConfig.AET)
+	logrus.Infof("📁 Studies directory: %s", outputDir)
+	logrus.Infof("⚙️  Configuration: Retries=%d, Timeout=%ds, Verbose=%t, Debug=%t",
+		retries, pacsConfig.Timeout, verbose, debug)
+
+	// Create PACS client with options
+	clientOptions := &pacs.ClientOptions{
+		Verbose: verbose,
+		Debug:   debug,
+	}
+	client := pacs.NewClientWithOptions(&pacsConfig, clientOptions)
 
 	// Connect to PACS
 	if err := client.Connect(c.Context); err != nil {
-		return fmt.Errorf("failed to connect to PACS: %w", err)
+		return fmt.Errorf("❌ failed to connect to PACS: %w", err)
 	}
 	defer client.Disconnect()
 
 	// Test connectivity with C-ECHO
 	if err := client.CEcho(c.Context); err != nil {
-		return fmt.Errorf("C-ECHO failed: %w", err)
+		return fmt.Errorf("❌ C-ECHO failed: %w", err)
 	}
 
 	// Find and send DICOM files for the study
 	studyDir := filepath.Join(outputDir, studyID)
 	dicomFiles, err := findDICOMFiles(studyDir)
 	if err != nil {
-		return fmt.Errorf("failed to find DICOM files: %w", err)
+		return fmt.Errorf("❌ failed to find DICOM files in %s: %w", studyDir, err)
 	}
 
-	logrus.Infof("Found %d DICOM files to send", len(dicomFiles))
+	if len(dicomFiles) == 0 {
+		return fmt.Errorf("❌ no DICOM files found in study directory: %s", studyDir)
+	}
+
+	logrus.Infof("📁 Found %d DICOM files to send from study directory: %s", len(dicomFiles), studyDir)
 
 	successCount := 0
-	for _, filePath := range dicomFiles {
-		logrus.Infof("Sending %s", filePath)
+	failedFiles := []string{}
+
+	for i, filePath := range dicomFiles {
+		logrus.Infof("📤 [%d/%d] Sending %s", i+1, len(dicomFiles), filepath.Base(filePath))
+
+		if debug {
+			logrus.Debugf("📁 Full path: %s", filePath)
+		}
 
 		// Read DICOM file
 		dicomData, err := os.ReadFile(filePath)
 		if err != nil {
-			logrus.Errorf("Failed to read %s: %v", filePath, err)
+			logrus.Errorf("❌ Failed to read %s: %v", filePath, err)
+			failedFiles = append(failedFiles, fmt.Sprintf("%s (read error: %v)", filePath, err))
 			continue
+		}
+
+		if debug {
+			logrus.Debugf("📊 File size: %d bytes", len(dicomData))
 		}
 
 		// Extract SOP Instance UID from actual DICOM metadata
 		sopInstanceUID := extractSOPInstanceUIDFromDICOM(filePath, cfg)
-
-		// Send to PACS
-		if err := client.CStore(c.Context, dicomData, sopInstanceUID); err != nil {
-			logrus.Errorf("Failed to send %s: %v", filePath, err)
-			continue
+		if debug {
+			logrus.Debugf("🆔 SOP Instance UID: %s", sopInstanceUID)
 		}
 
-		successCount++
+		// Send to PACS with retry logic
+		for attempt := 1; attempt <= retries; attempt++ {
+			if attempt > 1 {
+				logrus.Warnf("🔄 Retry attempt %d/%d for %s", attempt, retries, filepath.Base(filePath))
+			}
+
+			if err := client.CStore(c.Context, dicomData, sopInstanceUID); err != nil {
+				if attempt < retries {
+					logrus.Warnf("⚠️  Attempt %d failed for %s: %v", attempt, filepath.Base(filePath), err)
+					continue
+				}
+				logrus.Errorf("❌ Failed to send %s after %d attempts: %v", filePath, retries, err)
+				failedFiles = append(failedFiles, fmt.Sprintf("%s (send error: %v)", filePath, err))
+				break
+			}
+
+			// Success
+			logrus.Infof("✅ Successfully sent %s", filepath.Base(filePath))
+			successCount++
+			break
+		}
 	}
 
-	fmt.Printf("Successfully sent %d/%d DICOM files to PACS\n", successCount, len(dicomFiles))
+	// Summary
+	fmt.Printf("\n📊 Transmission Summary:\n")
+	fmt.Printf("✅ Successfully sent: %d/%d files\n", successCount, len(dicomFiles))
+	if len(failedFiles) > 0 {
+		fmt.Printf("❌ Failed files (%d):\n", len(failedFiles))
+		for _, failedFile := range failedFiles {
+			fmt.Printf("   • %s\n", failedFile)
+		}
+		return fmt.Errorf("transmission completed with %d failures out of %d files", len(failedFiles), len(dicomFiles))
+	}
+
+	fmt.Printf("🎉 All files transmitted successfully!\n")
 	return nil
 }
 

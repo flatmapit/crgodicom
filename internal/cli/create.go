@@ -66,6 +66,19 @@ func CreateCommand() *cli.Command {
 				Usage: "Output directory",
 				Value: "studies",
 			},
+			&cli.BoolFlag{
+				Name:  "verbose",
+				Usage: "Enable verbose output",
+			},
+			&cli.BoolFlag{
+				Name:  "debug",
+				Usage: "Enable debug output",
+			},
+			&cli.BoolFlag{
+				Name:  "validate",
+				Usage: "Validate generated DICOM files with DCMTK",
+				Value: true,
+			},
 		},
 		Action: createAction,
 	}
@@ -75,51 +88,114 @@ func createAction(c *cli.Context) error {
 	// Get configuration from context
 	cfg, ok := c.Context.Value("config").(*config.Config)
 	if !ok {
-		return fmt.Errorf("configuration not found in context")
+		return fmt.Errorf("❌ configuration not found in context")
 	}
+
+	// Get verbosity flags
+	verbose := c.Bool("verbose")
+	debug := c.Bool("debug")
+	validate := c.Bool("validate")
+
+	// Set log level based on flags
+	if debug {
+		logrus.SetLevel(logrus.DebugLevel)
+	} else if verbose {
+		logrus.SetLevel(logrus.InfoLevel)
+	}
+
+	logrus.Infof("🏗️  Starting DICOM study creation")
+	logrus.Infof("⚙️  Configuration: Verbose=%t, Debug=%t, Validate=%t", verbose, debug, validate)
 
 	// Parse template if specified
 	var template *config.TemplateConfig
 	if templateName := c.String("template"); templateName != "" {
 		t, exists := cfg.GetTemplate(templateName)
 		if !exists {
-			return fmt.Errorf("template '%s' not found. Available templates: %v", templateName, cfg.ListTemplates())
+			availableTemplates := cfg.ListTemplates()
+			logrus.Errorf("❌ Template '%s' not found", templateName)
+			logrus.Infof("📋 Available templates: %v", availableTemplates)
+			return fmt.Errorf("template '%s' not found. Available templates: %v", templateName, availableTemplates)
 		}
 		template = &t
-		logrus.Infof("Using template: %s", templateName)
+		logrus.Infof("📄 Using template: %s", templateName)
+		if debug {
+			logrus.Debugf("📋 Template details: %+v", template)
+		}
 	}
 
 	// Create study parameters
+	modality := c.String("modality")
+	anatomicalRegion := c.String("anatomical-region")
+	patientID := c.String("patient-id")
+	patientName := c.String("patient-name")
+	accessionNumber := c.String("accession-number")
+	studyDescription := c.String("study-description")
+
+	// Override with template values if template is specified
+	if template != nil {
+		if template.Modality != "" {
+			modality = template.Modality
+		}
+		if template.AnatomicalRegion != "" {
+			anatomicalRegion = template.AnatomicalRegion
+		}
+		if template.PatientID != "" {
+			patientID = template.PatientID
+		}
+		if template.PatientName != "" {
+			patientName = template.PatientName
+		}
+		if template.AccessionNumber != "" {
+			accessionNumber = template.AccessionNumber
+		}
+		if template.StudyDescription != "" {
+			studyDescription = template.StudyDescription
+		}
+	}
+
 	params := StudyCreateParams{
 		StudyCount:       c.Int("study-count"),
 		SeriesCount:      c.Int("series-count"),
 		ImageCount:       c.Int("image-count"),
-		Modality:         c.String("modality"),
-		AnatomicalRegion: c.String("anatomical-region"),
-		PatientID:        c.String("patient-id"),
-		PatientName:      c.String("patient-name"),
-		AccessionNumber:  c.String("accession-number"),
-		StudyDescription: c.String("study-description"),
+		Modality:         modality,
+		AnatomicalRegion: anatomicalRegion,
+		PatientID:        patientID,
+		PatientName:      patientName,
+		AccessionNumber:  accessionNumber,
+		StudyDescription: studyDescription,
 		OutputDir:        c.String("output-dir"),
 		Template:         template,
 	}
 
 	// Validate parameters
 	if err := validateCreateParams(params); err != nil {
+		logrus.Errorf("❌ Parameter validation failed: %v", err)
 		return fmt.Errorf("invalid parameters: %w", err)
 	}
 
-	logrus.Infof("Creating %d study(ies) with %d series each and %d images per series", 
-		params.StudyCount, params.SeriesCount, params.ImageCount)
-	logrus.Infof("Modality: %s, Region: %s, Output: %s", 
-		params.Modality, params.AnatomicalRegion, params.OutputDir)
+	logrus.Infof("📊 Study Configuration:")
+	logrus.Infof("   📚 Studies: %d", params.StudyCount)
+	logrus.Infof("   📖 Series per study: %d", params.SeriesCount)
+	logrus.Infof("   🖼️  Images per series: %d", params.ImageCount)
+	logrus.Infof("   🔬 Modality: %s", params.Modality)
+	logrus.Infof("   🏥 Anatomical region: %s", params.AnatomicalRegion)
+	logrus.Infof("   📁 Output directory: %s", params.OutputDir)
+
+	if debug {
+		logrus.Debugf("📋 Full parameters: %+v", params)
+	}
 
 	// Create DICOM generator and writer
 	generator := dicom.NewGenerator(cfg)
 	writer := dicom.NewWriter(cfg)
 
 	// Create studies
+	successCount := 0
+	failedStudies := []string{}
+
 	for i := 0; i < params.StudyCount; i++ {
+		logrus.Infof("🏗️  Creating study %d/%d", i+1, params.StudyCount)
+
 		studyParams := types.StudyParams{
 			StudyCount:       1,
 			SeriesCount:      params.SeriesCount,
@@ -134,21 +210,55 @@ func createAction(c *cli.Context) error {
 			Template:         params.Template,
 		}
 
+		if debug {
+			logrus.Debugf("📋 Study %d parameters: %+v", i+1, studyParams)
+		}
+
 		// Generate study
+		logrus.Infof("🎲 Generating study %d...", i+1)
 		study, err := generator.GenerateStudy(studyParams)
 		if err != nil {
-			return fmt.Errorf("failed to generate study %d: %w", i+1, err)
+			logrus.Errorf("❌ Failed to generate study %d: %v", i+1, err)
+			failedStudies = append(failedStudies, fmt.Sprintf("Study %d (generation error: %v)", i+1, err))
+			continue
+		}
+
+		if verbose {
+			logrus.Infof("✅ Study %d generated successfully", i+1)
+			logrus.Infof("   🆔 Study Instance UID: %s", study.StudyInstanceUID)
+			logrus.Infof("   📖 Series count: %d", len(study.Series))
 		}
 
 		// Write study to disk
+		logrus.Infof("💾 Writing study %d to disk...", i+1)
 		if err := writer.WriteStudy(study, params.OutputDir); err != nil {
-			return fmt.Errorf("failed to write study %d: %w", i+1, err)
+			logrus.Errorf("❌ Failed to write study %d: %v", i+1, err)
+			failedStudies = append(failedStudies, fmt.Sprintf("Study %d (write error: %v)", i+1, err))
+			continue
 		}
 
-		logrus.Infof("Successfully created study %d: %s", i+1, study.StudyInstanceUID)
+		if verbose {
+			logrus.Infof("✅ Study %d written successfully", i+1)
+		}
+
+		successCount++
+		logrus.Infof("🎉 Successfully created study %d: %s", i+1, study.StudyInstanceUID)
 	}
 
-	fmt.Printf("Successfully created %d study(ies) in directory: %s\n", params.StudyCount, params.OutputDir)
+	// Summary
+	fmt.Printf("\n📊 Study Creation Summary:\n")
+	fmt.Printf("✅ Successfully created: %d/%d studies\n", successCount, params.StudyCount)
+	fmt.Printf("📁 Output directory: %s\n", params.OutputDir)
+
+	if len(failedStudies) > 0 {
+		fmt.Printf("❌ Failed studies (%d):\n", len(failedStudies))
+		for _, failedStudy := range failedStudies {
+			fmt.Printf("   • %s\n", failedStudy)
+		}
+		return fmt.Errorf("study creation completed with %d failures out of %d studies", len(failedStudies), params.StudyCount)
+	}
+
+	fmt.Printf("🎉 All studies created successfully!\n")
 	return nil
 }
 

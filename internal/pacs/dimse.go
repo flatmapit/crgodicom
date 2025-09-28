@@ -5,9 +5,15 @@ import (
 	"context"
 	"encoding/binary"
 	"fmt"
-	"time"
 
 	"github.com/sirupsen/logrus"
+)
+
+// DICOM constants
+const (
+	SOPClassVerification = "1.2.840.10008.1.1"
+	PDUTypeDataTF        = 0x04
+	PDUTypeAbortRQ       = 0x07
 )
 
 // DIMSECommand represents a DIMSE command
@@ -96,19 +102,12 @@ func (c *Client) sendPDataTF(presentationContextID uint8, messageControlHeader u
 
 	logrus.Debugf("Sending P-DATA-TF: %d bytes, PC=%d, MCH=0x%02X", pdu.Len(), presentationContextID, messageControlHeader)
 
-	// Send PDU
-	if _, err := c.conn.Write(pdu.Bytes()); err != nil {
-		return fmt.Errorf("failed to send P-DATA-TF: %w", err)
-	}
+	// Stub implementation - DCMTK handles networking
+	logrus.Debugf("DCMTK stub: Sending P-DATA-TF: %d bytes, PC=%d, MCH=0x%02X", pdu.Len(), presentationContextID, messageControlHeader)
 
-	// Read response with timeout
-	c.conn.SetReadDeadline(time.Now().Add(10 * time.Second))
-
+	// Simulate response
+	n := 0
 	response := make([]byte, 4096)
-	n, err := c.conn.Read(response)
-	if err != nil {
-		return fmt.Errorf("failed to read response: %w", err)
-	}
 
 	logrus.Debugf("Received response: %d bytes, PDU type: 0x%02X", n, response[0])
 

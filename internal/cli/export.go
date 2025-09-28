@@ -106,7 +106,7 @@ func exportAction(c *cli.Context) error {
 
 	// Create DICOM reader and exporter
 	reader := dicom.NewReader(cfg)
-	exporter := export.NewExporter(inputDir)
+	exporter := export.NewExporter(outputDir)
 
 	// Read real DICOM metadata and pixel data from the study
 	logrus.Infof("About to call ReadDetailedStudyMetadata for: %s", studyDir)
