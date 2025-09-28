@@ -420,29 +420,55 @@ func (i *ImageGenerator) generateMRPattern(pixelData []byte, width, height, byte
 
 // generateUSPattern generates ultrasound-like noise pattern
 func (i *ImageGenerator) generateUSPattern(pixelData []byte, width, height, bytesPerPixel int) {
-	// Ultrasound characteristics: low contrast, speckle noise
+	// Ultrasound characteristics: low contrast, speckle noise with anatomical structures
 	for y := 0; y < height; y++ {
 		for x := 0; x < width; x++ {
 			idx := (y*width + x) * bytesPerPixel
 
-			// Base noise with lower contrast
-			noise := i.rand.Intn(128) + 64 // Range 64-191
+			// Create anatomical structure (simulate abdominal ultrasound)
+			var baseValue int
+			
+			// Top section: skin/fat layer (bright)
+			if y < height/8 {
+				baseValue = 180 + i.rand.Intn(40) // Bright with some variation
+			} else if y < height/4 {
+				// Muscle layer (medium brightness)
+				baseValue = 120 + i.rand.Intn(60)
+			} else if y < height/2 {
+				// Organ tissue (variable brightness)
+				baseValue = 80 + i.rand.Intn(80)
+			} else {
+				// Deeper structures (darker)
+				baseValue = 40 + i.rand.Intn(60)
+			}
 
 			// Add speckle noise (characteristic of ultrasound)
-			if i.rand.Intn(10) < 2 {
-				noise += 50
+			speckle := i.rand.Intn(20) - 10 // -10 to +10 variation
+			baseValue += speckle
+
+			// Add horizontal scan lines (ultrasound beam pattern)
+			if y%4 == 0 {
+				baseValue += i.rand.Intn(15) - 7 // Slight brightness variation
 			}
 
 			// Ensure values are in valid range
-			if noise < 0 {
-				noise = 0
+			if baseValue < 0 {
+				baseValue = 0
 			}
-			if noise > 255 {
-				noise = 255
+			if baseValue > 255 {
+				baseValue = 255
 			}
 
-			// Store pixel value
-			pixelData[idx] = byte(noise)
+			// Store pixel value with proper bit depth handling
+			if bytesPerPixel == 2 {
+				// 16-bit - scale to full range
+				value := uint16(baseValue) * 257 // Scale 0-255 to 0-65535
+				pixelData[idx] = byte(value & 0xFF)          // Low byte first (little-endian)
+				pixelData[idx+1] = byte((value >> 8) & 0xFF) // High byte second
+			} else {
+				// 8-bit
+				pixelData[idx] = byte(baseValue)
+			}
 		}
 	}
 }
