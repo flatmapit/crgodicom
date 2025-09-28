@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **CT Study Generation**: Successfully created CT study with two series for patient CTTEST
 - **PACS Integration**: Successfully sent CT study to PACS1 (Orthanc) using DCMTK storescu
 - **Study Export**: Generated PDF report for CT study export
+- **US Study Generation**: Created 3-series Ultrasound study for patient SMITH^GRANNY
+- **Multi-format Export**: Exported US study to PNG (24 images) and PDF report formats
 
 ### Changed
 - **Study Cleanup**: Cleaned up old and incomplete studies, keeping only the complete CTTEST study
