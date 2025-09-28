@@ -8,6 +8,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **CT Study Generation**: Successfully created CT study with two series for patient CTTEST
+- **PACS Integration**: Successfully sent CT study to PACS1 (Orthanc) using DCMTK storescu
+- **Study Export**: Generated PDF report for CT study export
+- **Comprehensive DICOM Metadata Coverage**: Complete implementation of Type 1, Type 2, and Type 3 DICOM attributes
+- **Enterprise-Grade UID Management**: Cryptographically secure UID generation with guaranteed uniqueness
+- **DICOM Conformance Validation Framework**: Built-in conformance checking for all DICOM modules
+- **Extended Modality Support**: Added NM, PT, RT, SR modalities with modality-specific image patterns
+- **Enhanced MR Sequences**: T1, T2, FLAIR, DWI sequence patterns for MRI studies
+- **Comprehensive Testing Framework**: Unit, integration, conformance, and performance testing
+- **Visual Verification**: Burned-in metadata for integration testing and debugging
+- **Advanced Image Generation**: Modality-specific patterns (hot spots for NM, metabolic activity for PT, dose distributions for RT)
+- **Comprehensive Documentation**: Updated README.md and new TESTING.md with detailed testing procedures
 - Initial CLI framework implementation
 - Configuration system with YAML support
 - Study templates (built-in and user-defined)
@@ -22,6 +34,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - C wrapper functions for DCMTK reader, writer, and network operations
 
 ### Changed
+- **Enhanced DICOM Generation**: Upgraded from basic metadata to comprehensive DICOM 3.0 compliance
+- **Improved UID Generation**: Replaced simple timestamp-based UIDs with enterprise-grade cryptographic generation
+- **Extended Modality Support**: Expanded from 6 to 10 supported modalities with specialized patterns
+- **Enhanced CLI**: Added conformance checking flags and comprehensive validation options
 - Migrated from suyashkumar/dicom library to DCMTK for all DICOM operations
 - Updated DICOM reader to use DCMTK CGO bindings
 - Updated DICOM writer to use DCMTK CGO bindings
